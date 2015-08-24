@@ -11,17 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TableRow;
 
 /**
  * Created by medionchou on 2015/8/23.
  */
 public class LookUpFragment extends Fragment{
+    private final String TAG_TITLE  = "TAG_TITLE";
+    private final String TAG_CONTENT = "TAG_CONTENT";
+
 
 
     int mNum;
-    private ServiceListener mConnection;
+    private LocalServiceConnection mConnection;
     private Button ingredientBtn;
     private Button productionBtn;
+    private Button recipeBtn;
     private Button deviceBtn;
     private FrameLayout titleFrameLayout;
     private FrameLayout contentFrameLayout;
@@ -39,8 +44,10 @@ public class LookUpFragment extends Fragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mConnection = (ServiceListener)mConnection;
+        ServiceListener mCallBack;
+        mCallBack = (ServiceListener) activity;
 
+        mConnection = mCallBack.getLocalServiceConnection();
     }
 
     @Override
@@ -52,21 +59,40 @@ public class LookUpFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.look_up_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.lookup_frag_layout, container, false);
+        createView(rootView);
 
-        ingredientBtn = (Button) rootView.findViewById(R.id.ingredient_btn);
-        productionBtn = (Button) rootView.findViewById(R.id.production_btn);
-        deviceBtn = (Button) rootView.findViewById(R.id.device_status_btn);
-        ingredientBtn.setOnClickListener(new IngredientBtnListener());
-        productionBtn.setOnClickListener(new ProductionBtnListener());
-        deviceBtn.setOnClickListener(new DeviceBtnListener());
         return rootView;
     }
 
+    private void createView(View rootView) {
+        ingredientBtn = (Button) rootView.findViewById(R.id.ingredient_btn);
+        productionBtn = (Button) rootView.findViewById(R.id.production_btn);
+        recipeBtn = (Button) rootView.findViewById(R.id.recipe_status_btn);
+        deviceBtn = (Button) rootView.findViewById(R.id.device_status_btn);
+        ingredientBtn.setOnClickListener(new IngredientBtnListener());
+        productionBtn.setOnClickListener(new ProductionBtnListener());
+        recipeBtn.setOnClickListener(new RecipeBtnListener());
+        deviceBtn.setOnClickListener(new DeviceBtnListener());
+
+        titleFrameLayout = (FrameLayout) rootView.findViewById(R.id.title_frag_container);
+        contentFrameLayout = (FrameLayout) rootView.findViewById(R.id.content_frag_container);
+    }
+
+    private void setTitleFrameLayoutWeight(float weight) {
+
+        TableRow.LayoutParams params = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
+        titleFrameLayout.setLayoutParams(params);
+    }
 
     private class IngredientBtnListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            if (!mConnection.isBound()) {
+                /*
+                    Disconnect with Server;
+                 */
+            }
 
         }
     }
@@ -74,6 +100,24 @@ public class LookUpFragment extends Fragment{
     private class ProductionBtnListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            if (!mConnection.isBound()) {
+                /*
+                    Disconnect with Server;
+                 */
+            }
+
+            setTitleFrameLayoutWeight(1f);
+        }
+    }
+
+    private class RecipeBtnListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (!mConnection.isBound()) {
+                /*
+                    Disconnect with Server;
+                 */
+            }
 
         }
     }
@@ -81,15 +125,32 @@ public class LookUpFragment extends Fragment{
     private class DeviceBtnListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+
+            if (!mConnection.isBound()) {
+                /*
+                    Disconnect with Server;
+                 */
+            }
+
             FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            Fragment fragment;
+            if ((fragment = fragmentManager.findFragmentByTag(TAG_TITLE)) != null) {
+                fragmentTransaction.remove(fragment);
+            }
 
-            fragmentTransaction.add(R.id.title_frag_container,  new TestFragment());
-            fragmentTransaction.add(R.id.content_frag_container,  new TestFragment());
+            if (fragmentManager.findFragmentByTag(TAG_CONTENT) != null) {
+                fragmentTransaction.replace(R.id.content_frag_container, new DeviceFragment(), TAG_CONTENT);
+            } else {
+                fragmentTransaction.add(R.id.content_frag_container, new DeviceFragment(), TAG_CONTENT);
+            }
 
             fragmentTransaction.commit();
 
+            setTitleFrameLayoutWeight(0f);
         }
     }
+
+
 
 }

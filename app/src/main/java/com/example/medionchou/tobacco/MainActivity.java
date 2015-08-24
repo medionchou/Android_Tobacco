@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 ConnectionAsynTask asynTask = new ConnectionAsynTask();
                 asynTask.execute((Void)null);
             } else {
-                Toast.makeText(MainActivity.this, "未連線到伺服器\n請稍候再試", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.setTitle("請稍候");
-            progressDialog.setMessage("登入中");
+            progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
+            progressDialog.setMessage(getString(R.string.logging));
             progressDialog.show();
             progressDialog.setCancelable(false);
         }
@@ -93,14 +93,14 @@ public class MainActivity extends AppCompatActivity {
             mService = mConnection.getService();
             String account = accountEditView.getText().toString();
             String pwd = MD5.getMD5EncryptedString(pwdEditView.getText().toString());
-            String cmd = "LOGIN TABLET " + account + " " + pwd + "<END>";
+            String cmd = "LOGIN\tTABLET\t" + "test" + "\t" + MD5.getMD5EncryptedString("123") + "<END>"; //Specific Command
 
             if (mService.getClientState() == States.CONNECT_OK) {
                 mService.setCmd(cmd);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                    Log.e("TobaccoLog", "InterruptedException: sleep interrupted " + e.toString());
+                    Log.e("MyLog", "InterruptedException In ConnectionAsynTask :" + e.toString());
                 }
 
                 if (mService.isLoggin()) {
@@ -109,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
                     startActivity(intent);
                 } else {
-                    msg = "帳號或密碼錯誤";
+                    msg = getString(R.string.user_info_err);
                 }
             } else {
-                msg = "未連線到伺服器\n請稍候再試";
+                msg = getString(R.string.no_connection);
             }
 
 

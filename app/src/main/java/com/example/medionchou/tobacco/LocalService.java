@@ -12,6 +12,8 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocalService extends Service implements Runnable {
 
@@ -25,6 +27,9 @@ public class LocalService extends Service implements Runnable {
     private CharBuffer outStream;
     private String serverReply;
     private String cmd;
+    private String queryReply;
+    private String updateOnline;
+    private List<Byte> buffer;
 
     private boolean isTerminated;
     private boolean isSignIn;
@@ -59,10 +64,14 @@ public class LocalService extends Service implements Runnable {
         isTerminated = false;
         isSignIn = false;
         client = new Thread(this);
-        inputBuffer = ByteBuffer.allocate(1024);
+        inputBuffer = ByteBuffer.allocate(2048);
         client_state = States.CONNECT_INITIALZING;
         serverReply = "";
         cmd = "";
+        queryReply = "";
+        updateOnline = "";
+        buffer = new ArrayList<>();
+        inputBuffer.clear();
     }
 
     private void deRefObject() {
@@ -71,8 +80,8 @@ public class LocalService extends Service implements Runnable {
     }
 
     private void setUpConnection() {
-        try {
 
+        try {
             while (!isTerminated) {
 
                 if (socketChannel == null) {
@@ -90,38 +99,56 @@ public class LocalService extends Service implements Runnable {
                     int num;
                     while ((num = socketChannel.read(inputBuffer)) > 0) {
                         inputBuffer.flip();
-                        serverReply += Charset.defaultCharset().decode(inputBuffer);
-                        inputBuffer.clear();
-
-                        while (serverReply.contains("<END>")) {
-
-                            int endIndex = serverReply.indexOf("<END>") + 5;
-                            if (endIndex < 0) endIndex = 0;
-
-                            String endLine = serverReply.substring(0, endIndex);
-
-                            Log.v("TObaccoLog", endLine);
-
-                            if (endLine.contains("CONNECT_OK<END>")) {
-                                client_state = States.CONNECT_OK;
-                            } else if (endLine.contains("LOGIN_REPLY")) {
-                                isSignIn = true;
-                            }
-
-                            serverReply = serverReply.replace(endLine, "");
+                        while (inputBuffer.hasRemaining()) {
+                            buffer.add(inputBuffer.get());
                         }
+                        inputBuffer.clear();
                     }
 
-                    if (num < 0) throw new IOException("Server disconnect");
+                    if (num < 0)
+                        throw new IOException("Server disconnect");
+
+                    if (buffer.size() > 0) {
+                        byte[] tmp = new byte[buffer.size()];
+                        for (int i = 0; i < buffer.size(); i++)
+                            tmp[i] = buffer.get(i);
+                        String ttmp = new String(tmp, "UTF-8");
+                        serverReply += ttmp;
+
+                        Log.v("MyLog", ttmp);
+                        buffer.clear();
+                    }
+
+                    while (serverReply.contains("<END>")) {
+
+                        int endIndex = serverReply.indexOf("<END>") + 5;
+                        if (endIndex < 0) endIndex = 0;
+
+                        String endLine = serverReply.substring(0, endIndex);
+
+                        //Log.v("MyLog", endLine);
+
+                        if (endLine.contains("CONNECT_OK<END>")) {
+                            client_state = States.CONNECT_OK;
+                        } else if (endLine.contains("LOGIN_REPLY")) {
+                            isSignIn = true;
+                        } else if (endLine.contains("QUERY_REPLY")) {
+                            queryReply = endLine;
+                        } else if (endLine.contains("UPDATE_ONLINE")) {
+                            updateOnline = endLine;
+                        }
+
+                        serverReply = serverReply.replace(endLine, "");
+                    }
 
 
                     switch (client_state) {
                         case States.CONNECT_INITIALZING:
-                            outStream = CharBuffer.wrap("CONNECT MI_2<END>");
+                            outStream = CharBuffer.wrap(Command.CONNECT_SERVER);
                             while (outStream.hasRemaining()) {
                                 socketChannel.write(Charset.defaultCharset().encode(outStream));
                             }
-                            Thread.sleep(500);
+                            Thread.sleep(2000);
                             outStream.clear();
                             break;
                         case States.CONNECT_OK:
@@ -138,18 +165,21 @@ public class LocalService extends Service implements Runnable {
                 }
             }
         } catch (InterruptedException e) {
-            Log.v("TobaccoLog", "InterruptedException " + e.toString());
+            Log.e("MyLog", "InterruptedException " + e.toString());
 
         } catch (IOException e) {
-            Log.v("TObaccoLog", "IOException " + e.toString());
+            Log.e("MyLog", "IOException " + e.toString());
             stopSelf();
             startService(new Intent(this, LocalService.class));
+            /* TODO:
+                    Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
+             */
         } finally {
             try {
                 if (socketChannel != null)
                     socketChannel.close();
             } catch (IOException err) {
-                Log.v("TobaccoLog", "IOException " + err.toString());
+                Log.v("MyLog", "IOException " + err.toString());
             }
         }
     }
@@ -164,6 +194,18 @@ public class LocalService extends Service implements Runnable {
 
     public boolean isLoggin() {
         return isSignIn;
+    }
+
+    public String getQueryReply() {
+        return queryReply;
+    }
+
+    public String getUpdateOnline() {
+        return updateOnline;
+    }
+
+    public void resetUpdateOnline() {
+        updateOnline = "";
     }
 
     public class LocalBinder extends Binder {

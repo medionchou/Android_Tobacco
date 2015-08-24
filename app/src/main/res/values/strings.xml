@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">Tobacco</string>
 
@@ -6,6 +8,16 @@
     <string name="title_activity_logged_in">LoggedInActivity</string>
     <string name="title_activity_test">Test</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="progress_dialog_waiting">請稍後</string>
+
+    <string name="logging">登入中....</string>
+
+    <string name="getting_online_state">取得設備狀態中</string>
+
+    <string name="no_connection">未連線到伺服器\n請稍候再試</string>
+
+    <string name="user_info_err">帳號或密碼錯誤</string>
+
+
+
 </resources>
