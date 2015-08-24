@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 ConnectionAsynTask asynTask = new ConnectionAsynTask();
                 asynTask.execute((Void)null);
             } else {
-
+                Toast.makeText(MainActivity.this, "未連線到伺服器\n請稍候再試", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -104,7 +104,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (mService.isLoggin()) {
-                    msg = "登入成功";
+                    Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    startActivity(intent);
                 } else {
                     msg = "帳號或密碼錯誤";
                 }
@@ -120,7 +123,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
-            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+            if (msg.length() > 0)
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
         }
     }
 }
