@@ -93,7 +93,17 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
+            FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+            if (fragmentManager.findFragmentByTag(TAG_TITLE) != null) {
+                fragmentTransaction.replace(R.id.title_frag_container, new TitlesFragment(), TAG_TITLE);
+            } else {
+                fragmentTransaction.add(R.id.title_frag_container, new TitlesFragment(), TAG_TITLE);
+            }
+
+            fragmentTransaction.commit();
+            setTitleFrameLayoutWeight(1f);
         }
     }
 
@@ -105,8 +115,6 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
-
-            setTitleFrameLayoutWeight(1f);
         }
     }
 
@@ -118,6 +126,7 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
+
 
         }
     }

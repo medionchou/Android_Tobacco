@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             mService = mConnection.getService();
             String account = accountEditView.getText().toString();
             String pwd = MD5.getMD5EncryptedString(pwdEditView.getText().toString());
-            String cmd = "LOGIN\tTABLET\t" + "test" + "\t" + MD5.getMD5EncryptedString("123") + "<END>"; //Specific Command
+            String cmd = "LOGIN\tMASTER\t" + "test" + "\t" + MD5.getMD5EncryptedString("123") + "<END>"; //Specific Command
 
             if (mService.getClientState() == States.CONNECT_OK) {
                 mService.setCmd(cmd);

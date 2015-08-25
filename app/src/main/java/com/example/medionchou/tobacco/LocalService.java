@@ -112,11 +112,11 @@ public class LocalService extends Service implements Runnable {
                         byte[] tmp = new byte[buffer.size()];
                         for (int i = 0; i < buffer.size(); i++)
                             tmp[i] = buffer.get(i);
-                        String ttmp = new String(tmp, "UTF-8");
-                        serverReply += ttmp;
 
-                        Log.v("MyLog", ttmp);
-                        buffer.clear();
+                        if (tmp[tmp.length - 1] > 0) {
+                            serverReply += new String(tmp, "UTF-8");;
+                            buffer.clear();
+                        }
                     }
 
                     while (serverReply.contains("<END>")) {
@@ -126,7 +126,7 @@ public class LocalService extends Service implements Runnable {
 
                         String endLine = serverReply.substring(0, endIndex);
 
-                        //Log.v("MyLog", endLine);
+                        Log.v("MyLog", endLine);
 
                         if (endLine.contains("CONNECT_OK<END>")) {
                             client_state = States.CONNECT_OK;

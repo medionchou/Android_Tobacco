@@ -59,13 +59,13 @@ public class DeviceFragment extends Fragment {
 
         first_col.setStretchAllColumns(true);
         second_col.setStretchAllColumns(true);
+        asynTask.execute((Void) null);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        asynTask.execute((Void) null);
     }
 
     @Override
