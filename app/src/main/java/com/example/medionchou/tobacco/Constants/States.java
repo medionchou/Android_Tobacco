@@ -1,4 +1,4 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.Constants;
 
 /**
  * Created by medionchou on 2015/8/23.

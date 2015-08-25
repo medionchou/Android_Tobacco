@@ -1,4 +1,4 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.SubFragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,7 +15,12 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.medionchou.tobacco.Constants.Command;
+import com.example.medionchou.tobacco.LocalService;
+import com.example.medionchou.tobacco.LocalServiceConnection;
+import com.example.medionchou.tobacco.R;
+import com.example.medionchou.tobacco.ServiceListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;

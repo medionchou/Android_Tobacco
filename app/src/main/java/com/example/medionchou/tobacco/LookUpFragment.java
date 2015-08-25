@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableRow;
 
+import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
+import com.example.medionchou.tobacco.SubFragment.TitlesFragment;
+
 /**
  * Created by medionchou on 2015/8/23.
  */

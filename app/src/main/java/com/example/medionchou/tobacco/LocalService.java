@@ -6,6 +6,9 @@ import android.os.*;
 import android.os.Process;
 import android.util.Log;
 
+import com.example.medionchou.tobacco.Constants.Command;
+import com.example.medionchou.tobacco.Constants.States;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

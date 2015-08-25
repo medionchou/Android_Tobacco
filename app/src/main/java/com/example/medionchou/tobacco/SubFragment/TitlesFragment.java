@@ -1,24 +1,22 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.SubFragment;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.example.medionchou.tobacco.R;
+
+import java.util.Calendar;
+
 
 /**
  * Created by Medion on 2015/8/25.
@@ -74,7 +72,6 @@ public class TitlesFragment extends Fragment {
         private String[][] children;
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
-
         public ExpandableAdapter() {
             group = new String[] {"本日進出貨情況", "庫存情形", "查詢歷史紀錄"};
             children = new String [][] {
@@ -122,13 +119,17 @@ public class TitlesFragment extends Fragment {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Bundle bundle = new Bundle();
                     if (getGroup(groupPosition).toString().equals("本日進出貨情況")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
                     } else if (getGroup(groupPosition).toString().equals("庫存情形")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
-                    } else if (getGroup(groupPosition).toString().equals("查尋歷史紀錄")) {
+                    } else if (getGroup(groupPosition).toString().equals("查詢歷史紀錄")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
+                    String test;
+                    test = String.valueOf(Calendar.getInstance().get(Calendar.YEAR)) + " " + String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1) + " " + String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+                    Log.v("MyLog", test);
                 }
             });
 
