@@ -132,29 +132,33 @@ public class TitlesFragment extends Fragment {
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
-
+                        bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("本日庫存情形")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
+                        bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
-                        newFrag = new HistoryFragment();
+                        newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
+                        bundle.putBoolean("LOOK_UP", true);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢庫存紀錄")){
-                        newFrag = new HistoryFragment();
+                        newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
+                        bundle.putBoolean("LOOK_UP", true);
                         newFrag.setArguments(bundle);
                     }
 
                     if (newFrag != null)
                         parentFragment.createFragment(newFrag, R.id.content_frag_container, LookUpFragment.TAG_CONTENT);
+
                 }
             });
 
