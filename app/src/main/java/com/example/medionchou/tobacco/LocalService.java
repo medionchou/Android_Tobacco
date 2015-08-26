@@ -112,12 +112,12 @@ public class LocalService extends Service implements Runnable {
                         throw new IOException("Server disconnect");
 
                     if (buffer.size() > 0) {
-                        byte[] tmp = new byte[buffer.size()];
-                        for (int i = 0; i < buffer.size(); i++)
-                            tmp[i] = buffer.get(i);
 
-                        if (tmp[tmp.length - 1] > 0) {
-                            serverReply += new String(tmp, "UTF-8");;
+                        if (buffer.get(buffer.size() - 1) > 0) {
+                            byte[] tmp = new byte[buffer.size()];
+                            for (int i = 0; i < buffer.size(); i++)
+                                tmp[i] = buffer.get(i);
+                            serverReply += new String(tmp, "UTF-8");
                             buffer.clear();
                         }
                     }
@@ -137,8 +137,12 @@ public class LocalService extends Service implements Runnable {
                             isSignIn = true;
                         } else if (endLine.contains("QUERY_REPLY")) {
                             queryReply = endLine;
-                        } else if (endLine.contains("UPDATE_ONLINE")) {
-                            updateOnline = endLine;
+                        } else if (endLine.contains("UPDATE")) {
+                            if (endLine.contains("UPDATE_ONLINE")) {
+                                updateOnline = endLine;
+                            } else {
+                                Log.v("MyLog", endLine);
+                            }
                         }
 
                         serverReply = serverReply.replace(endLine, "");
@@ -205,6 +209,10 @@ public class LocalService extends Service implements Runnable {
 
     public String getUpdateOnline() {
         return updateOnline;
+    }
+
+    public void resetQueryReply() {
+        queryReply = "";
     }
 
     public void resetUpdateOnline() {

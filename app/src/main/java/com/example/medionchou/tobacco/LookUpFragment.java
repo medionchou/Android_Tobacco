@@ -14,16 +14,16 @@ import android.widget.FrameLayout;
 import android.widget.TableRow;
 
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
+import com.example.medionchou.tobacco.SubFragment.QueryFragment;
 import com.example.medionchou.tobacco.SubFragment.TitlesFragment;
 
 /**
  * Created by medionchou on 2015/8/23.
  */
 public class LookUpFragment extends Fragment{
-    private final String TAG_TITLE  = "TAG_TITLE";
-    private final String TAG_CONTENT = "TAG_CONTENT";
 
-
+    public static final String TAG_TITLE  = "TAG_TITLE";
+    public static final String TAG_CONTENT = "TAG_CONTENT";
 
     int mNum;
     private LocalServiceConnection mConnection;
@@ -88,6 +88,31 @@ public class LookUpFragment extends Fragment{
         titleFrameLayout.setLayoutParams(params);
     }
 
+    public void createFragment(Fragment newFrag, int layoutId, String fragTag) {
+        FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment oldFrag = fragmentManager.findFragmentByTag(fragTag);
+
+        if (oldFrag != null) {
+            fragmentTransaction.replace(layoutId, newFrag, fragTag);
+        } else {
+            fragmentTransaction.add(layoutId, newFrag, fragTag);
+        }
+
+        fragmentTransaction.commit();
+    }
+
+    public void deleteFragment(String fragTag) {
+        FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment oldFrag = fragmentManager.findFragmentByTag(fragTag);
+
+        if (oldFrag != null)
+            fragmentTransaction.remove(oldFrag);
+
+        fragmentTransaction.commit();
+    }
+
     private class IngredientBtnListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -96,16 +121,21 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
-            FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
+            /*FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            TitlesFragment titlesFragment = new TitlesFragment();
 
             if (fragmentManager.findFragmentByTag(TAG_TITLE) != null) {
-                fragmentTransaction.replace(R.id.title_frag_container, new TitlesFragment(), TAG_TITLE);
+                fragmentTransaction.replace(R.id.title_frag_container, titlesFragment, TAG_TITLE);
             } else {
-                fragmentTransaction.add(R.id.title_frag_container, new TitlesFragment(), TAG_TITLE);
+                fragmentTransaction.add(R.id.title_frag_container, titlesFragment, TAG_TITLE);
             }
 
-            fragmentTransaction.commit();
+            fragmentTransaction.commit();*/
+            TitlesFragment titlesFragment = new TitlesFragment();
+            titlesFragment.setParentFrag(LookUpFragment.this);
+            createFragment(titlesFragment, R.id.title_frag_container, TAG_TITLE);
+            deleteFragment(TAG_CONTENT);
             setTitleFrameLayoutWeight(1f);
         }
     }
@@ -144,7 +174,7 @@ public class LookUpFragment extends Fragment{
                  */
             }
 
-            FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
+            /*FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             Fragment fragment;
             if ((fragment = fragmentManager.findFragmentByTag(TAG_TITLE)) != null) {
@@ -157,12 +187,12 @@ public class LookUpFragment extends Fragment{
                 fragmentTransaction.add(R.id.content_frag_container, new DeviceFragment(), TAG_CONTENT);
             }
 
-            fragmentTransaction.commit();
-
+            fragmentTransaction.commit();*/
+            DeviceFragment deviceFragment = new DeviceFragment();
+            createFragment(deviceFragment, R.id.content_frag_container, TAG_CONTENT);
+            deleteFragment(TAG_TITLE);
             setTitleFrameLayoutWeight(0f);
         }
     }
-
-
 
 }

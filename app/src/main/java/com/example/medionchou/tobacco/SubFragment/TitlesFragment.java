@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,8 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.medionchou.tobacco.LookUpFragment;
 import com.example.medionchou.tobacco.R;
-
-import java.util.Calendar;
 
 
 /**
@@ -25,6 +23,11 @@ public class TitlesFragment extends Fragment {
 
     private int lastExpandedPos = -1;
     private ExpandableListView expandableListView;
+    private  LookUpFragment parentFragment;
+
+    public void setParentFrag(LookUpFragment parent) {
+        this.parentFragment = parent;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -73,8 +76,9 @@ public class TitlesFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"本日進出貨情況", "庫存情形", "查詢歷史紀錄"};
+            group = new String[] {"本日進出貨情況", "本日庫存情形", "查詢進出貨紀錄", "查詢庫存紀錄"};
             children = new String [][] {
+                    {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"},
                     {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"},
                     {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"},
                     {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"}
@@ -119,17 +123,38 @@ public class TitlesFragment extends Fragment {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Fragment newFrag = null;
                     Bundle bundle = new Bundle();
+                    String houseName = viewHolder.textView.getText().toString();
+
                     if (getGroup(groupPosition).toString().equals("本日進出貨情況")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
-                    } else if (getGroup(groupPosition).toString().equals("庫存情形")) {
+                        newFrag = new QueryFragment();
+                        bundle.putString("HOUSE_NAME", houseName);
+                        bundle.putString("QUERY_TYPE", "HISTORY");
+
+                        newFrag.setArguments(bundle);
+                    } else if (getGroup(groupPosition).toString().equals("本日庫存情形")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
-                    } else if (getGroup(groupPosition).toString().equals("查詢歷史紀錄")) {
+                        newFrag = new QueryFragment();
+                        bundle.putString("HOUSE_NAME", houseName);
+                        bundle.putString("QUERY_TYPE", "NOW");
+                        newFrag.setArguments(bundle);
+                    } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
                         Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
+                        newFrag = new HistoryFragment();
+                        bundle.putString("HOUSE_NAME", houseName);
+                        bundle.putString("QUERY_TYPE", "HISTORY");
+                        newFrag.setArguments(bundle);
+                    } else if (getGroup(groupPosition).toString().equals("查詢庫存紀錄")){
+                        newFrag = new HistoryFragment();
+                        bundle.putString("HOUSE_NAME", houseName);
+                        bundle.putString("QUERY_TYPE", "NOW");
+                        newFrag.setArguments(bundle);
                     }
-                    String test;
-                    test = String.valueOf(Calendar.getInstance().get(Calendar.YEAR)) + " " + String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1) + " " + String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-                    Log.v("MyLog", test);
+
+                    if (newFrag != null)
+                        parentFragment.createFragment(newFrag, R.id.content_frag_container, LookUpFragment.TAG_CONTENT);
                 }
             });
 

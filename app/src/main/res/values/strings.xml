@@ -19,5 +19,7 @@
     <string name="user_info_err">帳號或密碼錯誤</string>
 
 
+    <string name="getting_query_result">查詢資料中</string>
+
 
 </resources>

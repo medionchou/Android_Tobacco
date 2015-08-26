@@ -76,7 +76,11 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
         asynTask.cancel(true);
     }
 
@@ -96,25 +100,25 @@ public class DeviceFragment extends Fragment {
         protected Void doInBackground(Void... params) {
             try {
                 LocalService mService = mConnection.getService();
-                String onlineState;
+                String onlineStateMsg;
 
                 mService.setCmd(Command.QUERY_ONLINE_STATE);
                 Thread.sleep(2000);
 
-                onlineState = mService.getQueryReply();
+                onlineStateMsg = mService.getQueryReply();
 
-                Log.v("Test", onlineState);
+                parseOnlineStateMsg(onlineStateMsg);
 
-                parseOnlineState(onlineState);
+                mService.resetQueryReply();
 
                 publishProgress((Void) null);
 
 
-                if (onlineState.length() > 0) {
+                if (deviceStatue.size() > 0) {
                     while (!isCancelled()) {
-                        String updateOnline = mService.getUpdateOnline();
-                        if (updateOnline.length() > 0) {
-                            updateOnlineState(updateOnline);
+                        String updateOnlineMsg = mService.getUpdateOnline();
+                        if (updateOnlineMsg.length() > 0) {
+                            updateOnlineState(updateOnlineMsg);
                             publishProgress((Void) null);
 
                             mService.resetUpdateOnline();
@@ -145,7 +149,7 @@ public class DeviceFragment extends Fragment {
         }
 
 
-        private void parseOnlineState(String onlineState) {
+        private void parseOnlineStateMsg(String onlineState) {
             String[] data = onlineState.split("\\t|<N>|<END>");
             for (int i = 0; i < data.length; i = i + 3) {
                 deviceStatue.put(data[i + 1], Integer.valueOf(data[i + 2]));
