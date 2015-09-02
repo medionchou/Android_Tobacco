@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressDialog.dismiss();
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
             if (msg.length() > 0)
                 Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
         }

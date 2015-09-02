@@ -100,8 +100,6 @@ public class TitlesFragment extends Fragment {
             }
             viewHolder.textView.setText(getGroup(groupPosition).toString());
 
-
-
             return convertView;
         }
 
@@ -128,24 +126,28 @@ public class TitlesFragment extends Fragment {
                     String houseName = viewHolder.textView.getText().toString();
 
                     if (getGroup(groupPosition).toString().equals("本日進出貨情況")) {
+                        Toast.makeText(getActivity(), "HHHHHHH", Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("本日庫存情形")) {
+                        Toast.makeText(getActivity(), "HHHHHHH", Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
+                        Toast.makeText(getActivity(), "HHHHHHH", Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
                         bundle.putBoolean("LOOK_UP", true);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢庫存紀錄")){
+                        Toast.makeText(getActivity(), "HHHHHHH", Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");

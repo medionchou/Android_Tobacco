@@ -2,23 +2,25 @@ package com.example.medionchou.tobacco;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.util.Log;
+import android.widget.TextView;
 
 
-public class LoggedInActivity extends FragmentActivity implements ServiceListener{
+public class LoggedInActivity extends FragmentActivity implements ServiceListener {
 
     private LocalServiceConnection mConnection;
     private LocalService mService;
+
+    private TextView runningTextView;
+    private Thread test;
+    private RunningText runningText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         super.onStart();
         Intent intent = new Intent(this, LocalService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        test.start();
     }
 
     @Override
@@ -40,16 +43,57 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         if (mConnection.isBound()) {
             unbindService(mConnection);
         }
+        runningText.setStop();
     }
 
     private void initObject() {
         mConnection = new LocalServiceConnection();
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        runningTextView = (TextView) findViewById(R.id.running_text_view);
+        runningText = new RunningText();
+        test = new Thread(runningText);
     }
+
 
     public LocalServiceConnection getLocalServiceConnection() {
         return mConnection;
+    }
+
+    private class RunningText implements Runnable {
+
+        boolean stop = false;
+        String msg;
+        @Override
+        public void run() {
+            LocalService mService;
+            while (!mConnection.isBound()) {
+
+            }
+            mService = mConnection.getService();
+            while (!stop) {
+                try {
+                    msg = mService.getMsg();
+                    if (msg.length() > 0) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                runningTextView.setText(msg);
+                            }
+                        });
+                        mService.resetMsg();
+                    }
+
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    Log.e("MyLog", e.toString());
+                }
+            }
+        }
+
+        public void setStop() {
+            stop = true;
+        }
     }
 
     private class PagerAdapter extends FragmentPagerAdapter {

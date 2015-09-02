@@ -33,6 +33,7 @@ public class LocalService extends Service implements Runnable {
     private String queryReply;
     private String updateOnline;
     private String updateMsg;
+    private String msg;
     private List<Byte> buffer;
 
     private boolean isTerminated;
@@ -75,6 +76,7 @@ public class LocalService extends Service implements Runnable {
         queryReply = "";
         updateOnline = "";
         updateMsg = "";
+        msg = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
     }
@@ -96,7 +98,7 @@ public class LocalService extends Service implements Runnable {
                     socketChannel.connect(new InetSocketAddress(SERVER_IP, SERVER_PORT));
 
                     while (!socketChannel.finishConnect()) {
-                        Thread.sleep(3000);
+                        Thread.sleep(2000);
                     }
 
                 } else if (socketChannel != null) {
@@ -147,6 +149,8 @@ public class LocalService extends Service implements Runnable {
                                     updateMsg += endLine;
                                 }
                             }
+                        } else if (endLine.contains("MSG")) {
+                            msg = endLine;
                         }
 
                         serverReply = serverReply.replace(endLine, "");
@@ -159,13 +163,13 @@ public class LocalService extends Service implements Runnable {
                             while (outStream.hasRemaining()) {
                                 socketChannel.write(Charset.defaultCharset().encode(outStream));
                             }
-                            Log.v("MyLog", "Writing");
                             Thread.sleep(2000);
                             outStream.clear();
                             break;
                         case States.CONNECT_OK:
                             if (cmd.length() > 0) {
                                 outStream = CharBuffer.wrap(cmd);
+                                Log.v("MyLog", cmd);
                                 while (outStream.hasRemaining()) {
                                     socketChannel.write(Charset.defaultCharset().encode(outStream));
                                 }
@@ -212,8 +216,12 @@ public class LocalService extends Service implements Runnable {
         return queryReply;
     }
 
-    public  String getUpdateOnlineMsg() {
+    public String getUpdateOnlineMsg() {
         return updateOnline;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
     public synchronized String getUpdateMsg() {
@@ -222,6 +230,10 @@ public class LocalService extends Service implements Runnable {
 
     public void resetQueryReply() {
         queryReply = "";
+    }
+
+    public void resetMsg() {
+        msg = "";
     }
 
     public synchronized void resetUpdateOnline() {

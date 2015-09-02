@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
+import com.example.medionchou.tobacco.LoggedInActivity;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
 
@@ -44,6 +45,8 @@ public class DeviceFragment extends Fragment {
         super.onAttach(activity);
         ServiceListener mCallBack;
         mCallBack = (ServiceListener) activity;
+        LoggedInActivity loggin = (LoggedInActivity) activity;
+
         mConnection = mCallBack.getLocalServiceConnection();
     }
 
@@ -186,7 +189,7 @@ public class DeviceFragment extends Fragment {
             TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
 
-            tableRowParams.setMargins(1, 1, 1, 1);
+            tableRowParams.setMargins(1, 0, 1, 1);
             tableRow.setBackgroundColor(Color.GRAY);
             tableRow.setLayoutParams(tableRowParams);
 
@@ -195,11 +198,11 @@ public class DeviceFragment extends Fragment {
             } else {
                 imageView.setImageResource(R.drawable.green_circle);
             }
-            imageViewParams.setMargins(0, 10, 0, 0);
+            imageViewParams.setMargins(0, 1, 0, 0);
             imageView.setLayoutParams(imageViewParams);
 
             textView.setText(deviceName);
-            textView.setTextSize(50);
+            textView.setTextSize(30);
             textView.setLayoutParams(textViewParams);
 
             tableRow.addView(imageView);

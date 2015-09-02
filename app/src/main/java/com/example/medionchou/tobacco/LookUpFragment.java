@@ -1,17 +1,20 @@
 package com.example.medionchou.tobacco;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
 import com.example.medionchou.tobacco.SubFragment.QueryFragment;
@@ -34,7 +37,6 @@ public class LookUpFragment extends Fragment{
     private FrameLayout titleFrameLayout;
     private FrameLayout contentFrameLayout;
 
-
     public static LookUpFragment newInstance(int num) {
         LookUpFragment f = new LookUpFragment();
         Bundle args = new Bundle();
@@ -49,7 +51,6 @@ public class LookUpFragment extends Fragment{
         super.onAttach(activity);
         ServiceListener mCallBack;
         mCallBack = (ServiceListener) activity;
-
         mConnection = mCallBack.getLocalServiceConnection();
     }
 
@@ -57,6 +58,17 @@ public class LookUpFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Nullable
@@ -111,6 +123,7 @@ public class LookUpFragment extends Fragment{
             fragmentTransaction.remove(oldFrag);
 
         fragmentTransaction.commit();
+
     }
 
     private class IngredientBtnListener implements View.OnClickListener {
@@ -121,17 +134,6 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
-            /*FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            TitlesFragment titlesFragment = new TitlesFragment();
-
-            if (fragmentManager.findFragmentByTag(TAG_TITLE) != null) {
-                fragmentTransaction.replace(R.id.title_frag_container, titlesFragment, TAG_TITLE);
-            } else {
-                fragmentTransaction.add(R.id.title_frag_container, titlesFragment, TAG_TITLE);
-            }
-
-            fragmentTransaction.commit();*/
             TitlesFragment titlesFragment = new TitlesFragment();
             titlesFragment.setParentFrag(LookUpFragment.this);
             createFragment(titlesFragment, R.id.title_frag_container, TAG_TITLE);
@@ -174,20 +176,6 @@ public class LookUpFragment extends Fragment{
                  */
             }
 
-            /*FragmentManager fragmentManager= LookUpFragment.this.getChildFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fragment;
-            if ((fragment = fragmentManager.findFragmentByTag(TAG_TITLE)) != null) {
-                fragmentTransaction.remove(fragment);
-            }
-
-            if (fragmentManager.findFragmentByTag(TAG_CONTENT) != null) {
-                fragmentTransaction.replace(R.id.content_frag_container, new DeviceFragment(), TAG_CONTENT);
-            } else {
-                fragmentTransaction.add(R.id.content_frag_container, new DeviceFragment(), TAG_CONTENT);
-            }
-
-            fragmentTransaction.commit();*/
             DeviceFragment deviceFragment = new DeviceFragment();
             createFragment(deviceFragment, R.id.content_frag_container, TAG_CONTENT);
             deleteFragment(TAG_TITLE);
