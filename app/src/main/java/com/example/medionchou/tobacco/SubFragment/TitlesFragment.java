@@ -81,7 +81,7 @@ public class TitlesFragment extends Fragment {
                     {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"},
                     {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"},
                     {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"},
-                    {"3號倉庫", "5號倉庫", "6號倉庫", "線邊倉"}
+                    {"3號倉庫", "5號倉庫", "6號倉庫"}
             };
 
         }
@@ -128,21 +128,18 @@ public class TitlesFragment extends Fragment {
                     String houseName = viewHolder.textView.getText().toString();
 
                     if (getGroup(groupPosition).toString().equals("本日進出貨情況")) {
-                        Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("本日庫存情形")) {
-                        Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
-                        Toast.makeText(getActivity(), viewHolder.textView.getText().toString(), Toast.LENGTH_SHORT).show();
                         newFrag = new QueryFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");

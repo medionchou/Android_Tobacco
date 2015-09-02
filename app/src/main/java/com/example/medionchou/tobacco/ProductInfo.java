@@ -10,16 +10,16 @@ public class ProductInfo {
     private String productName = "";
     private String quantity = "";
     private String unit = "";
-    private String persion = "";
+    private String person = "";
 
-    public ProductInfo(String date, String action, String productId, String productName, String quantity, String unit, String persion) {
+    public ProductInfo(String date, String action, String productId, String productName, String quantity, String unit, String person) {
         this.date = date;
         this.action = action;
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
         this.unit = unit;
-        this.persion = persion;
+        this.person = person;
     }
 
     public ProductInfo(String productId, String productName, String quantity, String unit) {
@@ -53,7 +53,11 @@ public class ProductInfo {
         return unit;
     }
 
-    public String getPersion() {
-        return persion;
+    public String getPerson() {
+        return person;
+    }
+
+    public boolean isProductIdMatch(ProductInfo info) {
+        return productId.equals(info.productId);
     }
 }

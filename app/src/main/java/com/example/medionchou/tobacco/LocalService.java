@@ -32,6 +32,7 @@ public class LocalService extends Service implements Runnable {
     private String cmd;
     private String queryReply;
     private String updateOnline;
+    private String updateMsg;
     private List<Byte> buffer;
 
     private boolean isTerminated;
@@ -73,6 +74,7 @@ public class LocalService extends Service implements Runnable {
         cmd = "";
         queryReply = "";
         updateOnline = "";
+        updateMsg = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
     }
@@ -141,7 +143,9 @@ public class LocalService extends Service implements Runnable {
                             if (endLine.contains("UPDATE_ONLINE")) {
                                 updateOnline = endLine;
                             } else {
-                                Log.v("MyLog", endLine);
+                                synchronized (updateMsg) {
+                                    updateMsg += endLine;
+                                }
                             }
                         }
 
@@ -155,6 +159,7 @@ public class LocalService extends Service implements Runnable {
                             while (outStream.hasRemaining()) {
                                 socketChannel.write(Charset.defaultCharset().encode(outStream));
                             }
+                            Log.v("MyLog", "Writing");
                             Thread.sleep(2000);
                             outStream.clear();
                             break;
@@ -177,7 +182,7 @@ public class LocalService extends Service implements Runnable {
         } catch (IOException e) {
             Log.e("MyLog", "IOException " + e.toString());
             stopSelf();
-            startService(new Intent(this, LocalService.class));
+            //startService(new Intent(this, LocalService.class));
             /* TODO:
                     Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
              */
@@ -207,16 +212,24 @@ public class LocalService extends Service implements Runnable {
         return queryReply;
     }
 
-    public String getUpdateOnline() {
+    public  String getUpdateOnlineMsg() {
         return updateOnline;
+    }
+
+    public synchronized String getUpdateMsg() {
+        return updateMsg;
     }
 
     public void resetQueryReply() {
         queryReply = "";
     }
 
-    public void resetUpdateOnline() {
+    public synchronized void resetUpdateOnline() {
         updateOnline = "";
+    }
+
+    public synchronized void resetUpdateMsg() {
+        updateMsg = "";
     }
 
     public class LocalBinder extends Binder {

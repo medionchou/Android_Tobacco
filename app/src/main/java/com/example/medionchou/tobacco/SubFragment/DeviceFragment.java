@@ -116,7 +116,7 @@ public class DeviceFragment extends Fragment {
 
                 if (deviceStatue.size() > 0) {
                     while (!isCancelled()) {
-                        String updateOnlineMsg = mService.getUpdateOnline();
+                        String updateOnlineMsg = mService.getUpdateOnlineMsg();
                         if (updateOnlineMsg.length() > 0) {
                             updateOnlineState(updateOnlineMsg);
                             publishProgress((Void) null);

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.medionchou.tobacco.Constants.Command;
@@ -26,10 +27,14 @@ import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.ProductInfo;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
+import com.example.medionchou.tobacco.SideHouse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Medion on 2015/8/25.
@@ -37,10 +42,15 @@ import java.util.List;
 public class QueryFragment extends Fragment {
 
 
+    private int YEAR;
+    private int MONTH;
+    private int DATE;
+
     private LocalService mService;
     private String cmd = "";
     private QueryResultTask queryTask;
     private LinearLayout linearLayout;
+    private TableLayout tableLayout;
     private static int year;
     private static int month;
     private static int date;
@@ -65,6 +75,9 @@ public class QueryFragment extends Fragment {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
         date = calendar.get(Calendar.DATE);
+        YEAR = year;
+        MONTH = month;
+        DATE = date;
         queryTask = new QueryResultTask();
     }
 
@@ -73,12 +86,16 @@ public class QueryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.query_frag_layout, container, false);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_container);
+        tableLayout = (TableLayout) rootView.findViewById(R.id.table_layout_container);
+
+        tableLayout.setStretchAllColumns(true);
+
         if (getArguments().getBoolean("LOOK_UP")) {
             createLookUpView();
         } else {
             setCommand(year, month, date);
         }
-        queryTask.execute((Void)null);
+        queryTask.execute((Void) null);
         return rootView;
     }
 
@@ -95,7 +112,9 @@ public class QueryFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        queryTask.cancel(true);
+        if (!queryTask.isCancelled()) {
+            queryTask.cancel(true);
+        }
     }
 
     private void createLookUpView() {
@@ -123,7 +142,6 @@ public class QueryFragment extends Fragment {
         sendButton.setOnClickListener(new SetCommandListener());
 
 
-
         linearLayout.addView(dateButton);
         linearLayout.addView(dateTextView);
         linearLayout.addView(sendButton);
@@ -136,37 +154,40 @@ public class QueryFragment extends Fragment {
 
         if (type.equals("HISTORY")) {
             if (house.equals("3號倉庫")) {
-                cmd = Command.WH_HISTORY_THREE + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_THREE + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("5號倉庫")) {
-                cmd = Command.WH_HISTORY_FIVE + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_FIVE + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("6號倉庫")) {
-                cmd = Command.WH_HISTORY_SIX + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_SIX + year + "\t" + month + "\t" + date + "<END>";
             } else {
-                cmd = Command.SH_HISTORY + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.SH_HISTORY + year + "\t" + month + "\t" + date + "<END>";
             }
         } else {
             if (house.equals("3號倉庫")) {
-                cmd = Command.WH_NOW_THREE + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_NOW_THREE + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("5號倉庫")) {
-                cmd = Command.WH_NOW_FIVE + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_NOW_FIVE + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("6號倉庫")) {
-                cmd = Command.WH_NOW_SIX + year +  "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_NOW_SIX + year + "\t" + month + "\t" + date + "<END>";
             } else {
                 cmd = Command.SH_NOW;
             }
         }
     }
 
-    private class QueryResultTask extends AsyncTask<Void, Void, Void> {
+    private class QueryResultTask extends AsyncTask<Void, String, Void> {
 
-        ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        List<ProductInfo> productInfos = new ArrayList<>();
-        boolean showDialog = false;
+        ProgressDialog progressDialog;
+        Map<String, ProductInfo> productInfoMap = new HashMap<>();
+        List<SideHouse> sideHouseList = new ArrayList<>();
+        List<ProductInfo> productInfoList = new ArrayList<>();
+        List<String> updateMsgQueue = new LinkedList<>();
+        String msg = "";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            setProgressDialog();
+            progressDialog = new ProgressDialog(getActivity());
         }
 
         @Override
@@ -174,35 +195,65 @@ public class QueryFragment extends Fragment {
             try {
                 while (!isCancelled()) {
                     String stockMsg;
+                    String updateMsg;
+
                     if (cmd.length() > 0) {
                         mService.setCmd(cmd);
-                        showDialog = true;
-                        publishProgress();
+                        publishProgress("", "ShowDialog");
                         Thread.sleep(2000);
+
                         stockMsg = mService.getQueryReply();
-
-                        if (cmd.contains("HISTORY")) {
-                            parseHistoryMsg(stockMsg);
-                        } else if (cmd.contains("NOW")) {
-                            if (cmd.contains("WH_NOW")) {
-                                parseNowMsg(stockMsg);
-                            } else if (cmd.contains("SH_NOW")) {
-
-                            }
-
-                        }
-
                         mService.resetQueryReply();
 
+                        if (!stockMsg.contains("QUERY_NULL<END>") && stockMsg.length() != 0) {
+                            if (cmd.contains("HISTORY")) {
+                                parseHistoryMsg(stockMsg, true);
+                                if (cmd.contains("WH_HISTORY")) {
+                                    msg = "WH_HISTORY";
+                                } else if (cmd.contains("SH_HISTORY")) {
+                                    msg = "SH_HISTORY";
+                                }
+                            } else if (cmd.contains("NOW")) {
+                                if (cmd.contains("WH_NOW")) {
+                                    parseWH_NOWmsg(stockMsg, false);
+                                    msg = "WH_NOW";
+                                } else if (cmd.contains("SH_NOW")) {
+                                    msg = "SH_NOW";
+                                    parseSH_NOWmsg(stockMsg, false);
+                                }
+                            }
+                        }
+
+                        publishProgress(msg, "");
                         cmd = "";
                     }
 
-                    showDialog = false;
+                    updateMsg = mService.getUpdateMsg();
+                    if (updateMsg.length() > 0 && isTimeMatch()) {
+                        mService.resetUpdateMsg();
+                        parseUpdateMsg(updateMsg);
 
-                    publishProgress((Void)null);
+                        for (int i = 0; i < updateMsgQueue.size(); i++) {
+                            String text = updateMsgQueue.get(i);
+                            if (msg.equals("WH_HISTORY") && text.contains("WH_HISTORY")) {
+                                parseHistoryMsg(text, false);
+
+                            } else if (msg.equals("SH_HISTORY") && text.contains("SH_HISTORY")) {
+                                parseHistoryMsg(text, false);
+
+                            } else if (msg.equals("WH_NOW") && text.contains("WH_NOW")) {
+                                parseWH_NOWmsg(text, true);
+
+                            } else if (msg.equals("SH_NOW") && text.contains("SH_NOW")) {
+                                parseSH_NOWmsg(text, true);
+                            }
+                        }
+                        publishProgress(msg, "");
+                        updateMsgQueue.clear();
+                    }
                 }
             } catch (InterruptedException e) {
-                Log.e("MyLog", "InterruptedException In QueryResultTask: " +  e.toString());
+                Log.e("MyLog", "InterruptedException In QueryResultTask: " + e.toString());
             }
 
 
@@ -210,10 +261,22 @@ public class QueryFragment extends Fragment {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            if (showDialog) {
-                setProgressDialog();
+
+            if (values[0].equals("WH_NOW")) {
+                updateWH_NOWgui(productInfoList);
+            } else if (values[0].equals("SH_NOW")) {
+                updateSH_NOWgui(sideHouseList);
+            } else if (values[0].contains("HISTORY")) {
+                updateHistorygui(productInfoList);
+            }
+
+            if (values[1].equals("ShowDialog")) {
+                progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
+                progressDialog.setMessage(getString(R.string.getting_query_result));
+                progressDialog.show();
+                progressDialog.setCancelable(false);
             } else {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
@@ -227,29 +290,313 @@ public class QueryFragment extends Fragment {
                 progressDialog.dismiss();
         }
 
-        private void setProgressDialog() {
-            progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
-            progressDialog.setMessage(getString(R.string.getting_query_result));
-            progressDialog.show();
-            progressDialog.setCancelable(false);
+        private void parseHistoryMsg(String stockMsg, boolean clear) {
+            /**
+             *  TODO: empty command
+             */
+            String[] data = stockMsg.split("\\t|<N>|<END>");
+
+            if (clear) {
+                productInfoList.clear();
+            }
+
+            for (int i = 0; i < data.length; i = i + 8) {
+                ProductInfo info = new ProductInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
+                productInfoList.add(info);
+            }
         }
 
-        private void parseHistoryMsg(String stockMsg) {
+        private void parseWH_NOWmsg(String stockMsg, boolean update) {
+            /**
+             *  TODO: empty command
+             */
+
             String[] data = stockMsg.split("\\t|<N>|<END>");
+
+
+            if (update) {
+                ProductInfo info = new ProductInfo(data[1], data[2], data[3], data[4]);
+                boolean isUpdate = false;
+                for (int i = 0; i < productInfoList.size(); i++) {
+                    ProductInfo tmp = productInfoList.get(i);
+                    if (tmp.isProductIdMatch(info)) {
+                        isUpdate = true;
+                        productInfoList.set(i, info);
+                    }
+                }
+
+                if (!isUpdate)
+                    productInfoList.add(info);
+
+            } else {
+                for (int i = 0; i < data.length; i = i + 5) {
+                    ProductInfo info = new ProductInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4]);
+                    productInfoList.add(info);
+                }
+            }
+        }
+
+        private void parseSH_NOWmsg(String stockMsg, boolean update) {
+
+            String[] data = stockMsg.split("\\t|<N>|<END>");
+
+            if (update) {
+                SideHouse sideHouse = new SideHouse(data[1], data[2], data[3]);
+
+                for (int i = 0; i < sideHouseList.size(); i++) {
+                    SideHouse tmp = sideHouseList.get(i);
+                    if (tmp.isNameMatch(sideHouse)) {
+                        sideHouseList.set(i, sideHouse);
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < data.length; i = i + 4) {
+                    SideHouse sideHouse = new SideHouse(data[i + 1], data[i + 2], data[i + 3]);
+                    sideHouseList.add(sideHouse);
+                }
+            }
+        }
+
+        private void parseUpdateMsg(String updateMsg) {
+            String data[] = updateMsg.split("<END>");
 
             for (int i = 0; i < data.length; i++) {
-                Log.v("MyLog", data[i]);
+                updateMsgQueue.add(data[i]);
             }
         }
 
-        private void parseNowMsg(String stockMsg) {
-            String[] data = stockMsg.split("\\t|<N>|<END>");
 
-            for (int i = 0; i < data.length; i=i+5) {
-                ProductInfo info = new ProductInfo(data[i+1], data[i+2], data[i+3], data[i+4]);
-                Log.v("MyLog", data[i+1] + " "+ data[i+2]+ " "+ data[i+3]+ " "+ data[i+4]);
-                productInfos.add(info);
+        private void updateWH_NOWgui(List<ProductInfo> productInfoList) {
+            tableLayout.removeAllViews();
+            /*TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+            TableRow tableRow = new TableRow(getActivity());
+            TextView productIdTitle = new TextView(getActivity());
+            TextView productNameTitle = new TextView(getActivity());
+            TextView quantityTitle = new TextView(getActivity());
+            TextView unitTitle = new TextView(getActivity());
+
+            textViewParams.gravity = Gravity.CENTER_HORIZONTAL;
+
+            tableRow.setLayoutParams(tableRowParams);
+            productIdTitle.setLayoutParams(textViewParams);
+            productNameTitle.setLayoutParams(textViewParams);
+            quantityTitle.setLayoutParams(textViewParams);
+            unitTitle.setLayoutParams(textViewParams);
+            productIdTitle.setText("編號");
+            productNameTitle.setText("名稱");
+            quantityTitle.setText("數量");
+            unitTitle.setText("單位");
+            productIdTitle.setTextSize(30);
+            productNameTitle.setTextSize(30);
+            quantityTitle.setTextSize(30);
+            unitTitle.setTextSize(30);
+            tableRow.addView(productIdTitle);
+            tableRow.addView(productNameTitle);
+            tableRow.addView(quantityTitle);
+            tableRow.addView(unitTitle);
+            tableLayout.addView(tableRow);*/
+
+            for (int i = 0; i < productInfoList.size(); i++) {
+                ProductInfo info = productInfoList.get(i);
+                inflateTextView(info, i);
             }
+        }
+
+        private void updateSH_NOWgui(List<SideHouse> info) {
+            tableLayout.removeAllViews();
+
+            for (int i = 0; i < info.size(); i++) {
+                SideHouse sideHouse = info.get(i);
+                inflateTextView(sideHouse);
+            }
+        }
+
+        private void updateHistorygui(List<ProductInfo> productInfoList) {
+            tableLayout.removeAllViews();
+
+            for (int i = 0; i < productInfoList.size(); i++) {
+                ProductInfo info = productInfoList.get(i);
+                inflateTextView(info, i);
+            }
+        }
+
+        private void inflateTextView(ProductInfo info, int indexToInflate) {
+            TableRow tableRow = new TableRow(getActivity());
+            TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TextView date = new TextView(getActivity());
+            TextView action = new TextView(getActivity());
+            TextView productId = new TextView(getActivity());
+            TextView productName = new TextView(getActivity());
+            TextView quantity = new TextView(getActivity());
+            TextView unit = new TextView(getActivity());
+            TextView person = new TextView(getActivity());
+
+
+            tableRow.setLayoutParams(tableRowParams);
+            date.setLayoutParams(textViewParams);
+            action.setLayoutParams(textViewParams);
+            productId.setLayoutParams(textViewParams);
+            productName.setLayoutParams(textViewParams);
+            quantity.setLayoutParams(textViewParams);
+            unit.setLayoutParams(textViewParams);
+            person.setLayoutParams(textViewParams);
+
+
+            if (!info.getDate().equals("")) { //history
+                date.setText(info.getDate());
+                action.setText(info.getAction());
+                productId.setText(info.getProductId());
+                productName.setText(info.getProductName());
+                quantity.setText(info.getQuantity());
+                unit.setText(info.getUnit());
+                person.setText(info.getPerson());
+
+
+                date.setTextSize(30);
+                action.setTextSize(30);
+                productId.setTextSize(30);
+                productName.setTextSize(30);
+                quantity.setTextSize(30);
+                unit.setTextSize(30);
+                person.setTextSize(30);
+
+
+                if (indexToInflate == 0) {
+
+                    TableRow titleRow = new TableRow(getActivity());
+                    TextView dateTitle = new TextView(getActivity());
+                    TextView actionTitle = new TextView(getActivity());
+                    TextView productIdTitle = new TextView(getActivity());
+                    TextView productNameTitle = new TextView(getActivity());
+                    TextView quantityTitle = new TextView(getActivity());
+                    TextView unitTitle = new TextView(getActivity());
+                    TextView personTitle = new TextView(getActivity());
+
+                    titleRow.setLayoutParams(tableRowParams);
+                    dateTitle.setLayoutParams(textViewParams);
+                    actionTitle.setLayoutParams(textViewParams);
+                    productIdTitle.setLayoutParams(textViewParams);
+                    quantityTitle.setLayoutParams(textViewParams);
+                    unitTitle.setLayoutParams(textViewParams);
+                    personTitle.setLayoutParams(textViewParams);
+
+                    dateTitle.setText("日期");
+                    actionTitle.setText("動作");
+                    productIdTitle.setText("產品編號");
+                    productNameTitle.setText("產品名稱");
+                    quantityTitle.setText("數量");
+                    unitTitle.setText("單位");
+                    personTitle.setText("人員");
+
+                    dateTitle.setTextSize(30);
+                    actionTitle.setTextSize(30);
+                    productIdTitle.setTextSize(30);
+                    productNameTitle.setTextSize(30);
+                    quantityTitle.setTextSize(30);
+                    unitTitle.setTextSize(30);
+                    personTitle.setTextSize(30);
+
+                    titleRow.addView(dateTitle);
+                    titleRow.addView(actionTitle);
+                    titleRow.addView(productIdTitle);
+                    titleRow.addView(productNameTitle);
+                    titleRow.addView(quantityTitle);
+                    titleRow.addView(unitTitle);
+                    titleRow.addView(personTitle);
+
+                    tableLayout.addView(titleRow);
+                }
+
+                tableRow.addView(date);
+                tableRow.addView(action);
+                tableRow.addView(productId);
+                tableRow.addView(productName);
+                tableRow.addView(quantity);
+                tableRow.addView(unit);
+                tableRow.addView(person);
+            } else { // now
+                productId.setText(info.getProductId());
+                productName.setText(info.getProductName());
+                quantity.setText(info.getQuantity());
+                unit.setText(info.getUnit());
+                productId.setTextSize(30);
+                productName.setTextSize(30);
+                quantity.setTextSize(30);
+                unit.setTextSize(30);
+
+                if (indexToInflate == 0) {
+
+                    TableRow titleRow = new TableRow(getActivity());
+                    TextView productIdTitle = new TextView(getActivity());
+                    TextView productNameTitle = new TextView(getActivity());
+                    TextView quantityTitle = new TextView(getActivity());
+                    TextView unitTitle = new TextView(getActivity());
+
+                    titleRow.setLayoutParams(tableRowParams);
+                    productIdTitle.setLayoutParams(textViewParams);
+                    quantityTitle.setLayoutParams(textViewParams);
+                    unitTitle.setLayoutParams(textViewParams);
+
+                    productIdTitle.setText("產品編號");
+                    productNameTitle.setText("產品名稱");
+                    quantityTitle.setText("數量");
+                    unitTitle.setText("單位");
+
+                    productIdTitle.setTextSize(30);
+                    productNameTitle.setTextSize(30);
+                    quantityTitle.setTextSize(30);
+                    unitTitle.setTextSize(30);
+
+                    titleRow.addView(productIdTitle);
+                    titleRow.addView(productNameTitle);
+                    titleRow.addView(quantityTitle);
+                    titleRow.addView(unitTitle);
+
+                    tableLayout.addView(titleRow);
+                }
+
+                tableRow.addView(productId);
+                tableRow.addView(productName);
+                tableRow.addView(quantity);
+                tableRow.addView(unit);
+            }
+            tableLayout.addView(tableRow);
+        }
+
+        private void inflateTextView(SideHouse sideHouse) {
+            TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow tableRow = new TableRow(getActivity());
+            TextView name = new TextView(getActivity());
+            TextView productName = new TextView(getActivity());
+            TextView unit = new TextView(getActivity());
+
+            tableRow.setLayoutParams(tableRowParams);
+            name.setLayoutParams(rowParams);
+            productName.setLayoutParams(rowParams);
+            unit.setLayoutParams(rowParams);
+
+            name.setText(sideHouse.getName());
+            productName.setText(sideHouse.getProductName());
+            unit.setText(sideHouse.getQuantity());
+
+            name.setTextSize(30);
+            productName.setTextSize(30);
+            unit.setTextSize(30);
+
+            tableRow.addView(name);
+            tableRow.addView(productName);
+            tableRow.addView(unit);
+
+            tableLayout.addView(tableRow);
+        }
+
+        private boolean isTimeMatch() {
+            return YEAR == year && MONTH == month && DATE == date;
         }
     }
 
@@ -308,7 +655,7 @@ public class QueryFragment extends Fragment {
             QueryFragment.month = monthOfYear + 1;
             QueryFragment.date = dayOfMonth;
 
-            String dateInfo = QueryFragment.year + "/" +  QueryFragment.month + "/" + QueryFragment.date;
+            String dateInfo = QueryFragment.year + "/" + QueryFragment.month + "/" + QueryFragment.date;
             dateTextView.setText(dateInfo);
 
         }

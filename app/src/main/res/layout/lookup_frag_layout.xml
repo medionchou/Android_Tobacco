@@ -8,11 +8,11 @@
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingTop="10dp">
+        android:layout_weight="1">
 
         <Button
             style="?android:buttonBarButtonStyle"
+            android:background="@android:color/darker_gray"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -22,24 +22,27 @@
 
         <Button
             style="?android:buttonBarButtonStyle"
+            android:background="@android:color/darker_gray"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="30sp"
-            android:text="生產"
+            android:text="捲包"
             android:id="@+id/production_btn"/>
 
         <Button
             style="?android:buttonBarButtonStyle"
+            android:background="@android:color/darker_gray"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="30sp"
-            android:text="配料"
+            android:text="理切"
             android:id="@+id/recipe_status_btn"/>
 
         <Button
             style="?android:buttonBarButtonStyle"
+            android:background="@android:color/darker_gray"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
