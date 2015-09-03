@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,12 +24,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.medionchou.tobacco.Constants.Command;
+import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
-import com.example.medionchou.tobacco.ProductInfo;
+import com.example.medionchou.tobacco.DataContainer.ProductInfo;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
-import com.example.medionchou.tobacco.SideHouse;
+import com.example.medionchou.tobacco.DataContainer.SideHouse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -369,35 +372,6 @@ public class QueryFragment extends Fragment {
 
         private void updateWH_NOWgui(List<ProductInfo> productInfoList) {
             tableLayout.removeAllViews();
-            /*TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-            TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-
-            TableRow tableRow = new TableRow(getActivity());
-            TextView productIdTitle = new TextView(getActivity());
-            TextView productNameTitle = new TextView(getActivity());
-            TextView quantityTitle = new TextView(getActivity());
-            TextView unitTitle = new TextView(getActivity());
-
-            textViewParams.gravity = Gravity.CENTER_HORIZONTAL;
-
-            tableRow.setLayoutParams(tableRowParams);
-            productIdTitle.setLayoutParams(textViewParams);
-            productNameTitle.setLayoutParams(textViewParams);
-            quantityTitle.setLayoutParams(textViewParams);
-            unitTitle.setLayoutParams(textViewParams);
-            productIdTitle.setText("編號");
-            productNameTitle.setText("名稱");
-            quantityTitle.setText("數量");
-            unitTitle.setText("單位");
-            productIdTitle.setTextSize(30);
-            productNameTitle.setTextSize(30);
-            quantityTitle.setTextSize(30);
-            unitTitle.setTextSize(30);
-            tableRow.addView(productIdTitle);
-            tableRow.addView(productNameTitle);
-            tableRow.addView(quantityTitle);
-            tableRow.addView(unitTitle);
-            tableLayout.addView(tableRow);*/
 
             for (int i = 0; i < productInfoList.size(); i++) {
                 ProductInfo info = productInfoList.get(i);
@@ -456,59 +430,17 @@ public class QueryFragment extends Fragment {
                 person.setText(info.getPerson());
 
 
-                date.setTextSize(30);
-                action.setTextSize(30);
-                productId.setTextSize(30);
-                productName.setTextSize(30);
-                quantity.setTextSize(30);
-                unit.setTextSize(30);
-                person.setTextSize(30);
+                date.setTextSize(Config.TEXT_SIZE);
+                action.setTextSize(Config.TEXT_SIZE);
+                productId.setTextSize(Config.TEXT_SIZE);
+                productName.setTextSize(Config.TEXT_SIZE);
+                quantity.setTextSize(Config.TEXT_SIZE);
+                unit.setTextSize(Config.TEXT_SIZE);
+                person.setTextSize(Config.TEXT_SIZE);
 
 
                 if (indexToInflate == 0) {
-
-                    TableRow titleRow = new TableRow(getActivity());
-                    TextView dateTitle = new TextView(getActivity());
-                    TextView actionTitle = new TextView(getActivity());
-                    TextView productIdTitle = new TextView(getActivity());
-                    TextView productNameTitle = new TextView(getActivity());
-                    TextView quantityTitle = new TextView(getActivity());
-                    TextView unitTitle = new TextView(getActivity());
-                    TextView personTitle = new TextView(getActivity());
-
-                    titleRow.setLayoutParams(tableRowParams);
-                    dateTitle.setLayoutParams(textViewParams);
-                    actionTitle.setLayoutParams(textViewParams);
-                    productIdTitle.setLayoutParams(textViewParams);
-                    quantityTitle.setLayoutParams(textViewParams);
-                    unitTitle.setLayoutParams(textViewParams);
-                    personTitle.setLayoutParams(textViewParams);
-
-                    dateTitle.setText("日期");
-                    actionTitle.setText("動作");
-                    productIdTitle.setText("產品編號");
-                    productNameTitle.setText("產品名稱");
-                    quantityTitle.setText("數量");
-                    unitTitle.setText("單位");
-                    personTitle.setText("人員");
-
-                    dateTitle.setTextSize(30);
-                    actionTitle.setTextSize(30);
-                    productIdTitle.setTextSize(30);
-                    productNameTitle.setTextSize(30);
-                    quantityTitle.setTextSize(30);
-                    unitTitle.setTextSize(30);
-                    personTitle.setTextSize(30);
-
-                    titleRow.addView(dateTitle);
-                    titleRow.addView(actionTitle);
-                    titleRow.addView(productIdTitle);
-                    titleRow.addView(productNameTitle);
-                    titleRow.addView(quantityTitle);
-                    titleRow.addView(unitTitle);
-                    titleRow.addView(personTitle);
-
-                    tableLayout.addView(titleRow);
+                    setTitleLabel(true);
                 }
 
                 tableRow.addView(date);
@@ -523,40 +455,13 @@ public class QueryFragment extends Fragment {
                 productName.setText(info.getProductName());
                 quantity.setText(info.getQuantity());
                 unit.setText(info.getUnit());
-                productId.setTextSize(30);
-                productName.setTextSize(30);
-                quantity.setTextSize(30);
-                unit.setTextSize(30);
+                productId.setTextSize(Config.TEXT_SIZE);
+                productName.setTextSize(Config.TEXT_SIZE);
+                quantity.setTextSize(Config.TEXT_SIZE);
+                unit.setTextSize(Config.TEXT_SIZE);
 
                 if (indexToInflate == 0) {
-
-                    TableRow titleRow = new TableRow(getActivity());
-                    TextView productIdTitle = new TextView(getActivity());
-                    TextView productNameTitle = new TextView(getActivity());
-                    TextView quantityTitle = new TextView(getActivity());
-                    TextView unitTitle = new TextView(getActivity());
-
-                    titleRow.setLayoutParams(tableRowParams);
-                    productIdTitle.setLayoutParams(textViewParams);
-                    quantityTitle.setLayoutParams(textViewParams);
-                    unitTitle.setLayoutParams(textViewParams);
-
-                    productIdTitle.setText("產品編號");
-                    productNameTitle.setText("產品名稱");
-                    quantityTitle.setText("數量");
-                    unitTitle.setText("單位");
-
-                    productIdTitle.setTextSize(30);
-                    productNameTitle.setTextSize(30);
-                    quantityTitle.setTextSize(30);
-                    unitTitle.setTextSize(30);
-
-                    titleRow.addView(productIdTitle);
-                    titleRow.addView(productNameTitle);
-                    titleRow.addView(quantityTitle);
-                    titleRow.addView(unitTitle);
-
-                    tableLayout.addView(titleRow);
+                    setTitleLabel(false);
                 }
 
                 tableRow.addView(productId);
@@ -565,6 +470,92 @@ public class QueryFragment extends Fragment {
                 tableRow.addView(unit);
             }
             tableLayout.addView(tableRow);
+        }
+
+        private void setTitleLabel(boolean isHistory) {
+
+            TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow titleRow = new TableRow(getActivity());
+            TextView dateTitle = new TextView(getActivity());
+            TextView actionTitle = new TextView(getActivity());
+            TextView productIdTitle = new TextView(getActivity());
+            TextView productNameTitle = new TextView(getActivity());
+            TextView quantityTitle = new TextView(getActivity());
+            TextView unitTitle = new TextView(getActivity());
+            TextView personTitle = new TextView(getActivity());
+
+
+            tableRowParams.setMargins(1, 10, 1, 1);
+            titleRow.setLayoutParams(tableRowParams);
+            dateTitle.setLayoutParams(textViewParams);
+            actionTitle.setLayoutParams(textViewParams);
+            productIdTitle.setLayoutParams(textViewParams);
+            productNameTitle.setLayoutParams(textViewParams);
+            quantityTitle.setLayoutParams(textViewParams);
+            unitTitle.setLayoutParams(textViewParams);
+            personTitle.setLayoutParams(textViewParams);
+
+            dateTitle.setTextColor(Color.BLACK);
+            actionTitle.setTextColor(Color.BLACK);
+            productIdTitle.setTextColor(Color.BLACK);
+            productNameTitle.setTextColor(Color.BLACK);
+            quantityTitle.setTextColor(Color.BLACK);
+            unitTitle.setTextColor(Color.BLACK);
+            personTitle.setTextColor(Color.BLACK);
+
+            dateTitle.setTypeface(null, Typeface.BOLD);
+            actionTitle.setTypeface(null, Typeface.BOLD);
+            productIdTitle.setTypeface(null, Typeface.BOLD);
+            productNameTitle.setTypeface(null, Typeface.BOLD);
+            quantityTitle.setTypeface(null, Typeface.BOLD);
+            unitTitle.setTypeface(null, Typeface.BOLD);
+            personTitle.setTypeface(null, Typeface.BOLD);
+
+
+            if (isHistory) {
+                dateTitle.setText("日期");
+                actionTitle.setText("動作");
+                productIdTitle.setText("產品編號");
+                productNameTitle.setText("產品名稱");
+                quantityTitle.setText("數量");
+                unitTitle.setText("單位");
+                personTitle.setText("人員");
+
+                dateTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                actionTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                productIdTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                productNameTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                quantityTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                unitTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                personTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+
+                titleRow.addView(dateTitle);
+                titleRow.addView(actionTitle);
+                titleRow.addView(productIdTitle);
+                titleRow.addView(productNameTitle);
+                titleRow.addView(quantityTitle);
+                titleRow.addView(unitTitle);
+                titleRow.addView(personTitle);
+            } else {
+
+                productIdTitle.setText("產品編號");
+                productNameTitle.setText("產品名稱");
+                quantityTitle.setText("數量");
+                unitTitle.setText("單位");
+
+                productIdTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                productNameTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                quantityTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                unitTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+
+                titleRow.addView(productIdTitle);
+                titleRow.addView(productNameTitle);
+                titleRow.addView(quantityTitle);
+                titleRow.addView(unitTitle);
+            }
+
+            tableLayout.addView(titleRow);
         }
 
         private void inflateTextView(SideHouse sideHouse) {
@@ -584,9 +575,9 @@ public class QueryFragment extends Fragment {
             productName.setText(sideHouse.getProductName());
             unit.setText(sideHouse.getQuantity());
 
-            name.setTextSize(30);
-            productName.setTextSize(30);
-            unit.setTextSize(30);
+            name.setTextSize(Config.TEXT_SIZE);
+            productName.setTextSize(Config.TEXT_SIZE);
+            unit.setTextSize(Config.TEXT_SIZE);
 
             tableRow.addView(name);
             tableRow.addView(productName);

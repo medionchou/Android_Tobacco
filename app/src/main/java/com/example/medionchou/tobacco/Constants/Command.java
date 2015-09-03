@@ -14,5 +14,6 @@ public class Command {
     public final static String WH_HISTORY_SIX = "QUERY\tWH_HISTORY\t6\t";
     public final static String SH_NOW = "QUERY\tSH_NOW<END>";
     public final static String SH_HISTORY = "QUERY\tSH_HISTORY\t";
+    public final static String RECIPE_NOW = "QUERY\tRECIPE_NOW<END>";
 
 }

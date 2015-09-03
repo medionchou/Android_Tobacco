@@ -1,24 +1,21 @@
 package com.example.medionchou.tobacco;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
-import com.example.medionchou.tobacco.SubFragment.QueryFragment;
-import com.example.medionchou.tobacco.SubFragment.TitlesFragment;
+import com.example.medionchou.tobacco.SubFragment.IngreTitlesFragment;
+import com.example.medionchou.tobacco.SubFragment.RecipeTitlesFragment;
 
 /**
  * Created by medionchou on 2015/8/23.
@@ -119,11 +116,10 @@ public class LookUpFragment extends Fragment{
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment oldFrag = fragmentManager.findFragmentByTag(fragTag);
 
-        if (oldFrag != null)
+        if (oldFrag != null) {
             fragmentTransaction.remove(oldFrag);
-
-        fragmentTransaction.commit();
-
+            fragmentTransaction.commit();
+        }
     }
 
     private class IngredientBtnListener implements View.OnClickListener {
@@ -134,9 +130,9 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
-            TitlesFragment titlesFragment = new TitlesFragment();
-            titlesFragment.setParentFrag(LookUpFragment.this);
-            createFragment(titlesFragment, R.id.title_frag_container, TAG_TITLE);
+            IngreTitlesFragment ingreTitlesFragment = new IngreTitlesFragment();
+            ingreTitlesFragment.setParentFrag(LookUpFragment.this);
+            createFragment(ingreTitlesFragment, R.id.title_frag_container, TAG_TITLE);
             deleteFragment(TAG_CONTENT);
             setTitleFrameLayoutWeight(1f);
         }
@@ -161,6 +157,11 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
+            RecipeTitlesFragment recipeTitlesFragment = new RecipeTitlesFragment();
+            recipeTitlesFragment.setParentFrag(LookUpFragment.this);
+            createFragment(recipeTitlesFragment, R.id.title_frag_container, TAG_TITLE);
+            deleteFragment(TAG_CONTENT);
+            setTitleFrameLayoutWeight(1f);
 
 
         }

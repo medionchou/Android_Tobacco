@@ -1,4 +1,4 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.DataContainer;
 
 /**
  * Created by Medion on 2015/8/28.

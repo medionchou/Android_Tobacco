@@ -150,7 +150,9 @@ public class LocalService extends Service implements Runnable {
                                 }
                             }
                         } else if (endLine.contains("MSG")) {
-                            msg = endLine;
+                            String tmp;
+                            tmp = endLine.replace("<END>", "");
+                            msg = tmp;
                         }
 
                         serverReply = serverReply.replace(endLine, "");

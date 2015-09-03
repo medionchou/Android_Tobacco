@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.TextView;
@@ -19,8 +20,9 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     private LocalService mService;
 
     private TextView runningTextView;
-    private Thread test;
-    private RunningText runningText;
+
+    private RunningTextThread thread;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,8 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         super.onStart();
         Intent intent = new Intent(this, LocalService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        test.start();
+        if (thread.getState() == Thread.State.NEW)
+            thread.start();
     }
 
     @Override
@@ -43,7 +46,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         if (mConnection.isBound()) {
             unbindService(mConnection);
         }
-        runningText.setStop();
+        thread.stopThread();
     }
 
     private void initObject() {
@@ -51,8 +54,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
         runningTextView = (TextView) findViewById(R.id.running_text_view);
-        runningText = new RunningText();
-        test = new Thread(runningText);
+        thread = new RunningTextThread();
     }
 
 
@@ -60,12 +62,15 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         return mConnection;
     }
 
-    private class RunningText implements Runnable {
 
-        boolean stop = false;
+    private class RunningTextThread extends Thread {
+
+        private boolean stop = false;
         String msg;
+
         @Override
         public void run() {
+            super.run();
             LocalService mService;
             while (!mConnection.isBound()) {
 
@@ -91,7 +96,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             }
         }
 
-        public void setStop() {
+        public void stopThread() {
             stop = true;
         }
     }

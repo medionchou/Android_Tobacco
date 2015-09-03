@@ -17,6 +17,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.medionchou.tobacco.Constants.Command;
+import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.LoggedInActivity;
@@ -202,7 +203,7 @@ public class DeviceFragment extends Fragment {
             imageView.setLayoutParams(imageViewParams);
 
             textView.setText(deviceName);
-            textView.setTextSize(30);
+            textView.setTextSize(Config.TEXT_SIZE);
             textView.setLayoutParams(textViewParams);
 
             tableRow.addView(imageView);
