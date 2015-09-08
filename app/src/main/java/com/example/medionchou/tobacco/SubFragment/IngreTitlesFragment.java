@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.medionchou.tobacco.LookUpFragment;
 import com.example.medionchou.tobacco.R;
@@ -42,7 +41,7 @@ public class IngreTitlesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.title_frag_layout, container, false);
+        View rootView = inflater.inflate(R.layout.frag_title_layout, container, false);
 
         expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandable_list_view);
         ExpandableAdapter expandableAdapter = new ExpandableAdapter();
@@ -126,25 +125,25 @@ public class IngreTitlesFragment extends Fragment {
                     String houseName = viewHolder.textView.getText().toString();
 
                     if (getGroup(groupPosition).toString().equals("本日進出貨情況")) {
-                        newFrag = new QueryFragment();
+                        newFrag = new WareHouseFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("本日庫存情形")) {
-                        newFrag = new QueryFragment();
+                        newFrag = new WareHouseFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
-                        newFrag = new QueryFragment();
+                        newFrag = new WareHouseFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
                         bundle.putBoolean("LOOK_UP", true);
                         newFrag.setArguments(bundle);
                     } else if (getGroup(groupPosition).toString().equals("查詢庫存紀錄")){
-                        newFrag = new QueryFragment();
+                        newFrag = new WareHouseFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
                         bundle.putBoolean("LOOK_UP", true);

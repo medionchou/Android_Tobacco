@@ -9,4 +9,5 @@ public class States {
 
     public final static int CONNECT_INITIALZING = 0x0000002;
     public final static int CONNECT_OK = 0x0000003;
+
 }

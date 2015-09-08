@@ -1,6 +1,5 @@
 package com.example.medionchou.tobacco.SubFragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -12,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -51,16 +48,16 @@ public class ACFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        asyncTask = new RecipeAsyncTask();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipe_frag_layout, container, false);
+        View rootView = inflater.inflate(R.layout.frag_recipe_layout, container, false);
 
         tableLayout = (TableLayout) rootView.findViewById(R.id.recipe_table_layout);
         tableLayout.setStretchAllColumns(true);
 
+        asyncTask = new RecipeAsyncTask();
         asyncTask.execute((Void)null);
         return rootView;
     }
@@ -172,9 +169,9 @@ public class ACFragment extends Fragment {
             }
         }
 
-        private void inflateTextView(Recipe recipe, int indexToInflate) {
+        private void inflateTextView(Recipe recipe, int indexOfTitle) {
 
-            TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, 1);
             TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
             TableRow tableRow = new TableRow(getActivity());
             TextView bucketTextView = new TextView(getActivity());
@@ -195,7 +192,7 @@ public class ACFragment extends Fragment {
             recipeIdTextView.setTextSize(Config.TEXT_SIZE);
             recipeNameTextView.setTextSize(Config.TEXT_SIZE);
 
-            if (indexToInflate == 0) {
+            if (indexOfTitle == 0) {
                 TableRow titleRow = new TableRow(getActivity());
                 TextView bucketTitle= new TextView(getActivity());
                 TextView recipeIdTitle = new TextView(getActivity());

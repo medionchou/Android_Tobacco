@@ -46,8 +46,6 @@ public class DeviceFragment extends Fragment {
         super.onAttach(activity);
         ServiceListener mCallBack;
         mCallBack = (ServiceListener) activity;
-        LoggedInActivity loggin = (LoggedInActivity) activity;
-
         mConnection = mCallBack.getLocalServiceConnection();
     }
 
@@ -55,14 +53,14 @@ public class DeviceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         asynTask = new DeviceStatusTask();
-        deviceStatue = new HashMap<String, Integer>();
+        deviceStatue = new HashMap<>();
         sequences = new ArrayList<>();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.device_frag_layout, container, false);
+        View rootView = inflater.inflate(R.layout.frag_device_layout, container, false);
         first_col = (TableLayout) rootView.findViewById(R.id.first_col_table_layout);
         second_col = (TableLayout) rootView.findViewById(R.id.second_col_table_layout);
 

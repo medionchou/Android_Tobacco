@@ -19,9 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoggedInActivity"
             android:label="@string/title_activity_logged_in" >
+        </activity>
+
+        <activity
+            android:name=".DetailDialogActivity"
+            android:label="@string/title_activity_detail_dialog"
+            android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge">
         </activity>
 
         <service

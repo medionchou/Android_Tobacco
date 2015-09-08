@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.medionchou.tobacco.LookUpFragment;
 import com.example.medionchou.tobacco.R;
@@ -41,7 +40,7 @@ public class RecipeTitlesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.title_frag_layout, container, false);
+        View rootView = inflater.inflate(R.layout.frag_title_layout, container, false);
 
         expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandable_list_view);
         ExpandableAdapter expandableAdapter = new ExpandableAdapter();

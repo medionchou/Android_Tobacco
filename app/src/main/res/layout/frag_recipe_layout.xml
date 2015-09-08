@@ -7,6 +7,6 @@
     <TableLayout
         android:id="@+id/recipe_table_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></TableLayout>
+        android:layout_height="match_parent"></TableLayout>
 
 </LinearLayout>

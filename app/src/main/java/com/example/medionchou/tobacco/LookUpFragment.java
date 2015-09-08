@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableRow;
 
+import com.example.medionchou.tobacco.SubFragment.CPFragment;
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
 import com.example.medionchou.tobacco.SubFragment.IngreTitlesFragment;
 import com.example.medionchou.tobacco.SubFragment.RecipeTitlesFragment;
@@ -71,7 +72,7 @@ public class LookUpFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.lookup_frag_layout, container, false);
+        View rootView = inflater.inflate(R.layout.frag_lookup_layout, container, false);
         createView(rootView);
 
         return rootView;
@@ -146,6 +147,10 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
+            CPFragment cpFragment = new CPFragment();
+            createFragment(cpFragment, R.id.content_frag_container, TAG_CONTENT);
+            deleteFragment(TAG_TITLE);
+            setTitleFrameLayoutWeight(0f);
         }
     }
 

@@ -34,6 +34,7 @@ public class LocalService extends Service implements Runnable {
     private String updateOnline;
     private String updateMsg;
     private String msg;
+    private String swapMsg;
     private List<Byte> buffer;
 
     private boolean isTerminated;
@@ -140,7 +141,7 @@ public class LocalService extends Service implements Runnable {
                         } else if (endLine.contains("LOGIN_REPLY")) {
                             isSignIn = true;
                         } else if (endLine.contains("QUERY_REPLY")) {
-                            queryReply = endLine;
+                            queryReply += endLine;
                         } else if (endLine.contains("UPDATE")) {
                             if (endLine.contains("UPDATE_ONLINE")) {
                                 updateOnline = endLine;
@@ -152,7 +153,10 @@ public class LocalService extends Service implements Runnable {
                         } else if (endLine.contains("MSG")) {
                             String tmp;
                             tmp = endLine.replace("<END>", "");
+                            tmp = tmp.replace("MSG\t", "");
                             msg = tmp;
+                        } else if (endLine.contains("SWAP")) {
+                            swapMsg = endLine;
                         }
 
                         serverReply = serverReply.replace(endLine, "");
@@ -224,6 +228,14 @@ public class LocalService extends Service implements Runnable {
 
     public String getMsg() {
         return msg;
+    }
+
+    public String getSwapMsg() {
+        return swapMsg;
+    }
+
+    public void resetSwapMsg() {
+        swapMsg = "";
     }
 
     public synchronized String getUpdateMsg() {

@@ -27,22 +27,20 @@ import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
-import com.example.medionchou.tobacco.DataContainer.ProductInfo;
+import com.example.medionchou.tobacco.DataContainer.WareHouseInfo;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
 import com.example.medionchou.tobacco.DataContainer.SideHouse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Medion on 2015/8/25.
  */
-public class QueryFragment extends Fragment {
+public class WareHouseFragment extends Fragment {
 
 
     private int YEAR;
@@ -87,7 +85,7 @@ public class QueryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.query_frag_layout, container, false);
+        View rootView = inflater.inflate(R.layout.frag_query_layout, container, false);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_layout_container);
         tableLayout = (TableLayout) rootView.findViewById(R.id.table_layout_container);
 
@@ -181,9 +179,8 @@ public class QueryFragment extends Fragment {
     private class QueryResultTask extends AsyncTask<Void, String, Void> {
 
         ProgressDialog progressDialog;
-        Map<String, ProductInfo> productInfoMap = new HashMap<>();
         List<SideHouse> sideHouseList = new ArrayList<>();
-        List<ProductInfo> productInfoList = new ArrayList<>();
+        List<WareHouseInfo> wareHouseInfoList = new ArrayList<>();
         List<String> updateMsgQueue = new LinkedList<>();
         String msg = "";
 
@@ -268,11 +265,11 @@ public class QueryFragment extends Fragment {
             super.onProgressUpdate(values);
 
             if (values[0].equals("WH_NOW")) {
-                updateWH_NOWgui(productInfoList);
+                updateWH_NOWgui(wareHouseInfoList);
             } else if (values[0].equals("SH_NOW")) {
                 updateSH_NOWgui(sideHouseList);
             } else if (values[0].contains("HISTORY")) {
-                updateHistorygui(productInfoList);
+                updateHistorygui(wareHouseInfoList);
             }
 
             if (values[1].equals("ShowDialog")) {
@@ -300,12 +297,12 @@ public class QueryFragment extends Fragment {
             String[] data = stockMsg.split("\\t|<N>|<END>");
 
             if (clear) {
-                productInfoList.clear();
+                wareHouseInfoList.clear();
             }
 
             for (int i = 0; i < data.length; i = i + 8) {
-                ProductInfo info = new ProductInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
-                productInfoList.add(info);
+                WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
+                wareHouseInfoList.add(info);
             }
         }
 
@@ -318,23 +315,23 @@ public class QueryFragment extends Fragment {
 
 
             if (update) {
-                ProductInfo info = new ProductInfo(data[1], data[2], data[3], data[4]);
+                WareHouseInfo info = new WareHouseInfo(data[1], data[2], data[3], data[4]);
                 boolean isUpdate = false;
-                for (int i = 0; i < productInfoList.size(); i++) {
-                    ProductInfo tmp = productInfoList.get(i);
+                for (int i = 0; i < wareHouseInfoList.size(); i++) {
+                    WareHouseInfo tmp = wareHouseInfoList.get(i);
                     if (tmp.isProductIdMatch(info)) {
                         isUpdate = true;
-                        productInfoList.set(i, info);
+                        wareHouseInfoList.set(i, info);
                     }
                 }
 
                 if (!isUpdate)
-                    productInfoList.add(info);
+                    wareHouseInfoList.add(info);
 
             } else {
                 for (int i = 0; i < data.length; i = i + 5) {
-                    ProductInfo info = new ProductInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4]);
-                    productInfoList.add(info);
+                    WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4]);
+                    wareHouseInfoList.add(info);
                 }
             }
         }
@@ -370,11 +367,11 @@ public class QueryFragment extends Fragment {
         }
 
 
-        private void updateWH_NOWgui(List<ProductInfo> productInfoList) {
+        private void updateWH_NOWgui(List<WareHouseInfo> wareHouseInfoList) {
             tableLayout.removeAllViews();
 
-            for (int i = 0; i < productInfoList.size(); i++) {
-                ProductInfo info = productInfoList.get(i);
+            for (int i = 0; i < wareHouseInfoList.size(); i++) {
+                WareHouseInfo info = wareHouseInfoList.get(i);
                 inflateTextView(info, i);
             }
         }
@@ -388,16 +385,16 @@ public class QueryFragment extends Fragment {
             }
         }
 
-        private void updateHistorygui(List<ProductInfo> productInfoList) {
+        private void updateHistorygui(List<WareHouseInfo> wareHouseInfoList) {
             tableLayout.removeAllViews();
 
-            for (int i = 0; i < productInfoList.size(); i++) {
-                ProductInfo info = productInfoList.get(i);
+            for (int i = 0; i < wareHouseInfoList.size(); i++) {
+                WareHouseInfo info = wareHouseInfoList.get(i);
                 inflateTextView(info, i);
             }
         }
 
-        private void inflateTextView(ProductInfo info, int indexToInflate) {
+        private void inflateTextView(WareHouseInfo info, int indexToInflate) {
             TableRow tableRow = new TableRow(getActivity());
             TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -642,11 +639,11 @@ public class QueryFragment extends Fragment {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            QueryFragment.year = year;
-            QueryFragment.month = monthOfYear + 1;
-            QueryFragment.date = dayOfMonth;
+            WareHouseFragment.year = year;
+            WareHouseFragment.month = monthOfYear + 1;
+            WareHouseFragment.date = dayOfMonth;
 
-            String dateInfo = QueryFragment.year + "/" + QueryFragment.month + "/" + QueryFragment.date;
+            String dateInfo = WareHouseFragment.year + "/" + WareHouseFragment.month + "/" + WareHouseFragment.date;
             dateTextView.setText(dateInfo);
 
         }

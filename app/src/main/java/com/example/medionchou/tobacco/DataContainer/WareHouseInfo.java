@@ -3,7 +3,7 @@ package com.example.medionchou.tobacco.DataContainer;
 /**
  * Created by Medion on 2015/8/28.
  */
-public class ProductInfo {
+public class WareHouseInfo {
     private String date = "";
     private String action = "";
     private String productId = "";
@@ -12,7 +12,7 @@ public class ProductInfo {
     private String unit = "";
     private String person = "";
 
-    public ProductInfo(String date, String action, String productId, String productName, String quantity, String unit, String person) {
+    public WareHouseInfo(String date, String action, String productId, String productName, String quantity, String unit, String person) {
         this.date = date;
         this.action = action;
         this.productId = productId;
@@ -22,7 +22,7 @@ public class ProductInfo {
         this.person = person;
     }
 
-    public ProductInfo(String productId, String productName, String quantity, String unit) {
+    public WareHouseInfo(String productId, String productName, String quantity, String unit) {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
@@ -57,7 +57,7 @@ public class ProductInfo {
         return person;
     }
 
-    public boolean isProductIdMatch(ProductInfo info) {
+    public boolean isProductIdMatch(WareHouseInfo info) {
         return productId.equals(info.productId);
     }
 }

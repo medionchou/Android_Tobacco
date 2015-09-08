@@ -20,6 +20,7 @@
 
 
     <string name="getting_query_result">查詢資料中</string>
+    <string name="title_activity_detail_dialog">DetailDialogActivity</string>
 
 
 </resources>

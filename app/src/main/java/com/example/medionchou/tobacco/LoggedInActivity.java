@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -102,8 +103,8 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     }
 
     private class PagerAdapter extends FragmentPagerAdapter {
-        private final int PAGE_COUNT = 3;
-        private String[] tabTitles = {"主管查詢", "換牌", "人機界面"};
+        private final int PAGE_COUNT = 1;
+        private String[] tabTitles = {"主管查詢"};
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
