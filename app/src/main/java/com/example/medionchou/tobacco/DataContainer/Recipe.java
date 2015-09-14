@@ -9,6 +9,7 @@ public class Recipe {
     private String recipeId;
     private String recipeName;
 
+
     public Recipe(String bucket, String recipeId, String recipeName) {
         this.bucket = bucket;
         this.recipeId = recipeId;

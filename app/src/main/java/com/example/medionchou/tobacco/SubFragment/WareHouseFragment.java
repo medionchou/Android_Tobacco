@@ -1,6 +1,7 @@
 package com.example.medionchou.tobacco.SubFragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -199,7 +200,7 @@ public class WareHouseFragment extends Fragment {
 
                     if (cmd.length() > 0) {
                         mService.setCmd(cmd);
-                        publishProgress("", "ShowDialog");
+                        publishProgress("", "ShowDialog", "", "");
                         Thread.sleep(2000);
 
                         stockMsg = mService.getQueryReply();
@@ -222,9 +223,11 @@ public class WareHouseFragment extends Fragment {
                                     parseSH_NOWmsg(stockMsg, false);
                                 }
                             }
+                        } else {
+                            publishProgress("", "ShowDialog", "警告", "查無資料");
                         }
 
-                        publishProgress(msg, "");
+                        publishProgress(msg, "", "", "");
                         cmd = "";
                     }
 
@@ -248,7 +251,7 @@ public class WareHouseFragment extends Fragment {
                                 parseSH_NOWmsg(text, true);
                             }
                         }
-                        publishProgress(msg, "");
+                        publishProgress(msg, "", "", "");
                         updateMsgQueue.clear();
                     }
                 }
@@ -273,10 +276,17 @@ public class WareHouseFragment extends Fragment {
             }
 
             if (values[1].equals("ShowDialog")) {
-                progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
-                progressDialog.setMessage(getString(R.string.getting_query_result));
-                progressDialog.show();
-                progressDialog.setCancelable(false);
+                if (!values[2].equals("")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(values[2]);
+                    builder.setMessage(values[3]);
+                    builder.show();
+                } else {
+                    progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
+                    progressDialog.setMessage(getString(R.string.getting_query_result));
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                }
             } else {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();

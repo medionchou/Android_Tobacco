@@ -78,6 +78,7 @@ public class LocalService extends Service implements Runnable {
         updateOnline = "";
         updateMsg = "";
         msg = "";
+        swapMsg = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
     }

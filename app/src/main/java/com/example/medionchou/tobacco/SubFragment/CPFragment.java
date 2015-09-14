@@ -102,11 +102,11 @@ public class CPFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*progressDialog = new ProgressDialog(getActivity());
+            progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle("請稍後");
             progressDialog.setMessage("取得生產資訊中");
             progressDialog.show();
-            progressDialog.setCancelable(false);*/
+            progressDialog.setCancelable(false);
         }
 
         @Override
@@ -171,8 +171,8 @@ public class CPFragment extends Fragment {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            /*if (progressDialog.isShowing())
-                progressDialog.dismiss();*/
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
 
             updateGui(values[0], values[1]);
         }
@@ -309,8 +309,8 @@ public class CPFragment extends Fragment {
                 tableRow.addView(production_serial);
                 tableRow.addView(linearLayout_status);
                 tableRow.addView(linearLayout_statusText);
-                tableRow.addView(swap);
                 tableRow.addView(broadcast);
+                tableRow.addView(swap);
 
             } else {
                 TextView name = new TextView(getActivity());
@@ -359,8 +359,8 @@ public class CPFragment extends Fragment {
                 tableRow.addView(production_serial);
                 tableRow.addView(status);
                 tableRow.addView(statusTextView);
-                tableRow.addView(swap);
                 tableRow.addView(broadcast);
+                tableRow.addView(swap);
             }
 
             tableLayout.addView(tableRow);
@@ -426,8 +426,8 @@ public class CPFragment extends Fragment {
             tableRow.addView(production_serial);
             tableRow.addView(status);
             tableRow.addView(statusTextView);
-            tableRow.addView(swap);
             tableRow.addView(broadcast);
+            tableRow.addView(swap);
 
             tableLayout.addView(tableRow);
         }
