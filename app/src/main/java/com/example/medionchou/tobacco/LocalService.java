@@ -6,6 +6,7 @@ import android.os.*;
 import android.os.Process;
 import android.util.Log;
 
+import com.example.medionchou.tobacco.Activity.MainActivity;
 import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.Constants.States;
 
@@ -192,11 +193,17 @@ public class LocalService extends Service implements Runnable {
 
         } catch (IOException e) {
             Log.e("MyLog", "IOException " + e.toString());
-            stopSelf();
-            //startService(new Intent(this, LocalService.class));
-            /* TODO:
-                    Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
-             */
+            if (e.toString().contains("Server disconnect") || e.toString().contains("SocketTimeoutException")) {
+                stopSelf();
+                //startService(new Intent(this, LocalService.class));
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                /* TODO:
+                        Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
+                 */
+            }
+            
         } finally {
             try {
                 if (socketChannel != null)

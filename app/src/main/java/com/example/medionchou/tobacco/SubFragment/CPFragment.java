@@ -25,12 +25,11 @@ import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.DataContainer.LineState;
 import com.example.medionchou.tobacco.DataContainer.ProductLine;
-import com.example.medionchou.tobacco.DetailDialogActivity;
+import com.example.medionchou.tobacco.Activity.DetailDialogActivity;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
-import com.google.android.gms.analytics.ecommerce.Product;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -38,6 +37,7 @@ import java.util.List;
 
 /**
  * Created by Medion on 2015/9/7.
+ * Cigarette and Packing
  */
 public class CPFragment extends Fragment {
 
@@ -198,6 +198,7 @@ public class CPFragment extends Fragment {
         }
 
         private void inflateView(int index, String category, String lineNum) {
+
             TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, 1);
             TableRow.LayoutParams viewParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
             TableRow.LayoutParams viewParams_topMargin = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -269,6 +270,7 @@ public class CPFragment extends Fragment {
                     else {
                         swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
                     }
+
                 } else {
                     cur_production.setText("無生產資料");
                     production_serial.setEnabled(false);

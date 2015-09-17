@@ -1,5 +1,6 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.Activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.medionchou.tobacco.Constants.States;
+import com.example.medionchou.tobacco.LocalService;
+import com.example.medionchou.tobacco.LocalServiceConnection;
+import com.example.medionchou.tobacco.MD5;
+import com.example.medionchou.tobacco.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -118,8 +123,19 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
-            if (msg.length() > 0)
-                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+            if (msg.length() > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                if (msg.contains("未連線到伺服器")) {
+                    builder.setTitle("提示");
+                    builder.setMessage("暫時無法連線到伺服器\n請稍後重試或確認伺服器狀態後重試。");
+                    builder.show();
+                } else {
+                    builder.setTitle("提示");
+                    builder.setMessage("帳號或密碼錯誤。");
+                    builder.show();
+                }
+            }
         }
     }
 }

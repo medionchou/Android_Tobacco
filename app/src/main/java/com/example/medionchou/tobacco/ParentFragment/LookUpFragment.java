@@ -1,4 +1,4 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.ParentFragment;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableRow;
 
+import com.example.medionchou.tobacco.LocalServiceConnection;
+import com.example.medionchou.tobacco.R;
+import com.example.medionchou.tobacco.ServiceListener;
 import com.example.medionchou.tobacco.SubFragment.CPFragment;
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
 import com.example.medionchou.tobacco.SubFragment.IngreTitlesFragment;

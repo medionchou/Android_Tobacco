@@ -20,7 +20,6 @@ import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
-import com.example.medionchou.tobacco.LoggedInActivity;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
 
@@ -140,14 +139,13 @@ public class DeviceFragment extends Fragment {
             super.onProgressUpdate(values);
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
+
             updateGUI();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (progressDialog.isShowing())
-                progressDialog.dismiss();
         }
 
 

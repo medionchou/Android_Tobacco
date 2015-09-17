@@ -1,4 +1,4 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.Activity;
 
 import android.app.Activity;
 import android.content.Intent;

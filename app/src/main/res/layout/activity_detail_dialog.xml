@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.medionchou.tobacco.DetailDialogActivity">
+    tools:context="com.example.medionchou.tobacco.Activity.DetailDialogActivity">
 
     <TableLayout
         android:id="@+id/detail_table_layout"

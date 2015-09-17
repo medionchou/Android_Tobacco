@@ -1,18 +1,22 @@
-package com.example.medionchou.tobacco;
+package com.example.medionchou.tobacco.Activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.*;
+import android.os.Process;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
+
+import com.example.medionchou.tobacco.LocalService;
+import com.example.medionchou.tobacco.LocalServiceConnection;
+import com.example.medionchou.tobacco.ParentFragment.LookUpFragment;
+import com.example.medionchou.tobacco.R;
+import com.example.medionchou.tobacco.ServiceListener;
 
 
 public class LoggedInActivity extends FragmentActivity implements ServiceListener {
@@ -48,6 +52,18 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             unbindService(mConnection);
         }
         thread.stopThread();
+
+
+        Intent intent = new Intent(this, MainActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void initObject() {
