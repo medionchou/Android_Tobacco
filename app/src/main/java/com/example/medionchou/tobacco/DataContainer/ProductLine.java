@@ -97,6 +97,10 @@ public class ProductLine implements Parcelable {
         return category.equals(tmp.getCategory()) && line.equals(tmp.getLineNum());
     }
 
+    public String toString() {
+        return category + " " + line;
+    }
+
     @Override
     public int describeContents() {
         return 0;

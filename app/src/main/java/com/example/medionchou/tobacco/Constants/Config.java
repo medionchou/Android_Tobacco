@@ -9,15 +9,21 @@ public class Config {
     public static final int TEXT_SIZE = 30;
     public static final int TEXT_TITLE_SIZE = 32;
 
+    public static final int GRAY = 0;
+    public static final int RED = 1;
+    public static final int YELLOW = 2;
+    public static final int GREEN = 3;
+
+
     public static int getColor(int code) {
         switch (code) {
-            case 0:
+            case GRAY:
                 return Color.GRAY;
-            case 1:
+            case RED:
                 return Color.RED;
-            case 2:
+            case YELLOW:
                 return Color.YELLOW;
-            case 3:
+            case GREEN:
                 return Color.GREEN;
         }
 

@@ -111,9 +111,11 @@ public class CPFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
+
             try {
                 String msg;
-                String swapMsg;
+                String swapGroupMsg;
+                String swapDoneMsg;
 
                 mService.setCmd(Command.PRODUCT);
                 Thread.sleep(2000);
@@ -132,7 +134,8 @@ public class CPFragment extends Fragment {
 
                 while (!isCancelled()) {
                     msg = mService.getUpdateMsg();
-                    swapMsg = mService.getSwapMsg();
+                    swapDoneMsg = mService.getSwapDoneMsg();
+
 
                     if (msg.length() > 0) {
                         mService.resetUpdateMsg();
@@ -147,22 +150,24 @@ public class CPFragment extends Fragment {
                                 parseProductLine(text, true);
                             }
                         }
+
                         publishProgress("", "");
                     }
 
-                    if (swapMsg.length() > 0) {
+                    if (swapDoneMsg.length() > 0) {
                         ProductLine productLine;
 
-                        mService.resetSwapMsg();
-                        productLine = parseSwapDone(swapMsg);
+                        mService.resetSwapDoneMsg();
+                        productLine = parseSwapDone(swapDoneMsg);
 
                         publishProgress(productLine.getCategory(), productLine.getLineNum());
 
                     }
                     Thread.sleep(5000);
                 }
+
             } catch (InterruptedException e) {
-                Log.v("MyLog", e.toString());
+                Log.e("MyLog", e.toString());
             }
             return (Void) null;
         }
@@ -259,16 +264,34 @@ public class CPFragment extends Fragment {
                 statusTextView_pm.setGravity(Gravity.CENTER_HORIZONTAL);
 
                 name.setText("生產線_" + String.valueOf(index / 2 + 1));
+                production_serial.setText("查看生產序列");
+                status_cm.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());
+                status_pm.setText(lineStateList.get(index + 1).getCategory() + "_" + lineStateList.get(index + 1).getLineNum());
+                statusTextView_cm.setText(lineStateList.get(index).getStatusText());
+                statusTextView_pm.setText(lineStateList.get(index + 1).getStatusText());
+                swap.setText("換牌");
+                broadcast.setText("廣播");
+
                 if (productLineList.get(index / 2).getSize() > 0) {
                     ProductLine productLine = productLineList.get(index / 2);
                     ProductLine tmp = new ProductLine(category, lineNum, 0);
                     cur_production.setText(productLineList.get(index / 2).getProductName(0));
                     production_serial.setOnClickListener(new DetailDialogListener(productLineList.get(index / 2)));
 
-                    if (tmp.isProductionLineMatch(productLine))
-                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getCategory() + "\t" + productLine.getLineNum() + "<END>"));
-                    else {
+                    /*if (tmp.isProductionLineMatch(productLine)) {
                         swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
+                        swap.setText("完成");
+                    } else {
+                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>"));
+                    }*/
+
+                    if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus()  == Config.GREEN)) {
+                        swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
+                        swap.setText("完成");
+                    } else if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus()  == Config.GRAY)){
+                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>"));
+                    } else {
+                        swap.setEnabled(false);
                     }
 
                 } else {
@@ -277,14 +300,6 @@ public class CPFragment extends Fragment {
                     swap.setEnabled(false);
                     broadcast.setEnabled(false);
                 }
-
-                production_serial.setText("查看生產序列");
-                status_cm.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());
-                status_pm.setText(lineStateList.get(index + 1).getCategory() + "_" + lineStateList.get(index + 1).getLineNum());
-                statusTextView_cm.setText(lineStateList.get(index).getStatusText());
-                statusTextView_pm.setText(lineStateList.get(index + 1).getStatusText());
-                swap.setText("換牌");
-                broadcast.setText("廣播");
 
 
                 name.setTextSize(Config.TEXT_SIZE);
@@ -328,10 +343,12 @@ public class CPFragment extends Fragment {
                     cur_production.setText(productLineList.get(index - 8).getProductName(0));
                     production_serial.setOnClickListener(new DetailDialogListener(productLine));
 
-                    if (tmp.isProductionLineMatch(productLine)) {
-                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getCategory() + "\t" + productLine.getLineNum() + "<END>"));
+                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
+
+                    if (lineStateList.get(index).getStatus() == Config.GREEN) {
+                        swap.setEnabled(true);
                     } else {
-                        swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
+                        swap.setEnabled(false);
                     }
 
                 } else {
@@ -343,8 +360,7 @@ public class CPFragment extends Fragment {
 
                 production_serial.setText("查看生產序列");
                 statusTextView.setText(lineStateList.get(index).getStatusText());
-                swap.setText("換牌");
-                broadcast.setText("廣播");
+                swap.setText("完成");
 
                 name.setTextSize(Config.TEXT_SIZE);
                 cur_production.setTextSize(Config.TEXT_SIZE);
@@ -352,7 +368,6 @@ public class CPFragment extends Fragment {
                 status.setTextSize(Config.TEXT_SIZE);
                 statusTextView.setTextSize(Config.TEXT_SIZE);
                 swap.setTextSize(Config.TEXT_SIZE);
-                broadcast.setTextSize(Config.TEXT_SIZE);
 
                 status.setBackgroundColor(Config.getColor(lineStateList.get(index).getStatus()));
 
@@ -361,9 +376,11 @@ public class CPFragment extends Fragment {
                 tableRow.addView(production_serial);
                 tableRow.addView(status);
                 tableRow.addView(statusTextView);
-                tableRow.addView(broadcast);
+                tableRow.addView(new TextView(getActivity()));
                 tableRow.addView(swap);
             }
+
+
 
             tableLayout.addView(tableRow);
         }
@@ -453,19 +470,21 @@ public class CPFragment extends Fragment {
             final int SIZE = 3;
             int count;
 
-            Log.v("MyLog", msg);
-
             for (int i = 0; i < data.length; i++) {
                 String[] detail = data[i].split("\\t");
                 count = 0;
 
                 if (update) {
                     ProductLine productLine = new ProductLine(detail[1], detail[2], (detail.length - SIZE) / 2);
-                    productLine.setProductId(detail[3], count);
-                    productLine.setProductName(detail[4], count);
-                    productLine.setCurrent(String.valueOf(0), count);
-                    productLine.setLeft(String.valueOf(0), count);
-                    productLine.setTotal(String.valueOf(0), count);
+
+                    for (int j = 3; j < detail.length; j = j + 2) {
+                        productLine.setProductId(detail[j], count);
+                        productLine.setProductName(detail[j + 1], count);
+                        productLine.setCurrent(String.valueOf(0), count);
+                        productLine.setLeft(String.valueOf(0), count);
+                        productLine.setTotal(String.valueOf(0), count);
+                        count++;
+                    }
 
                     for (int j = 0; j < productLineList.size(); j++) {
                         ProductLine tmp = productLineList.get(j);
@@ -495,8 +514,6 @@ public class CPFragment extends Fragment {
 
         private void parseLineState(String msg, boolean update) {
             String[] data = msg.split("\\t|<N>|<END>");
-
-            Log.v("MyLog", msg);
 
             if (update) {
                 LineState lineState = new LineState(data[1], data[2], Integer.valueOf(data[3]), data[4]);
@@ -571,6 +588,7 @@ public class CPFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 publishProgress("", "");
+                mService.setCmd(command);
             }
         }
     }

@@ -339,6 +339,7 @@ public class WareHouseFragment extends Fragment {
                     wareHouseInfoList.add(info);
 
             } else {
+                wareHouseInfoList.clear();
                 for (int i = 0; i < data.length; i = i + 5) {
                     WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4]);
                     wareHouseInfoList.add(info);
@@ -361,6 +362,7 @@ public class WareHouseFragment extends Fragment {
                 }
             }
             else {
+                sideHouseList.clear();
                 for (int i = 0; i < data.length; i = i + 4) {
                     SideHouse sideHouse = new SideHouse(data[i + 1], data[i + 2], data[i + 3]);
                     sideHouseList.add(sideHouse);

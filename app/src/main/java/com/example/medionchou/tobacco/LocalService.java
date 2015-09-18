@@ -35,7 +35,7 @@ public class LocalService extends Service implements Runnable {
     private String updateOnline;
     private String updateMsg;
     private String msg;
-    private String swapMsg;
+    private String swapDoneMsg;
     private List<Byte> buffer;
 
     private boolean isTerminated;
@@ -79,7 +79,7 @@ public class LocalService extends Service implements Runnable {
         updateOnline = "";
         updateMsg = "";
         msg = "";
-        swapMsg = "";
+        swapDoneMsg = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
     }
@@ -143,7 +143,7 @@ public class LocalService extends Service implements Runnable {
                         } else if (endLine.contains("LOGIN_REPLY")) {
                             isSignIn = true;
                         } else if (endLine.contains("QUERY_REPLY")) {
-                            queryReply += endLine;
+                            queryReply = endLine;
                         } else if (endLine.contains("UPDATE")) {
                             if (endLine.contains("UPDATE_ONLINE")) {
                                 updateOnline = endLine;
@@ -157,8 +157,8 @@ public class LocalService extends Service implements Runnable {
                             tmp = endLine.replace("<END>", "");
                             tmp = tmp.replace("MSG\t", "");
                             msg = tmp;
-                        } else if (endLine.contains("SWAP")) {
-                            swapMsg = endLine;
+                        } else if (endLine.contains("SWAP_DONE")) {
+                            swapDoneMsg = endLine;
                         }
 
                         serverReply = serverReply.replace(endLine, "");
@@ -193,17 +193,18 @@ public class LocalService extends Service implements Runnable {
 
         } catch (IOException e) {
             Log.e("MyLog", "IOException " + e.toString());
-            if (e.toString().contains("Server disconnect") || e.toString().contains("SocketTimeoutException")) {
+            if (e.toString().contains("Server disconnect") || e.toString().contains("SocketTimeoutException") || e.toString().contains("ECONNRESET")) {
                 stopSelf();
+
                 //startService(new Intent(this, LocalService.class));
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 /* TODO:
                         Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
                  */
             }
-            
+
         } finally {
             try {
                 if (socketChannel != null)
@@ -238,16 +239,16 @@ public class LocalService extends Service implements Runnable {
         return msg;
     }
 
-    public String getSwapMsg() {
-        return swapMsg;
-    }
-
-    public void resetSwapMsg() {
-        swapMsg = "";
+    public String getSwapDoneMsg() {
+        return swapDoneMsg;
     }
 
     public synchronized String getUpdateMsg() {
         return updateMsg;
+    }
+
+    public void resetSwapDoneMsg() {
+        swapDoneMsg = "";
     }
 
     public void resetQueryReply() {
