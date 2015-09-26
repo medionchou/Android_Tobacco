@@ -49,11 +49,15 @@ public class LocalService extends Service implements Runnable {
         client.start();
     }
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         return mBinder;
     }
+
+
 
     @Override
     public void onDestroy() {
