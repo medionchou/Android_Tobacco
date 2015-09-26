@@ -81,13 +81,14 @@ public class ACFragment extends Fragment {
     }
 
     private class RecipeAsyncTask extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        ProgressDialog progressDialog;
 
         List<Recipe> recipeList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
             progressDialog.setMessage(getString(R.string.getting_online_state));
             progressDialog.show();
@@ -119,7 +120,7 @@ public class ACFragment extends Fragment {
                         publishProgress((Void)null);
                         mService.resetUpdateMsg();
                     }
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
                 }
 
             } catch(InterruptedException e) {

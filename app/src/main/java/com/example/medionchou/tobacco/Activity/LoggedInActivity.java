@@ -52,8 +52,6 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             unbindService(mConnection);
         }
         thread.stopThread();
-
-
         /*Intent intent = new Intent(this, MainActivity.class);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -64,6 +62,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopService(new Intent(this, LocalService.class));
     }
 
     private void initObject() {

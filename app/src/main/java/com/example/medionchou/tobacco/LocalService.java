@@ -45,13 +45,23 @@ public class LocalService extends Service implements Runnable {
     @Override
     public void onCreate() {
         super.onCreate();
+        /*initObject();
+        client.start();*/
+        //Log.v("MyLog", "ServiceOnCreate");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         initObject();
         client.start();
+        //Log.v("MyLog", "ServiceStart");
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
+        //Log.v("MyLog", "ServiceBound");
         return mBinder;
     }
 
@@ -82,6 +92,7 @@ public class LocalService extends Service implements Runnable {
         swapDoneMsg = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
+        socketChannel = null;
     }
 
     private void deRefObject() {
@@ -193,10 +204,9 @@ public class LocalService extends Service implements Runnable {
 
         } catch (IOException e) {
             Log.e("MyLog", "IOException " + e.toString());
-            if (e.toString().contains("Server disconnect") || e.toString().contains("SocketTimeoutException") || e.toString().contains("ECONNRESET")) {
+            if (e.toString().contains("Server disconnect") || e.toString().contains("SocketTimeoutException") || e.toString().contains("ECONNRESET") ) {
                 stopSelf();
 
-                //startService(new Intent(this, LocalService.class));
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

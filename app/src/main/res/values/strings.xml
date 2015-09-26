@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="app_name">煙絲看板</string>
+    <string name="app_name">菸絲看板</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_logged_in">煙絲看板</string>
+    <string name="title_activity_logged_in">菸絲看板</string>
     <string name="title_activity_test">Test</string>
 
     <string name="progress_dialog_waiting">請稍後</string>

@@ -28,6 +28,7 @@ public class LocalServiceConnection implements ServiceConnection {
     @Override
     public void onServiceDisconnected(ComponentName name) {
         mBound = false;
+        mService = null;
     }
 
     public boolean isBound() {
