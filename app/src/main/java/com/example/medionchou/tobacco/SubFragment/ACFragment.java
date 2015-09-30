@@ -81,14 +81,13 @@ public class ACFragment extends Fragment {
     }
 
     private class RecipeAsyncTask extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progressDialog;
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
         List<Recipe> recipeList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(getString(R.string.progress_dialog_waiting));
             progressDialog.setMessage(getString(R.string.getting_online_state));
             progressDialog.show();

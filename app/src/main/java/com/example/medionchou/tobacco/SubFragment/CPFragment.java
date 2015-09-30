@@ -114,6 +114,7 @@ public class CPFragment extends Fragment {
 
             try {
                 String msg;
+                String swapGroupMsg;
                 String swapDoneMsg;
 
                 mService.setCmd(Command.PRODUCT);
@@ -284,10 +285,10 @@ public class CPFragment extends Fragment {
                         swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>"));
                     }*/
 
-                    if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus() == Config.GREEN)) {
+                    if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus()  == Config.GREEN)) {
                         swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
                         swap.setText("完成");
-                    } else if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus() == Config.GRAY)) {
+                    } else if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus()  == Config.GRAY)){
                         swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>"));
                     } else {
                         swap.setEnabled(false);
@@ -378,6 +379,7 @@ public class CPFragment extends Fragment {
                 tableRow.addView(new TextView(getActivity()));
                 tableRow.addView(swap);
             }
+
 
 
             tableLayout.addView(tableRow);
@@ -471,20 +473,18 @@ public class CPFragment extends Fragment {
             for (int i = 0; i < data.length; i++) {
                 String[] detail = data[i].split("\\t");
                 count = 0;
-                ProductLine productLine = new ProductLine(detail[1], detail[2], (detail.length - SIZE) / 2);
-
-                for (int j = 3; j < detail.length; j = j + 2) {
-                    productLine.setProductId(detail[j], count);
-                    productLine.setProductName(detail[j + 1], count);
-                    productLine.setCurrent(String.valueOf(0), count);
-                    productLine.setLeft(String.valueOf(0), count);
-                    productLine.setTotal(String.valueOf(0), count);
-                    count++;
-                }
-
-                productLineList.add(productLine);
 
                 if (update) {
+                    ProductLine productLine = new ProductLine(detail[1], detail[2], (detail.length - SIZE) / 2);
+
+                    for (int j = 3; j < detail.length; j = j + 2) {
+                        productLine.setProductId(detail[j], count);
+                        productLine.setProductName(detail[j + 1], count);
+                        productLine.setCurrent(String.valueOf(0), count);
+                        productLine.setLeft(String.valueOf(0), count);
+                        productLine.setTotal(String.valueOf(0), count);
+                        count++;
+                    }
 
                     for (int j = 0; j < productLineList.size(); j++) {
                         ProductLine tmp = productLineList.get(j);
@@ -494,8 +494,20 @@ public class CPFragment extends Fragment {
                         }
                     }
 
-                }
+                } else {
+                    ProductLine productLine = new ProductLine(detail[1], detail[2], (detail.length - SIZE) / 2);
 
+                    for (int j = 3; j < detail.length; j = j + 2) {
+                        productLine.setProductId(detail[j], count);
+                        productLine.setProductName(detail[j + 1], count);
+                        productLine.setCurrent(String.valueOf(0), count);
+                        productLine.setLeft(String.valueOf(0), count);
+                        productLine.setTotal(String.valueOf(0), count);
+                        count++;
+                    }
+
+                    productLineList.add(productLine);
+                }
             }
 
         }
