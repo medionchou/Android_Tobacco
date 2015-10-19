@@ -9,24 +9,38 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
+import com.example.medionchou.tobacco.MarqueeTextView;
 import com.example.medionchou.tobacco.ParentFragment.LookUpFragment;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class LoggedInActivity extends FragmentActivity implements ServiceListener {
 
     private LocalServiceConnection mConnection;
+
     private LocalService mService;
 
-    private TextView runningTextView;
+    private MarqueeTextView runningTextView;
 
     private RunningTextThread thread;
+
+    private Timer logoutTimer;
+
+    private final int TIMEOUT = 300000;
 
 
     @Override
@@ -52,11 +66,6 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             unbindService(mConnection);
         }
         thread.stopThread();
-        /*Intent intent = new Intent(this, MainActivity.class);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(intent);*/
     }
 
     @Override
@@ -65,12 +74,24 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         stopService(new Intent(this, LocalService.class));
     }
 
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        Log.v("MyLog", "ResetLogout");
+        logoutTimer.cancel();
+        logoutTimer = new Timer();
+
+        logoutTimer.schedule(new LogoutTimerTask(), TIMEOUT);
+    }
+
     private void initObject() {
         mConnection = new LocalServiceConnection();
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
-        runningTextView = (TextView) findViewById(R.id.running_text_view);
+        runningTextView = (MarqueeTextView) findViewById(R.id.running_text_view);
         thread = new RunningTextThread();
+        logoutTimer = new Timer();
+        logoutTimer.schedule(new LogoutTimerTask(), TIMEOUT);
     }
 
 
@@ -83,6 +104,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
 
         private boolean stop = false;
         String msg;
+        String oldMsg = "";
 
         @Override
         public void run() {
@@ -95,17 +117,29 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             while (!stop) {
                 try {
                     msg = mService.getMsg();
-                    if (msg.length() > 0) {
+                    if (msg.length() > 0 && !oldMsg.equals(msg)) {
+                        Log.v("MyLog", "Invoked");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 runningTextView.setText(msg);
                             }
                         });
-                        mService.resetMsg();
-                    }
+                    } else if (msg.length() > 0){
 
-                    Thread.sleep(10000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Calendar cal = Calendar.getInstance();
+                                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                String date = dateFormat.format(cal.getTime());
+                                runningTextView.setNewText(msg + date);
+                            }
+                        });
+
+                    }
+                    oldMsg = msg;
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     Log.e("MyLog", e.toString());
                 }
@@ -139,6 +173,23 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
             return tabTitles[position];
+        }
+    }
+
+    private class LogoutTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            try {
+                mService = mConnection.getService();
+                mService.setCmd("LOGOUT<END>");
+                Thread.sleep(1000);
+                Intent intent = new Intent(LoggedInActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("LOGOUT", true);
+                startActivity(intent);
+            } catch(InterruptedException e) {
+
+            }
         }
     }
 

@@ -4,17 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <com.example.medionchou.tobacco.MarqueeTextView
         android:id="@+id/running_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:textSize="40sp"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:ellipsize="marquee"
         android:scrollHorizontally="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:textColor="#00FF00"
         android:background="#8B1A1A"
         android:text=""/>

@@ -54,7 +54,7 @@ public class LocalService extends Service implements Runnable {
     public int onStartCommand(Intent intent, int flags, int startId) {
         initObject();
         client.start();
-        //Log.v("MyLog", "ServiceStart");
+        Log.v("MyLog", "ServiceStart");
         return super.onStartCommand(intent, flags, startId);
     }
 
