@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textSize="50sp"
         android:gravity="center_horizontal"
-        android:text="煙絲看板" />
+        android:text="菸絲看板" />
 
     <EditText
         android:layout_width="match_parent"

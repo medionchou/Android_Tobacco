@@ -100,9 +100,9 @@ public class ACFragment extends Fragment {
 
             try {
                 String msg;
+
                 mService.setCmd(Command.RECIPE_NOW);
                 Thread.sleep(2000);
-
                 msg = mService.getQueryReply();
 
                 parseRecipeMsg(msg, false);

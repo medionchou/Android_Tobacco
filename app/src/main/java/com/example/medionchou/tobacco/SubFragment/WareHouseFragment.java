@@ -161,6 +161,8 @@ public class WareHouseFragment extends Fragment {
                 cmd = Command.WH_HISTORY_FIVE + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("6號倉庫")) {
                 cmd = Command.WH_HISTORY_SIX + year + "\t" + month + "\t" + date + "<END>";
+            } else if (house.equals("總倉庫")){
+                cmd = Command.WH_HISTORY_ALL + year + "\t" + month + "\t" + date + "<END>";
             } else {
                 cmd = Command.SH_HISTORY + year + "\t" + month + "\t" + date + "<END>";
             }
@@ -171,6 +173,8 @@ public class WareHouseFragment extends Fragment {
                 cmd = Command.WH_NOW_FIVE + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("6號倉庫")) {
                 cmd = Command.WH_NOW_SIX + year + "\t" + month + "\t" + date + "<END>";
+            } else if (house.equals("總倉庫")){
+                cmd = Command.WH_NOW_ALL + year + "\t" + month + "\t" + date + "<END>";
             } else {
                 cmd = Command.SH_NOW;
             }

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -31,7 +32,10 @@ import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -162,7 +166,7 @@ public class CPFragment extends Fragment {
                         publishProgress(productLine.getCategory(), productLine.getLineNum());
 
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                 }
 
             } catch (InterruptedException e) {
@@ -293,11 +297,22 @@ public class CPFragment extends Fragment {
                         swap.setEnabled(false);
                     }
 
+                    broadcast.setOnClickListener(new BroadcastListener(productLine.getCategory() + "\t" + productLine.getLineNum()));
+
                 } else {
                     cur_production.setText("無生產資料");
                     production_serial.setEnabled(false);
                     swap.setEnabled(false);
                     broadcast.setEnabled(false);
+                }
+
+
+                if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus() == Config.GREEN)) {
+                    String doneCategory = productLineList.get(index / 2).getCategory();
+                    String doneLineNUm = productLineList.get(index / 2).getLineNum();
+                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + doneCategory + "\t" + doneLineNUm + "<END>"));
+                    swap.setText("完成");
+                    swap.setEnabled(true);
                 }
 
 
@@ -356,6 +371,14 @@ public class CPFragment extends Fragment {
                     swap.setEnabled(false);
                     broadcast.setEnabled(false);
                 }
+
+                if (lineStateList.get(index).getStatus() == Config.GREEN) {
+                    String doneCategory = productLineList.get(index - 8).getCategory();
+                    String doneLineNum = productLineList.get(index - 8).getLineNum();
+                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + doneCategory + "\t" + doneLineNum + "<END>"));
+                    swap.setEnabled(true);
+                }
+
 
                 production_serial.setText("查看生產序列");
                 statusTextView.setText(lineStateList.get(index).getStatusText());
@@ -534,6 +557,47 @@ public class CPFragment extends Fragment {
                 Intent intent = new Intent(CPFragment.this.getActivity().getApplicationContext(), DetailDialogActivity.class);
                 intent.putExtra("data", productLine);
                 startActivity(intent);
+            }
+        }
+
+        private class BroadcastListener implements View.OnClickListener {
+            String lineInfo;
+
+            public BroadcastListener(String msg) {
+                lineInfo = msg;
+            }
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View customView = inflater.inflate(R.layout.dialog_broadcast, null);
+                EditText broadcastMsg;
+                Calendar cal = Calendar.getInstance();
+                DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+                String date = dateFormat.format(cal.getTime());
+                builder.setTitle("請輸入廣播訊息");
+                builder.setView(customView);
+                broadcastMsg = (EditText) customView.findViewById(R.id.broadcast_text);
+                broadcastMsg.setText("即將在 " + date + " 進行換牌，請注意。");
+
+                builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String broadcastMsg = ((EditText) customView.findViewById(R.id.broadcast_text)).getText().toString();
+                        String cmd = "EXE\tBROADCAST\t" + lineInfo + "\t" + broadcastMsg + "<END>";
+
+                        mService.setCmd(cmd);
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.show();
             }
         }
 

@@ -9,9 +9,11 @@ public class Command {
     public final static String WH_NOW_THREE = "QUERY\tWH_NOW\t3\t";
     public final static String WH_NOW_FIVE = "QUERY\tWH_NOW\t5\t";
     public final static String WH_NOW_SIX = "QUERY\tWH_NOW\t6\t";
+    public final static String WH_NOW_ALL = "QUERY\tWH_NOW\t\t";
     public final static String WH_HISTORY_THREE = "QUERY\tWH_HISTORY\t3\t";
     public final static String WH_HISTORY_FIVE = "QUERY\tWH_HISTORY\t5\t";
     public final static String WH_HISTORY_SIX = "QUERY\tWH_HISTORY\t6\t";
+    public final static String WH_HISTORY_ALL = "QUERY\tWH_HISTORY\t\t";
     public final static String SH_NOW = "QUERY\tSH_NOW<END>";
     public final static String SH_HISTORY = "QUERY\tSH_HISTORY\t";
     public final static String RECIPE_NOW = "QUERY\tRECIPE_NOW<END>";

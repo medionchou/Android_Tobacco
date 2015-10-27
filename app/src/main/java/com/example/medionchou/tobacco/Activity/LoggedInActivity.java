@@ -55,8 +55,11 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         super.onStart();
         Intent intent = new Intent(this, LocalService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        if (thread.getState() == Thread.State.NEW)
+        /*if (thread.getState() == Thread.State.NEW) {
             thread.start();
+        }*/
+        thread = new RunningTextThread();
+        thread.start();
     }
 
     @Override
@@ -77,7 +80,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
-        Log.v("MyLog", "ResetLogout");
+        //Log.v("MyLog", "ResetLogout");
         logoutTimer.cancel();
         logoutTimer = new Timer();
 
@@ -89,7 +92,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
         runningTextView = (MarqueeTextView) findViewById(R.id.running_text_view);
-        thread = new RunningTextThread();
+        //thread = new RunningTextThread();
         logoutTimer = new Timer();
         logoutTimer.schedule(new LogoutTimerTask(), TIMEOUT);
     }
