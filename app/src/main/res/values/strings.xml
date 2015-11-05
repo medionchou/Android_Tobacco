@@ -16,7 +16,7 @@
 
     <string name="no_connection">未連線到伺服器\n請稍候再試</string>
 
-    <string name="user_info_err">帳號或密碼錯誤</string>
+    <string name="user_info_err">工號錯誤</string>
 
 
     <string name="getting_query_result">查詢資料中</string>

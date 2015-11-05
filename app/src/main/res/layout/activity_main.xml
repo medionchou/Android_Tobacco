@@ -26,22 +26,9 @@
         android:textSize="25sp"
         android:maxLines="1"
         android:maxLength="16"
-        android:hint="請輸入帳號"
+        android:hint="請輸入工號"
         android:id="@+id/edit_text_account"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:gravity="center_horizontal"
-        android:textSize="25sp"
-        android:maxLines="1"
-        android:maxLength="16"
-        android:inputType="textPassword"
-        android:hint="請輸入密碼"
-        android:id="@+id/edit_text_password"/>
 
     <Button
         android:layout_width="wrap_content"

@@ -14,11 +14,10 @@ import android.widget.TextView;
 import com.example.medionchou.tobacco.ParentFragment.LookUpFragment;
 import com.example.medionchou.tobacco.R;
 
-
 /**
- * Created by Medion on 2015/8/25.
+ * Created by Medion on 2015/11/4.
  */
-public class IngreTitlesFragment extends Fragment {
+public class OtherTitlesFragment extends Fragment {
 
     private int lastExpandedPos = -1;
     private ExpandableListView expandableListView;
@@ -75,18 +74,16 @@ public class IngreTitlesFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"本日進出貨情況", "本日庫存情形", "查詢進出貨紀錄", "查詢庫存紀錄"};
+            group = new String[] {"設備狀況", "排班表"};
             children = new String [][] {
-                    {"3號倉庫", "5號倉庫", "6號倉庫", "總倉庫", "線邊倉"},
-                    {"3號倉庫", "5號倉庫", "6號倉庫", "總倉庫", "線邊倉"},
-                    {"3號倉庫", "5號倉庫", "6號倉庫", "總倉庫", "線邊倉"},
-                    {"3號倉庫", "5號倉庫", "6號倉庫", "總倉庫"}
+                    {},
+                    {}
             };
 
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
 
             if (convertView == null) {
@@ -99,60 +96,20 @@ public class IngreTitlesFragment extends Fragment {
             }
             viewHolder.textView.setText(getGroup(groupPosition).toString());
 
-            return convertView;
-        }
-
-        @Override
-        public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            final ViewHolder viewHolder;
-
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.list_item, parent, false);
-                viewHolder.textView = (TextView) convertView.findViewById(R.id.list_item);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            viewHolder.textView.setText(getChild(groupPosition, childPosition).toString());
-
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Fragment newFrag = null;
-                    Bundle bundle = new Bundle();
-                    String houseName = viewHolder.textView.getText().toString();
 
-                    if (getGroup(groupPosition).toString().equals("本日進出貨情況")) {
-                        newFrag = new WareHouseFragment();
-                        bundle.putString("HOUSE_NAME", houseName);
-                        bundle.putString("QUERY_TYPE", "HISTORY");
-                        bundle.putBoolean("LOOK_UP", false);
-                        newFrag.setArguments(bundle);
-                    } else if (getGroup(groupPosition).toString().equals("本日庫存情形")) {
-                        newFrag = new WareHouseFragment();
-                        bundle.putString("HOUSE_NAME", houseName);
-                        bundle.putString("QUERY_TYPE", "NOW");
-                        bundle.putBoolean("LOOK_UP", false);
-                        newFrag.setArguments(bundle);
-                    } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
-                        newFrag = new WareHouseFragment();
-                        bundle.putString("HOUSE_NAME", houseName);
-                        bundle.putString("QUERY_TYPE", "HISTORY");
-                        bundle.putBoolean("LOOK_UP", true);
-                        newFrag.setArguments(bundle);
-                    } else if (getGroup(groupPosition).toString().equals("查詢庫存紀錄")){
-                        newFrag = new WareHouseFragment();
-                        bundle.putString("HOUSE_NAME", houseName);
-                        bundle.putString("QUERY_TYPE", "NOW");
-                        bundle.putBoolean("LOOK_UP", true);
-                        newFrag.setArguments(bundle);
+                    if (getGroup(groupPosition).equals("設備狀況")) {
+                        newFrag = new DeviceFragment();
+
+                    } else if (getGroup(groupPosition).equals("排班表")) {
+                        newFrag = new SchedualFragment();
                     }
 
                     if (newFrag != null)
                         parentFragment.createFragment(newFrag, R.id.content_frag_container, LookUpFragment.TAG_CONTENT);
-
                 }
             });
 
@@ -160,7 +117,13 @@ public class IngreTitlesFragment extends Fragment {
         }
 
         @Override
+        public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            return null;
+        }
+
+        @Override
         public int getGroupCount() {
+
             return group.length;
         }
 
@@ -176,7 +139,7 @@ public class IngreTitlesFragment extends Fragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return children[groupPosition][childPosition];
+            return null;
         }
 
 
@@ -197,7 +160,7 @@ public class IngreTitlesFragment extends Fragment {
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
+            return false;
         }
 
         private class ViewHolder {

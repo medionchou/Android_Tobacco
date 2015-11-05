@@ -10,23 +10,28 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.medionchou.tobacco.Activity.LoggedInActivity;
 import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.DataContainer.LineState;
 import com.example.medionchou.tobacco.DataContainer.ProductLine;
 import com.example.medionchou.tobacco.Activity.DetailDialogActivity;
+import com.example.medionchou.tobacco.DataContainer.RecipeList;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.R;
@@ -47,8 +52,9 @@ public class CPFragment extends Fragment {
 
     private LocalService mService;
     private TableLayout tableLayout;
-
     private ProductAsynTask asyncTask;
+
+    private final int NUM_PRODUCTION_LINE = 9;
 
 
     @Override
@@ -100,6 +106,7 @@ public class CPFragment extends Fragment {
         ProgressDialog progressDialog;
         private List<ProductLine> productLineList = new ArrayList<>();
         private List<LineState> lineStateList = new ArrayList<>();
+        private List<RecipeList> recipeLists = new ArrayList<>();
 
         private List<String> updateMsgQueue = new LinkedList<>();
 
@@ -120,20 +127,11 @@ public class CPFragment extends Fragment {
                 String msg;
                 String swapDoneMsg;
 
-                mService.setCmd(Command.PRODUCT);
-                Thread.sleep(2000);
-                msg = mService.getQueryReply();
-                parseProductLine(msg, false);
-                mService.resetQueryReply();
-
-                mService.setCmd(Command.SWAP);
-                Thread.sleep(2000);
-                msg = mService.getQueryReply();
-                parseLineState(msg, false);
-                mService.resetQueryReply();
+                sendCommand(Command.PRODUCT);
+                sendCommand(Command.SWAP);
+                sendCommand(Command.RECIPE_LIST);
 
                 publishProgress("", "");
-
 
                 while (!isCancelled()) {
                     msg = mService.getUpdateMsg();
@@ -164,7 +162,6 @@ public class CPFragment extends Fragment {
                         productLine = parseSwapDone(swapDoneMsg);
 
                         publishProgress(productLine.getCategory(), productLine.getLineNum());
-
                     }
                     Thread.sleep(500);
                 }
@@ -173,6 +170,32 @@ public class CPFragment extends Fragment {
                 Log.e("MyLog", e.toString());
             }
             return (Void) null;
+        }
+
+        private String sendCommand(String cmd) {
+            String msg = "";
+            try {
+                while (msg.length() == 0) {
+                    mService.setCmd(cmd);
+                    Thread.sleep(1000);
+                    msg = mService.getQueryReply();
+                }
+                switch (cmd) {
+                    case Command.PRODUCT:
+                        parseProductLine(msg, false);
+                        break;
+                    case Command.SWAP:
+                        parseLineState(msg, false);
+                        break;
+                    case Command.RECIPE_LIST:
+                        parseRecipeList(msg);
+                        break;
+                }
+                mService.resetQueryReply();
+            } catch (InterruptedException e) {
+                Log.e("MyLog", e.toString() + "SendCommand thread interrupted");
+            }
+            return msg;
         }
 
         @Override
@@ -197,7 +220,7 @@ public class CPFragment extends Fragment {
 
                 inflateView(i, category, lineNum);
 
-                if (i < 16) {
+                if (i < NUM_PRODUCTION_LINE*2) {
                     i = i + 2;
                 } else {
                     i++;
@@ -212,14 +235,11 @@ public class CPFragment extends Fragment {
             TableRow.LayoutParams viewParams_topMargin = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
             TableRow tableRow = new TableRow(getActivity());
+            TextView name = new TextView(getActivity());
             TextView cur_production = new TextView(getActivity());
             Button production_serial = new Button(getActivity());
             TextView status = new TextView(getActivity());
-            TextView status_cm = new TextView(getActivity());
-            TextView status_pm = new TextView(getActivity());
             TextView statusTextView = new TextView(getActivity());
-            TextView statusTextView_cm = new TextView(getActivity());
-            TextView statusTextView_pm = new TextView(getActivity());
             Button swap = new Button(getActivity());
             Button broadcast = new Button(getActivity());
 
@@ -231,6 +251,7 @@ public class CPFragment extends Fragment {
             viewParams_topMargin.setMargins(0, 10, 0, 0);
 
             tableRow.setLayoutParams(tableRowParams);
+            name.setLayoutParams(viewParams);
             cur_production.setLayoutParams(viewParams);
             production_serial.setLayoutParams(viewParams);
             status.setLayoutParams(viewParams);
@@ -238,61 +259,74 @@ public class CPFragment extends Fragment {
             swap.setLayoutParams(viewParams);
             broadcast.setLayoutParams(viewParams);
 
-            if (index < 16) {
-                LinearLayout.LayoutParams childParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                LinearLayout linearLayout_status = new LinearLayout(getActivity());
-                LinearLayout linearLayout_statusText = new LinearLayout(getActivity());
-                TextView name = new TextView(getActivity());
+            status.setGravity(Gravity.CENTER_HORIZONTAL);
+            statusTextView.setGravity(Gravity.CENTER_HORIZONTAL);
 
-                childParams.setMargins(0, 2, 0, 2);
+            name.setTextSize(Config.TEXT_SIZE);
+            cur_production.setTextSize(Config.TEXT_SIZE);
+            production_serial.setTextSize(Config.TEXT_SIZE);
+            status.setTextSize(Config.TEXT_SIZE);
+            status.setTextSize(Config.TEXT_SIZE);
+            statusTextView.setTextSize(Config.TEXT_SIZE);
+            swap.setTextSize(Config.TEXT_SIZE);
+            broadcast.setTextSize(Config.TEXT_SIZE);
 
-                linearLayout_status.setOrientation(LinearLayout.VERTICAL);
-                linearLayout_status.setLayoutParams(viewParams);
-                linearLayout_statusText.setOrientation(LinearLayout.VERTICAL);
-                linearLayout_statusText.setLayoutParams(viewParams);
-
-                name.setLayoutParams(viewParams_topMargin);
-                cur_production.setLayoutParams(viewParams_topMargin);
-                production_serial.setLayoutParams(viewParams_topMargin);
-                status_cm.setLayoutParams(childParams);
-                status_pm.setLayoutParams(childParams);
-                statusTextView_cm.setLayoutParams(childParams);
-                statusTextView_pm.setLayoutParams(childParams);
-                swap.setLayoutParams(viewParams_topMargin);
-                broadcast.setLayoutParams(viewParams_topMargin);
-
-                status_cm.setGravity(Gravity.CENTER_HORIZONTAL);
-                status_pm.setGravity(Gravity.CENTER_HORIZONTAL);
-                statusTextView_cm.setGravity(Gravity.CENTER_HORIZONTAL);
-                statusTextView_pm.setGravity(Gravity.CENTER_HORIZONTAL);
+            if (index < NUM_PRODUCTION_LINE*2) {
 
                 name.setText("生產線_" + String.valueOf(index / 2 + 1));
                 production_serial.setText("查看生產序列");
-                status_cm.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());
-                status_pm.setText(lineStateList.get(index + 1).getCategory() + "_" + lineStateList.get(index + 1).getLineNum());
-                statusTextView_cm.setText(lineStateList.get(index).getStatusText());
-                statusTextView_pm.setText(lineStateList.get(index + 1).getStatusText());
+                status.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());//
+                statusTextView.setText(lineStateList.get(index).getStatusText());//
                 swap.setText("換牌");
                 broadcast.setText("廣播");
 
                 if (productLineList.get(index / 2).getSize() > 0) {
                     ProductLine productLine = productLineList.get(index / 2);
-                    ProductLine tmp = new ProductLine(category, lineNum, 0);
-                    cur_production.setText(productLineList.get(index / 2).getProductName(0));
-                    production_serial.setOnClickListener(new DetailDialogListener(productLineList.get(index / 2)));
+                    cur_production.setText(productLine.getProductName(0));
+                    production_serial.setOnClickListener(new DetailDialogListener(productLine));
 
-                    /*if (tmp.isProductionLineMatch(productLine)) {
+                    if (lineStateList.get(index).getStatus() == Config.GREEN) {
                         swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
                         swap.setText("完成");
+                    } else if (lineStateList.get(index).getStatus() == Config.GRAY && lineStateList.get(index + 1).getStatus() == Config.GRAY) {
+                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>", productLine.getProductName(0)));
                     } else {
-                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>"));
-                    }*/
+                        swap.setEnabled(false);
+                    }
 
-                    if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus() == Config.GREEN)) {
-                        swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
-                        swap.setText("完成");
-                    } else if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus() == Config.GRAY)) {
-                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>"));
+                    broadcast.setOnClickListener(new BroadcastListener(productLine.getCategory() + "\t" + productLine.getLineNum()));
+
+                } else {
+                    cur_production.setText("無生產資料");
+                    production_serial.setEnabled(false);
+                    swap.setEnabled(false);
+                    /*ProductLine productLine = productLineList.get(index / 2);
+                    swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>", productLine.getProductName(0)));*/
+                    broadcast.setEnabled(false);
+                }
+
+                if (lineStateList.get(index).getStatus() == Config.GREEN) {
+                    String doneCategory = productLineList.get(index / 2).getCategory();
+                    String doneLineNUm = productLineList.get(index / 2).getLineNum();
+                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + doneCategory + "\t" + doneLineNUm + "<END>"));
+                    swap.setText("完成");
+                    swap.setEnabled(true);
+                }
+
+                status.setBackgroundColor(Config.getColor(lineStateList.get(index).getStatus()));
+
+            } else {
+                name.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());
+                if (productLineList.get(index - NUM_PRODUCTION_LINE).getSize() > 0) {
+                    ProductLine productLine = productLineList.get(index - NUM_PRODUCTION_LINE);
+
+                    cur_production.setText(productLine.getProductName(0));
+                    production_serial.setOnClickListener(new DetailDialogListener(productLine));
+
+                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
+
+                    if (lineStateList.get(index).getStatus() == Config.GREEN) {
+                        swap.setEnabled(true);
                     } else {
                         swap.setEnabled(false);
                     }
@@ -306,103 +340,28 @@ public class CPFragment extends Fragment {
                     broadcast.setEnabled(false);
                 }
 
-
-                if ((lineStateList.get(index).getStatus() == lineStateList.get(index + 1).getStatus()) && (lineStateList.get(index + 1).getStatus() == Config.GREEN)) {
-                    String doneCategory = productLineList.get(index / 2).getCategory();
-                    String doneLineNUm = productLineList.get(index / 2).getLineNum();
-                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + doneCategory + "\t" + doneLineNUm + "<END>"));
-                    swap.setText("完成");
-                    swap.setEnabled(true);
-                }
-
-
-                name.setTextSize(Config.TEXT_SIZE);
-                cur_production.setTextSize(Config.TEXT_SIZE);
-                production_serial.setTextSize(Config.TEXT_SIZE);
-                status_cm.setTextSize(Config.TEXT_SIZE);
-                status_pm.setTextSize(Config.TEXT_SIZE);
-                statusTextView_cm.setTextSize(Config.TEXT_SIZE);
-                statusTextView_pm.setTextSize(Config.TEXT_SIZE);
-                swap.setTextSize(Config.TEXT_SIZE);
-                broadcast.setTextSize(Config.TEXT_SIZE);
-
-                status_cm.setBackgroundColor(Config.getColor(lineStateList.get(index).getStatus()));
-                status_pm.setBackgroundColor(Config.getColor(lineStateList.get(index + 1).getStatus()));
-
-
-                linearLayout_status.addView(status_cm);
-                linearLayout_status.addView(status_pm);
-                linearLayout_statusText.addView(statusTextView_cm);
-                linearLayout_statusText.addView(statusTextView_pm);
-
-                tableRow.addView(name);
-                tableRow.addView(cur_production);
-                tableRow.addView(production_serial);
-                tableRow.addView(linearLayout_status);
-                tableRow.addView(linearLayout_statusText);
-                tableRow.addView(broadcast);
-                tableRow.addView(swap);
-
-            } else {
-                TextView name = new TextView(getActivity());
-
-                name.setLayoutParams(viewParams);
-                statusTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-
-                name.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());
-                if (productLineList.get(index - 8).getSize() > 0) {
-                    ProductLine productLine = productLineList.get(index - 8);
-                    ProductLine tmp = new ProductLine(category, lineNum, 0);
-
-                    cur_production.setText(productLineList.get(index - 8).getProductName(0));
-                    production_serial.setOnClickListener(new DetailDialogListener(productLine));
-
-                    swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
-
-                    if (lineStateList.get(index).getStatus() == Config.GREEN) {
-                        swap.setEnabled(true);
-                    } else {
-                        swap.setEnabled(false);
-                    }
-
-                } else {
-                    cur_production.setText("無生產資料");
-                    production_serial.setEnabled(false);
-                    swap.setEnabled(false);
-                    broadcast.setEnabled(false);
-                }
-
                 if (lineStateList.get(index).getStatus() == Config.GREEN) {
-                    String doneCategory = productLineList.get(index - 8).getCategory();
-                    String doneLineNum = productLineList.get(index - 8).getLineNum();
+                    String doneCategory = productLineList.get(index - NUM_PRODUCTION_LINE).getCategory();
+                    String doneLineNum = productLineList.get(index - NUM_PRODUCTION_LINE).getLineNum();
                     swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + doneCategory + "\t" + doneLineNum + "<END>"));
                     swap.setEnabled(true);
                 }
 
-
                 production_serial.setText("查看生產序列");
                 statusTextView.setText(lineStateList.get(index).getStatusText());
                 swap.setText("完成");
-
-                name.setTextSize(Config.TEXT_SIZE);
-                cur_production.setTextSize(Config.TEXT_SIZE);
-                production_serial.setTextSize(Config.TEXT_SIZE);
-                status.setTextSize(Config.TEXT_SIZE);
-                statusTextView.setTextSize(Config.TEXT_SIZE);
-                swap.setTextSize(Config.TEXT_SIZE);
+                broadcast.setText("廣播");
 
                 status.setBackgroundColor(Config.getColor(lineStateList.get(index).getStatus()));
-
-                tableRow.addView(name);
-                tableRow.addView(cur_production);
-                tableRow.addView(production_serial);
-                tableRow.addView(status);
-                tableRow.addView(statusTextView);
-                tableRow.addView(new TextView(getActivity()));
-                tableRow.addView(swap);
             }
 
-
+            tableRow.addView(name);
+            tableRow.addView(cur_production);
+            tableRow.addView(production_serial);
+            tableRow.addView(status);
+            tableRow.addView(statusTextView);
+            tableRow.addView(broadcast);
+            tableRow.addView(swap);
             tableLayout.addView(tableRow);
         }
 
@@ -544,6 +503,16 @@ public class CPFragment extends Fragment {
             }
         }
 
+        private void parseRecipeList(String rawData) {
+            String[] data = rawData.split("<N>|<END>");
+
+            for (int i = 0; i < data.length; i++) {
+                String[] detailRecipe = data[i].split("\\t");
+                RecipeList recipeList = new RecipeList(detailRecipe[1], detailRecipe[2]);
+                recipeLists.add(recipeList);
+            }
+        }
+
         private class DetailDialogListener implements View.OnClickListener {
 
             private ProductLine productLine;
@@ -602,31 +571,60 @@ public class CPFragment extends Fragment {
         }
 
         private class SwapDialogListener implements View.OnClickListener {
-            String command;
+            private String command;
+            private List<String> tmp = new ArrayList<>();
+            private String selectedItem;
+            private String productioning;
 
-            public SwapDialogListener(String cmd) {
+            public SwapDialogListener(String cmd, String productioning) {
                 command = cmd;
+                this.productioning = productioning;
+                for (int i = 0; i < recipeLists.size(); i++)
+                    tmp.add(recipeLists.get(i).getProductName());
             }
 
             @Override
             public void onClick(View v) {
+                final View custom = getActivity().getLayoutInflater().inflate(R.layout.swap_confirm_dialog, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                Spinner spinner = (Spinner) custom.findViewById(R.id.spinner);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, tmp);
+                ItemSelectedListener listener = new ItemSelectedListener(this);
+
+                adapter.setDropDownViewResource(R.layout.spinner_item);
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(listener);
+
+                builder.setView(custom);
                 builder.setTitle("警告");
-                builder.setMessage("換牌後無法取消\n你確定要執行嗎 ？");
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+                builder.setMessage(Html.fromHtml("換牌後無法<font color='red'>取消</font>\n你確定要執行嗎 ？"));
+
 
                 builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mService.setCmd(command);
+                        String confirmedId = ((EditText)custom.findViewById(R.id.confirm_edit_text)).getText().toString();
+                        String workerId = ((LoggedInActivity)getActivity()).getWorkerId();
+
+                        if (workerId.equals(confirmedId)) {
+                            if (selectedItem.equals(productioning)) {
+                                Log.v("MyLog", "Equal");
+                            } else {
+                                Log.v("MyLog", "Not Equal");
+                            }
+                        }
                     }
                 });
 
-                builder.show();
+                AlertDialog alert = builder.create();
+                alert.show();
+                alert.getWindow().getAttributes();
+                ((TextView) alert.findViewById(android.R.id.message)).setTextSize(30);
+
+            }
+
+            public void setSelectedItem(String item) {
+                selectedItem = item;
             }
         }
 
@@ -641,6 +639,23 @@ public class CPFragment extends Fragment {
             public void onClick(View v) {
                 publishProgress("", "");
                 mService.setCmd(command);
+            }
+        }
+
+        private class ItemSelectedListener implements Spinner.OnItemSelectedListener {
+            private SwapDialogListener  listener;
+            public ItemSelectedListener(SwapDialogListener tmp) {
+                listener = tmp;
+            }
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                listener.setSelectedItem(parent.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         }
     }

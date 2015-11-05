@@ -19,6 +19,7 @@ import com.example.medionchou.tobacco.ServiceListener;
 import com.example.medionchou.tobacco.SubFragment.CPFragment;
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
 import com.example.medionchou.tobacco.SubFragment.IngreTitlesFragment;
+import com.example.medionchou.tobacco.SubFragment.OtherTitlesFragment;
 import com.example.medionchou.tobacco.SubFragment.RecipeTitlesFragment;
 
 /**
@@ -159,6 +160,7 @@ public class LookUpFragment extends Fragment{
 
     private class RecipeBtnListener implements View.OnClickListener {
         @Override
+
         public void onClick(View v) {
             if (!mConnection.isBound()) {
                 /*
@@ -185,10 +187,17 @@ public class LookUpFragment extends Fragment{
                  */
             }
 
-            DeviceFragment deviceFragment = new DeviceFragment();
+            /*DeviceFragment deviceFragment = new DeviceFragment();
             createFragment(deviceFragment, R.id.content_frag_container, TAG_CONTENT);
             deleteFragment(TAG_TITLE);
-            setTitleFrameLayoutWeight(0f);
+            setTitleFrameLayoutWeight(0f);*/
+
+            OtherTitlesFragment otherTitlesFragment = new OtherTitlesFragment();
+            otherTitlesFragment.setParentFrag(LookUpFragment.this);
+            createFragment(otherTitlesFragment, R.id.title_frag_container, TAG_TITLE);
+            deleteFragment(TAG_CONTENT);
+            setTitleFrameLayoutWeight(1f);
+
         }
     }
 

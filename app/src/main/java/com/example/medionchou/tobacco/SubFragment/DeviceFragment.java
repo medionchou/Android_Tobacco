@@ -86,7 +86,7 @@ public class DeviceFragment extends Fragment {
     }
 
     private class DeviceStatusTask extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {

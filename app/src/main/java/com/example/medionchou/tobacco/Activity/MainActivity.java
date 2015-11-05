@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     private LocalService mService;
     private EditText accountEditView;
-    private EditText pwdEditView;
     private Button loginBtn;
     private LocalServiceConnection mConnection;
 
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initObject() {
         accountEditView = (EditText) findViewById(R.id.edit_text_account);
-        pwdEditView = (EditText) findViewById(R.id.edit_text_password);
         loginBtn = (Button) findViewById(R.id.loginBtn);
         mConnection = new LocalServiceConnection();
         loginBtn.setOnClickListener(new LogginButtonListener());
@@ -94,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void[] params) {
             mService = mConnection.getService();
             String account = accountEditView.getText().toString();
-            String pwd = MD5.getMD5EncryptedString(pwdEditView.getText().toString());
-            String cmd = "LOGIN\tMASTER\t" + "test" + "\t" + MD5.getMD5EncryptedString("123") + "<END>"; //Specific Command
+            account = "1310568";
+            String cmd = "LOGIN\tPDA\t" + account + "<END>"; //Specific Command
 
             if (mService.getClientState() == States.CONNECT_OK) {
                 mService.setCmd(cmd);
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 if (mService.isLoggin()) {
                     Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+                    intent.putExtra("WorkerId", account);
                     startActivity(intent);
                 } else {
                     msg = getString(R.string.user_info_err);
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 } else {
                     builder.setTitle("提示");
-                    builder.setMessage("帳號或密碼錯誤。");
+                    builder.setMessage("公號錯誤。");
                     builder.show();
                 }
             }

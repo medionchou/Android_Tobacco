@@ -47,8 +47,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="30sp"
-            android:text="設備狀況"
+            android:text="其他"
             android:id="@+id/device_status_btn"/>
+
     </TableRow>
 
     <TableRow
@@ -66,7 +67,7 @@
             android:id="@+id/content_frag_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3" />
+            android:layout_weight="5" />
 
     </TableRow>
 

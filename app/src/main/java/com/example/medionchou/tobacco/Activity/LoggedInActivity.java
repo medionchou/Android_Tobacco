@@ -40,6 +40,8 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
 
     private Timer logoutTimer;
 
+    private String workerId;
+
     private final int TIMEOUT = 300000;
 
 
@@ -48,6 +50,8 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
         initObject();
+        Bundle extras = getIntent().getExtras();
+        workerId = extras.getString("WorkerId");
     }
 
     @Override
@@ -69,6 +73,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             unbindService(mConnection);
         }
         thread.stopThread();
+        logoutTimer.cancel();
     }
 
     @Override
@@ -121,7 +126,6 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
                 try {
                     msg = mService.getMsg();
                     if (msg.length() > 0 && !oldMsg.equals(msg)) {
-                        Log.v("MyLog", "Invoked");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -154,6 +158,10 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         }
     }
 
+    public String getWorkerId() {
+        return workerId;
+    }
+
     private class PagerAdapter extends FragmentPagerAdapter {
         private final int PAGE_COUNT = 1;
         private String[] tabTitles = {"主管查詢"};
@@ -175,7 +183,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         @Override
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
-            return tabTitles[position];
+            return null;
         }
     }
 

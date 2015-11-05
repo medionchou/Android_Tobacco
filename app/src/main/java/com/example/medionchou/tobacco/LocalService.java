@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.NotYetConnectedException;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -215,6 +216,14 @@ public class LocalService extends Service implements Runnable {
 
                 Log.v("MyLog", "Re-connection");
             }
+
+        } catch (NullPointerException e) {
+
+            Log.e("MyLog", e.toString());
+            stopSelf();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
 
         } finally {
             try {
