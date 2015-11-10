@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Created by Medion on 2015/11/4.
  */
-public class SchedualFragment extends Fragment {
+public class ScheduleFragment extends Fragment {
 
     private LocalService mService;
     private ScheduleAsync schedulAsync;

@@ -105,7 +105,7 @@ public class OtherTitlesFragment extends Fragment {
                         newFrag = new DeviceFragment();
 
                     } else if (getGroup(groupPosition).equals("排班表")) {
-                        newFrag = new SchedualFragment();
+                        newFrag = new ScheduleFragment();
                     }
 
                     if (newFrag != null)

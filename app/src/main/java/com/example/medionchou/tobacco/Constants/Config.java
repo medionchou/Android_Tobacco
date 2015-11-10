@@ -8,6 +8,8 @@ import android.graphics.Color;
 public class Config {
     public static final int TEXT_SIZE = 30;
     public static final int TEXT_TITLE_SIZE = 32;
+    public static final int DIALOG_TITLE_SIZE = 28;
+    public static final int DIALOG_SIZE = 26;
 
     public static final int GRAY = 0;
     public static final int RED = 1;

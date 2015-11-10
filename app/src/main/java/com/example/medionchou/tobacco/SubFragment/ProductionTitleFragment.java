@@ -15,9 +15,9 @@ import com.example.medionchou.tobacco.ParentFragment.LookUpFragment;
 import com.example.medionchou.tobacco.R;
 
 /**
- * Created by Medion on 2015/9/3.
+ * Created by Medion on 2015/11/10.
  */
-public class RecipeTitlesFragment extends Fragment {
+public class ProductionTitleFragment extends Fragment {
 
     private int lastExpandedPos = -1;
     private ExpandableListView expandableListView;
@@ -74,7 +74,7 @@ public class RecipeTitlesFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"配料歷史", "加香情況"};
+            group = new String[] {"切牌", "生產線"};
             children = new String [][] {
                     {},
                     {}
@@ -101,10 +101,11 @@ public class RecipeTitlesFragment extends Fragment {
                 public void onClick(View v) {
                     Fragment newFrag = null;
 
-                    if (getGroup(groupPosition).equals("配料歷史")) {
-                        newFrag = new MSFragment();
-                    } else if (getGroup(groupPosition).equals("加香情況")) {
-                        newFrag = new ACFragment();
+                    if (getGroup(groupPosition).equals("切牌")) {
+                        newFrag = new InsertFragment();
+
+                    } else if (getGroup(groupPosition).equals("生產線")) {
+                        newFrag = new CPFragment();
                     }
 
                     if (newFrag != null)

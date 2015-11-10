@@ -82,10 +82,14 @@ public class DetailDialogActivity extends Activity {
         productName.setTextSize(Config.TEXT_SIZE);
         amount.setTextSize(Config.TEXT_SIZE);
 
+        productName.setMaxEms(5);
+
         tableRow.addView(priority);
         tableRow.addView(productId);
         tableRow.addView(productName);
-        tableRow.addView(amount);
+
+        if (productLine.getCategory().equals("PRODUCT"))
+            tableRow.addView(amount);
 
         tableLayout.addView(tableRow);
     }
@@ -129,7 +133,9 @@ public class DetailDialogActivity extends Activity {
         tableRow.addView(priority);
         tableRow.addView(productId);
         tableRow.addView(productName);
-        tableRow.addView(amount);
+
+        if (productLine.getCategory().equals("PRODUCT"))
+            tableRow.addView(amount);
 
         tableLayout.addView(tableRow);
     }

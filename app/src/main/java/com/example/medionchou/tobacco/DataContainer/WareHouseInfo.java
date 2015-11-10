@@ -10,15 +10,17 @@ public class WareHouseInfo {
     private String productName = "";
     private String quantity = "";
     private String unit = "";
+    private String pallet = "";
     private String person = "";
 
-    public WareHouseInfo(String date, String action, String productId, String productName, String quantity, String unit, String person) {
+    public WareHouseInfo(String date, String action, String productId, String productName, String quantity, String unit, String pallet, String person) {
         this.date = date;
         this.action = action;
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
         this.unit = unit;
+        this.pallet = pallet;
         this.person = person;
     }
 
@@ -51,6 +53,10 @@ public class WareHouseInfo {
 
     public String getUnit() {
         return unit;
+    }
+
+    public String getPallet() {
+        return pallet;
     }
 
     public String getPerson() {

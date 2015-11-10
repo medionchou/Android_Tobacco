@@ -20,6 +20,7 @@ import com.example.medionchou.tobacco.SubFragment.CPFragment;
 import com.example.medionchou.tobacco.SubFragment.DeviceFragment;
 import com.example.medionchou.tobacco.SubFragment.IngreTitlesFragment;
 import com.example.medionchou.tobacco.SubFragment.OtherTitlesFragment;
+import com.example.medionchou.tobacco.SubFragment.ProductionTitleFragment;
 import com.example.medionchou.tobacco.SubFragment.RecipeTitlesFragment;
 
 /**
@@ -151,10 +152,16 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
-            CPFragment cpFragment = new CPFragment();
-            createFragment(cpFragment, R.id.content_frag_container, TAG_CONTENT);
-            deleteFragment(TAG_TITLE);
-            setTitleFrameLayoutWeight(0f);
+//            CPFragment cpFragment = new CPFragment();
+//            createFragment(cpFragment, R.id.content_frag_container, TAG_CONTENT);
+//            deleteFragment(TAG_TITLE);
+//            setTitleFrameLayoutWeight(0f);
+
+            ProductionTitleFragment productionTitleFragment = new ProductionTitleFragment();
+            productionTitleFragment.setParentFrag(LookUpFragment.this);
+            createFragment(productionTitleFragment, R.id.title_frag_container, TAG_TITLE);
+            deleteFragment(TAG_CONTENT);
+            setTitleFrameLayoutWeight(1f);
         }
     }
 
@@ -172,8 +179,6 @@ public class LookUpFragment extends Fragment{
             createFragment(recipeTitlesFragment, R.id.title_frag_container, TAG_TITLE);
             deleteFragment(TAG_CONTENT);
             setTitleFrameLayoutWeight(1f);
-
-
         }
     }
 

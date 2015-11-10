@@ -58,7 +58,7 @@ public class ACFragment extends Fragment {
         tableLayout.setStretchAllColumns(true);
 
         asyncTask = new RecipeAsyncTask();
-        asyncTask.execute((Void)null);
+        asyncTask.execute((Void) null);
         return rootView;
     }
 
@@ -97,33 +97,42 @@ public class ACFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            String msg = "";
             try {
-                String msg;
+
 
                 mService.setCmd(Command.RECIPE_NOW);
                 Thread.sleep(2000);
-                msg = mService.getQueryReply();
+
+                while (msg.length() == 0) {
+                    msg = mService.getQueryReply();
+                    Thread.sleep(1000);
+                }
 
                 parseRecipeMsg(msg, false);
 
                 mService.resetQueryReply();
 
-                publishProgress((Void)null);
+                publishProgress((Void) null);
 
                 while (!isCancelled()) {
                     msg = mService.getUpdateMsg();
 
                     if (msg.length() > 0) {
+                        String[] updatInfo = msg.split("<END>");
 
-                        parseRecipeMsg(msg, true);
-                        publishProgress((Void)null);
+                        for (String tmp : updatInfo) {
+                            if (tmp.contains("UPDATE_RECIPE_NOW")) {
+                                parseRecipeMsg(msg, true);
+                                publishProgress((Void) null);
+                            }
+                        }
                         mService.resetUpdateMsg();
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 }
 
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 Log.e("MyLog", e.toString());
             }
             return null;
@@ -193,9 +202,11 @@ public class ACFragment extends Fragment {
             recipeIdTextView.setTextSize(Config.TEXT_SIZE);
             recipeNameTextView.setTextSize(Config.TEXT_SIZE);
 
+            recipeIdTextView.setMaxEms(5);
+
             if (indexOfTitle == 0) {
                 TableRow titleRow = new TableRow(getActivity());
-                TextView bucketTitle= new TextView(getActivity());
+                TextView bucketTitle = new TextView(getActivity());
                 TextView recipeIdTitle = new TextView(getActivity());
                 TextView recipeNameTitle = new TextView(getActivity());
 
@@ -221,8 +232,8 @@ public class ACFragment extends Fragment {
                 recipeNameTitle.setTypeface(null, Typeface.BOLD);
 
                 titleRow.addView(bucketTitle);
-                titleRow.addView(recipeIdTitle);
                 titleRow.addView(recipeNameTitle);
+                titleRow.addView(recipeIdTitle);
 
                 tableLayout.addView(titleRow);
             }

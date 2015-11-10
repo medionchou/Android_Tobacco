@@ -11,9 +11,9 @@ public class LineState {
 
     public LineState(String category, String line, int status, String statusText) {
         if (category.equals("CM")) {
-            this.category = "捲包";
+            this.category = "捲菸機";
         } else if (category.equals("PM")){
-            this.category = "包裝";
+            this.category = "包裝機";
         } else {
             this.category = "濾嘴風送機";
         }

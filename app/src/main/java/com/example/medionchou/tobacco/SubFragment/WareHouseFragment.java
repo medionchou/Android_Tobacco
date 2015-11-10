@@ -80,7 +80,6 @@ public class WareHouseFragment extends Fragment {
         YEAR = year;
         MONTH = month;
         DATE = date;
-        queryTask = new QueryResultTask();
     }
 
     @Nullable
@@ -97,6 +96,7 @@ public class WareHouseFragment extends Fragment {
         } else {
             setCommand(year, month, date);
         }
+        queryTask = new QueryResultTask();
         queryTask.execute((Void) null);
         return rootView;
     }
@@ -156,15 +156,15 @@ public class WareHouseFragment extends Fragment {
 
         if (type.equals("HISTORY")) {
             if (house.equals("3號倉庫")) {
-                cmd = Command.WH_HISTORY_THREE + year + "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_THREE + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("5號倉庫")) {
-                cmd = Command.WH_HISTORY_FIVE + year + "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_FIVE + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("6號倉庫")) {
-                cmd = Command.WH_HISTORY_SIX + year + "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_SIX + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
             } else if (house.equals("總倉庫")){
-                cmd = Command.WH_HISTORY_ALL + year + "\t" + month + "\t" + date + "<END>";
+                cmd = Command.WH_HISTORY_ALL + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
             } else {
-                cmd = Command.SH_HISTORY + year + "\t" + month + "\t" + date + "<END>";
+                cmd = Command.SH_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
             }
         } else {
             if (house.equals("3號倉庫")) {
@@ -258,6 +258,8 @@ public class WareHouseFragment extends Fragment {
                         publishProgress(msg, "", "", "");
                         updateMsgQueue.clear();
                     }
+
+                    Thread.sleep(500);
                 }
             } catch (InterruptedException e) {
                 Log.e("MyLog", "InterruptedException In QueryResultTask: " + e.toString());
@@ -314,8 +316,8 @@ public class WareHouseFragment extends Fragment {
                 wareHouseInfoList.clear();
             }
 
-            for (int i = 0; i < data.length; i = i + 8) {
-                WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
+            for (int i = 0; i < data.length; i = i + 9) {
+                WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8]);
                 wareHouseInfoList.add(info);
             }
         }
@@ -420,6 +422,7 @@ public class WareHouseFragment extends Fragment {
             TextView productName = new TextView(getActivity());
             TextView quantity = new TextView(getActivity());
             TextView unit = new TextView(getActivity());
+            TextView pallet = new TextView(getActivity());
             TextView person = new TextView(getActivity());
 
 
@@ -430,7 +433,12 @@ public class WareHouseFragment extends Fragment {
             productName.setLayoutParams(textViewParams);
             quantity.setLayoutParams(textViewParams);
             unit.setLayoutParams(textViewParams);
+            pallet.setLayoutParams(textViewParams);
             person.setLayoutParams(textViewParams);
+
+            date.setMaxEms(5);
+            productId.setMaxEms(5);
+            productName.setMaxEms(5);
 
 
             if (!info.getDate().equals("")) { //history
@@ -440,6 +448,7 @@ public class WareHouseFragment extends Fragment {
                 productName.setText(info.getProductName());
                 quantity.setText(info.getQuantity());
                 unit.setText(info.getUnit());
+                pallet.setText(info.getPallet());
                 person.setText(info.getPerson());
 
 
@@ -449,6 +458,7 @@ public class WareHouseFragment extends Fragment {
                 productName.setTextSize(Config.TEXT_SIZE);
                 quantity.setTextSize(Config.TEXT_SIZE);
                 unit.setTextSize(Config.TEXT_SIZE);
+                pallet.setTextSize(Config.TEXT_SIZE);
                 person.setTextSize(Config.TEXT_SIZE);
 
 
@@ -462,8 +472,11 @@ public class WareHouseFragment extends Fragment {
                 tableRow.addView(productName);
                 tableRow.addView(quantity);
                 tableRow.addView(unit);
+                tableRow.addView(pallet);
                 tableRow.addView(person);
+
             } else { // now
+
                 productId.setText(info.getProductId());
                 productName.setText(info.getProductName());
                 quantity.setText(info.getQuantity());
@@ -496,6 +509,7 @@ public class WareHouseFragment extends Fragment {
             TextView productNameTitle = new TextView(getActivity());
             TextView quantityTitle = new TextView(getActivity());
             TextView unitTitle = new TextView(getActivity());
+            TextView palletTitle = new TextView(getActivity());
             TextView personTitle = new TextView(getActivity());
 
 
@@ -515,6 +529,7 @@ public class WareHouseFragment extends Fragment {
             productNameTitle.setTextColor(Color.BLACK);
             quantityTitle.setTextColor(Color.BLACK);
             unitTitle.setTextColor(Color.BLACK);
+            palletTitle.setTextColor(Color.BLACK);
             personTitle.setTextColor(Color.BLACK);
 
             dateTitle.setTypeface(null, Typeface.BOLD);
@@ -523,8 +538,8 @@ public class WareHouseFragment extends Fragment {
             productNameTitle.setTypeface(null, Typeface.BOLD);
             quantityTitle.setTypeface(null, Typeface.BOLD);
             unitTitle.setTypeface(null, Typeface.BOLD);
+            palletTitle.setTypeface(null, Typeface.BOLD);
             personTitle.setTypeface(null, Typeface.BOLD);
-
 
             if (isHistory) {
                 dateTitle.setText("日期");
@@ -533,6 +548,7 @@ public class WareHouseFragment extends Fragment {
                 productNameTitle.setText("產品名稱");
                 quantityTitle.setText("數量");
                 unitTitle.setText("單位");
+                palletTitle.setText("棧板數");
                 personTitle.setText("人員");
 
                 dateTitle.setTextSize(Config.TEXT_TITLE_SIZE);
@@ -541,6 +557,7 @@ public class WareHouseFragment extends Fragment {
                 productNameTitle.setTextSize(Config.TEXT_TITLE_SIZE);
                 quantityTitle.setTextSize(Config.TEXT_TITLE_SIZE);
                 unitTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                palletTitle.setTextSize(Config.TEXT_TITLE_SIZE);
                 personTitle.setTextSize(Config.TEXT_TITLE_SIZE);
 
                 titleRow.addView(dateTitle);
@@ -549,6 +566,7 @@ public class WareHouseFragment extends Fragment {
                 titleRow.addView(productNameTitle);
                 titleRow.addView(quantityTitle);
                 titleRow.addView(unitTitle);
+                titleRow.addView(palletTitle);
                 titleRow.addView(personTitle);
             } else {
 

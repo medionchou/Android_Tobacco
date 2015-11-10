@@ -16,10 +16,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -146,7 +148,8 @@ public class CPFragment extends Fragment {
                             String text = updateMsgQueue.get(i);
 
                             if (text.contains("SWAP")) {
-                                parseLineState(text, true);
+                                if (!text.contains("SWAP_HISTORY"))
+                                    parseLineState(text, true);
                             } else if (text.contains("PRODUCT")) {
                                 parseProductLine(text, true);
                             }
@@ -172,7 +175,7 @@ public class CPFragment extends Fragment {
             return (Void) null;
         }
 
-        private String sendCommand(String cmd) {
+        private void sendCommand(String cmd) {
             String msg = "";
             try {
                 while (msg.length() == 0) {
@@ -195,7 +198,6 @@ public class CPFragment extends Fragment {
             } catch (InterruptedException e) {
                 Log.e("MyLog", e.toString() + "SendCommand thread interrupted");
             }
-            return msg;
         }
 
         @Override
@@ -271,11 +273,13 @@ public class CPFragment extends Fragment {
             swap.setTextSize(Config.TEXT_SIZE);
             broadcast.setTextSize(Config.TEXT_SIZE);
 
+            cur_production.setMaxEms(5);
+
             if (index < NUM_PRODUCTION_LINE*2) {
 
                 name.setText("生產線_" + String.valueOf(index / 2 + 1));
                 production_serial.setText("查看生產序列");
-                status.setText(lineStateList.get(index).getCategory() + "_" + lineStateList.get(index).getLineNum());//
+                status.setText(lineStateList.get(index).getCategory());//
                 statusTextView.setText(lineStateList.get(index).getStatusText());//
                 swap.setText("換牌");
                 broadcast.setText("廣播");
@@ -289,7 +293,7 @@ public class CPFragment extends Fragment {
                         swap.setOnClickListener(new SwapDoneListener("SWAP_DONE_RECEIVE\t" + category + "\t" + lineNum + "<END>"));
                         swap.setText("完成");
                     } else if (lineStateList.get(index).getStatus() == Config.GRAY && lineStateList.get(index + 1).getStatus() == Config.GRAY) {
-                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>", productLine.getProductName(0)));
+                        swap.setOnClickListener(new SwapDialogListener("EXE\tSWAP\t" + productLine.getLineNum() + "<END>", productLine));
                     } else {
                         swap.setEnabled(false);
                     }
@@ -451,16 +455,16 @@ public class CPFragment extends Fragment {
             int count;
 
             for (int i = 0; i < data.length; i++) {
-                String[] detail = data[i].split("\\t");
+                String[] detail = data[i].split("\\t", -1);
                 count = 0;
-                ProductLine productLine = new ProductLine(detail[1], detail[2], (detail.length - SIZE) / 2);
+                ProductLine productLine = new ProductLine(detail[1], detail[2], (detail.length - SIZE) / 3);
 
-                for (int j = 3; j < detail.length; j = j + 2) {
+                for (int j = 3; j < detail.length; j = j + 3) {
                     productLine.setProductId(detail[j], count);
                     productLine.setProductName(detail[j + 1], count);
                     productLine.setCurrent(String.valueOf(0), count);
                     productLine.setLeft(String.valueOf(0), count);
-                    productLine.setTotal(String.valueOf(0), count);
+                    productLine.setTotal(detail[j + 2], count);
                     count++;
                 }
 
@@ -475,9 +479,7 @@ public class CPFragment extends Fragment {
                             productLineList.set(j, productLine);
                         }
                     }
-
                 }
-
             }
 
         }
@@ -574,11 +576,12 @@ public class CPFragment extends Fragment {
             private String command;
             private List<String> tmp = new ArrayList<>();
             private String selectedItem;
-            private String productioning;
+            private ProductLine productLine;
 
-            public SwapDialogListener(String cmd, String productioning) {
+            public SwapDialogListener(String cmd, ProductLine productLine) {
                 command = cmd;
-                this.productioning = productioning;
+                this.productLine = productLine;
+                tmp.add("請選擇物料");
                 for (int i = 0; i < recipeLists.size(); i++)
                     tmp.add(recipeLists.get(i).getProductName());
             }
@@ -590,6 +593,7 @@ public class CPFragment extends Fragment {
                 Spinner spinner = (Spinner) custom.findViewById(R.id.spinner);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, tmp);
                 ItemSelectedListener listener = new ItemSelectedListener(this);
+                final int index;
 
                 adapter.setDropDownViewResource(R.layout.spinner_item);
                 spinner.setAdapter(adapter);
@@ -597,28 +601,43 @@ public class CPFragment extends Fragment {
 
                 builder.setView(custom);
                 builder.setTitle("警告");
-                builder.setMessage(Html.fromHtml("換牌後無法<font color='red'>取消</font>\n你確定要執行嗎 ？"));
 
+                if (productLine.getSize() == 1) {
+                    builder.setMessage(Html.fromHtml("即將清除<font color='red'>" + productLine.getProductName(0) + "</font>\n你確定要執行嗎 ？"));
+                    index = 0;
+                } else {
+                    builder.setMessage(Html.fromHtml("即將更換成<font color='red'>" + productLine.getProductName(1) + "</font>\n你確定要執行嗎 ？"));
+                    index = 1;
+                }
 
                 builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String confirmedId = ((EditText)custom.findViewById(R.id.confirm_edit_text)).getText().toString();
-                        String workerId = ((LoggedInActivity)getActivity()).getWorkerId();
+                        String confirmedId = ((EditText) custom.findViewById(R.id.confirm_edit_text)).getText().toString();
+                        String workerId = ((LoggedInActivity) getActivity()).getWorkerId();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                        if (workerId.equals(confirmedId)) {
-                            if (selectedItem.equals(productioning)) {
-                                Log.v("MyLog", "Equal");
-                            } else {
-                                Log.v("MyLog", "Not Equal");
-                            }
-                        }
+//                        if (workerId.equals(confirmedId)) {
+//                            if (selectedItem.equals(productLine.getProductName(index))) {
+//                                mService.setCmd(command);
+//                            } else {
+//                                builder.setTitle("警告");
+//                                builder.setMessage("選擇的物料必須與換排物料相同");
+//                                builder.show();
+//                            }
+//                        } else {
+//                            builder.setTitle("警告");
+//                            builder.setMessage("輸入編號必須與登入編號相同");
+//                            builder.show();
+//                        }
+                        mService.setCmd(command);
                     }
                 });
 
                 AlertDialog alert = builder.create();
                 alert.show();
                 alert.getWindow().getAttributes();
+
                 ((TextView) alert.findViewById(android.R.id.message)).setTextSize(30);
 
             }

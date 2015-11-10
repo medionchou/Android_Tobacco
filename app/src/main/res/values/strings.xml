@@ -8,7 +8,7 @@
     <string name="title_activity_logged_in">菸絲看板</string>
     <string name="title_activity_test">Test</string>
 
-    <string name="progress_dialog_waiting">請稍後</string>
+    <string name="progress_dialog_waiting">請稍候</string>
 
     <string name="logging">登入中....</string>
 
