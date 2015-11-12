@@ -37,10 +37,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Medion on 2015/11/8.
+ * Created by Medion on 2015/11/11.
  */
-public class MSFragment extends Fragment {
-
+public class BoxHistoryFragment extends Fragment {
     private int YEAR;
     private int MONTH;
     private int DATE;
@@ -143,7 +142,7 @@ public class MSFragment extends Fragment {
     }
 
     private void setCommand(int year, int month, int date) {
-        cmd = Command.MS_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
+        cmd = Command.BOX_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
     }
 
     private class QueryAsyncTask extends AsyncTask<Void, String, Void> {
@@ -177,8 +176,8 @@ public class MSFragment extends Fragment {
                         mService.resetQueryReply();
 
                         if (query.length() > 0) {
-                            parseMS(query, false);
-                            msg = "MS_HISTORY";
+                            parseSWAP(query, false);
+                            msg = "BOX_HISTORY";
                         } else {
                             publishProgress("", "ShowDialog", "警告", "查無資料");
                             if (msDataList.size() > 0)
@@ -198,8 +197,8 @@ public class MSFragment extends Fragment {
                         for (int i = 0; i < updateMsgQueue.size(); i++) {
                             String text = updateMsgQueue.get(i);
 
-                            if (text.contains("MS_HISTORY") && isTimeMatch()) {
-                                parseMS(text, true);
+                            if (text.contains("BOX_HISTORY") && isTimeMatch()) {
+                                parseSWAP(text, true);
                             }
                         }
 
@@ -210,7 +209,7 @@ public class MSFragment extends Fragment {
                     Thread.sleep(500);
                 }
             } catch(InterruptedException e) {
-                Log.e("MyLog", "InterruptedException in MSFragment " + e.toString());
+                Log.e("MyLog", "InterruptedException in ASHistoryFragment " + e.toString());
             }
             return (Void)null;
         }
@@ -219,7 +218,7 @@ public class MSFragment extends Fragment {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            if (values[0].equals("MS_HISTORY"))
+            if (values[0].equals("BOX_HISTORY"))
                 inflateView();
 
             if (values[1].equals("ShowDialog")) {
@@ -251,19 +250,20 @@ public class MSFragment extends Fragment {
             return YEAR == year && MONTH == month && DATE == date;
         }
 
-        private void parseMS(String rawData, boolean update) {
-            String[] detailMS = rawData.split("<N>|<END>|\\t");
+        private void parseSWAP(String rawData, boolean update) {
+            String[] detailMS = rawData.split("<N>|<END>");
 
             if (update) {
-                MSData msData = new MSData(detailMS[1], detailMS[2], detailMS[3], detailMS[4], detailMS[5]);
+                MSData msData = new MSData(detailMS[1], detailMS[2], detailMS[3], detailMS[4], "");
                 msDataList.add(msData);
 
             } else {
                 if (msDataList.size() > 0)
                     msDataList.clear();
 
-                for (int i = 0; i < detailMS.length; i = i + 6) {
-                    MSData msData = new MSData(detailMS[i + 1], detailMS[i + 2], detailMS[i + 3], detailMS[i + 4], detailMS[i + 5]);
+                for (int i = 0; i < detailMS.length; i = i + 5) {
+                    String[] tmp = detailMS[i].split("\\t", -1);
+                    MSData msData = new MSData(tmp[1], tmp[2], tmp[3], tmp[4], "");
                     msDataList.add(msData);
                 }
             }
@@ -291,20 +291,17 @@ public class MSFragment extends Fragment {
             TextView rID = (TextView) tableRow.findViewById(R.id.rID);
             TextView rName = (TextView) tableRow.findViewById(R.id.rName);
             TextView staffID = (TextView) tableRow.findViewById(R.id.staffID);
-            TextView staff = (TextView) tableRow.findViewById(R.id.staff);
             MSData msData = msDataList.get(i);
 
             time.setText(msData.getTime());
             rID.setText(msData.getrID());
             rName.setText(msData.getrName());
             staffID.setText(msData.getStaffID());
-            staff.setText(msData.getStaff());
 
             time.setTextSize(Config.TEXT_SIZE);
             rID.setTextSize(Config.TEXT_SIZE);
             rName.setTextSize(Config.TEXT_SIZE);
             staffID.setTextSize(Config.TEXT_SIZE);
-            staff.setTextSize(Config.TEXT_SIZE);
 
             time.setMaxEms(5);
 
@@ -312,36 +309,32 @@ public class MSFragment extends Fragment {
         }
 
         private void addTableTitle() {
+
             TableRow tableRow = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.ms_row_item, null);
             TextView time = (TextView) tableRow.findViewById(R.id.time);
             TextView rID = (TextView) tableRow.findViewById(R.id.rID);
             TextView rName = (TextView) tableRow.findViewById(R.id.rName);
             TextView staffID = (TextView) tableRow.findViewById(R.id.staffID);
-            TextView staff = (TextView) tableRow.findViewById(R.id.staff);
 
             time.setText("時間");
-            rID.setText("配方編號");
-            rName.setText("配方名稱");
-            staffID.setText("流水編號");
-            staff.setText("員工名稱");
+            rID.setText("線號");
+            rName.setText("品牌名稱");
+            staffID.setText("箱數");
 
             time.setTextSize(Config.TEXT_TITLE_SIZE);
             rID.setTextSize(Config.TEXT_TITLE_SIZE);
             rName.setTextSize(Config.TEXT_TITLE_SIZE);
             staffID.setTextSize(Config.TEXT_TITLE_SIZE);
-            staff.setTextSize(Config.TEXT_TITLE_SIZE);
 
             time.setTypeface(null, Typeface.BOLD);
             rID.setTypeface(null, Typeface.BOLD);
             rName.setTypeface(null, Typeface.BOLD);
             staffID.setTypeface(null, Typeface.BOLD);
-            staff.setTypeface(null, Typeface.BOLD);
 
             time.setTextColor(Color.BLACK);
             rID.setTextColor(Color.BLACK);
             rName.setTextColor(Color.BLACK);
             staffID.setTextColor(Color.BLACK);
-            staff.setTextColor(Color.BLACK);
 
 
             tableLayout.addView(tableRow);
@@ -398,11 +391,11 @@ public class MSFragment extends Fragment {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            MSFragment.year = year;
-            MSFragment.month = monthOfYear + 1;
-            MSFragment.date = dayOfMonth;
+            BoxHistoryFragment.year = year;
+            BoxHistoryFragment.month = monthOfYear + 1;
+            BoxHistoryFragment.date = dayOfMonth;
 
-            String dateInfo = MSFragment.year + "/" + MSFragment.month + "/" + MSFragment.date;
+            String dateInfo = BoxHistoryFragment.year + "/" + BoxHistoryFragment.month + "/" + BoxHistoryFragment.date;
             dateTextView.setText(dateInfo);
 
         }

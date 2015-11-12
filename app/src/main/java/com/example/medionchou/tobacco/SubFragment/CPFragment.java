@@ -617,20 +617,20 @@ public class CPFragment extends Fragment {
                         String workerId = ((LoggedInActivity) getActivity()).getWorkerId();
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-//                        if (workerId.equals(confirmedId)) {
-//                            if (selectedItem.equals(productLine.getProductName(index))) {
-//                                mService.setCmd(command);
-//                            } else {
-//                                builder.setTitle("警告");
-//                                builder.setMessage("選擇的物料必須與換排物料相同");
-//                                builder.show();
-//                            }
-//                        } else {
-//                            builder.setTitle("警告");
-//                            builder.setMessage("輸入編號必須與登入編號相同");
-//                            builder.show();
-//                        }
-                        mService.setCmd(command);
+                        if (workerId.equals(confirmedId)) {
+                            if (selectedItem.equals(productLine.getProductName(index))) {
+                                mService.setCmd(command);
+                            } else {
+                                builder.setTitle("警告");
+                                builder.setMessage("選擇的物料必須與換排物料相同");
+                                builder.show();
+                            }
+                        } else {
+                            builder.setTitle("警告");
+                            builder.setMessage("輸入編號必須與登入編號相同");
+                            builder.show();
+                        }
+
                     }
                 });
 

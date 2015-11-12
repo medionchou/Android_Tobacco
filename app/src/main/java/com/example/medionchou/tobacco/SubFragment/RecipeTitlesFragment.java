@@ -74,7 +74,7 @@ public class RecipeTitlesFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"配料歷史", "加香情況"};
+            group = new String[] {"加香情況", "加香歷史", "配料歷史"};
             children = new String [][] {
                     {},
                     {}
@@ -105,6 +105,8 @@ public class RecipeTitlesFragment extends Fragment {
                         newFrag = new MSFragment();
                     } else if (getGroup(groupPosition).equals("加香情況")) {
                         newFrag = new ACFragment();
+                    } else if (getGroup(groupPosition).equals("加香歷史")) {
+                        newFrag = new ASHistoryFragment();
                     }
 
                     if (newFrag != null)

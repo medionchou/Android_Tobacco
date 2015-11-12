@@ -37,9 +37,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Medion on 2015/11/8.
+ * Created by Medion on 2015/11/11.
  */
-public class MSFragment extends Fragment {
+public class ASHistoryFragment extends Fragment {
 
     private int YEAR;
     private int MONTH;
@@ -143,7 +143,7 @@ public class MSFragment extends Fragment {
     }
 
     private void setCommand(int year, int month, int date) {
-        cmd = Command.MS_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
+        cmd = Command.AS_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
     }
 
     private class QueryAsyncTask extends AsyncTask<Void, String, Void> {
@@ -177,8 +177,8 @@ public class MSFragment extends Fragment {
                         mService.resetQueryReply();
 
                         if (query.length() > 0) {
-                            parseMS(query, false);
-                            msg = "MS_HISTORY";
+                            parseSWAP(query, false);
+                            msg = "AS_HISTORY";
                         } else {
                             publishProgress("", "ShowDialog", "警告", "查無資料");
                             if (msDataList.size() > 0)
@@ -198,8 +198,8 @@ public class MSFragment extends Fragment {
                         for (int i = 0; i < updateMsgQueue.size(); i++) {
                             String text = updateMsgQueue.get(i);
 
-                            if (text.contains("MS_HISTORY") && isTimeMatch()) {
-                                parseMS(text, true);
+                            if (text.contains("AS_HISTORY") && isTimeMatch()) {
+                                parseSWAP(text, true);
                             }
                         }
 
@@ -210,7 +210,7 @@ public class MSFragment extends Fragment {
                     Thread.sleep(500);
                 }
             } catch(InterruptedException e) {
-                Log.e("MyLog", "InterruptedException in MSFragment " + e.toString());
+                Log.e("MyLog", "InterruptedException in ASHistoryFragment " + e.toString());
             }
             return (Void)null;
         }
@@ -219,7 +219,7 @@ public class MSFragment extends Fragment {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            if (values[0].equals("MS_HISTORY"))
+            if (values[0].equals("AS_HISTORY"))
                 inflateView();
 
             if (values[1].equals("ShowDialog")) {
@@ -251,8 +251,8 @@ public class MSFragment extends Fragment {
             return YEAR == year && MONTH == month && DATE == date;
         }
 
-        private void parseMS(String rawData, boolean update) {
-            String[] detailMS = rawData.split("<N>|<END>|\\t");
+        private void parseSWAP(String rawData, boolean update) {
+            String[] detailMS = rawData.split("<N>|<END>");
 
             if (update) {
                 MSData msData = new MSData(detailMS[1], detailMS[2], detailMS[3], detailMS[4], detailMS[5]);
@@ -263,7 +263,8 @@ public class MSFragment extends Fragment {
                     msDataList.clear();
 
                 for (int i = 0; i < detailMS.length; i = i + 6) {
-                    MSData msData = new MSData(detailMS[i + 1], detailMS[i + 2], detailMS[i + 3], detailMS[i + 4], detailMS[i + 5]);
+                    String[] tmp = detailMS[i].split("\\t", -1);
+                    MSData msData = new MSData(tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]);
                     msDataList.add(msData);
                 }
             }
@@ -320,10 +321,10 @@ public class MSFragment extends Fragment {
             TextView staff = (TextView) tableRow.findViewById(R.id.staff);
 
             time.setText("時間");
-            rID.setText("配方編號");
-            rName.setText("配方名稱");
-            staffID.setText("流水編號");
-            staff.setText("員工名稱");
+            rID.setText("配方名稱");
+            rName.setText("流水編號");
+            staffID.setText("員工姓名");
+            staff.setText("備註");
 
             time.setTextSize(Config.TEXT_TITLE_SIZE);
             rID.setTextSize(Config.TEXT_TITLE_SIZE);
@@ -398,13 +399,14 @@ public class MSFragment extends Fragment {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            MSFragment.year = year;
-            MSFragment.month = monthOfYear + 1;
-            MSFragment.date = dayOfMonth;
+            ASHistoryFragment.year = year;
+            ASHistoryFragment.month = monthOfYear + 1;
+            ASHistoryFragment.date = dayOfMonth;
 
-            String dateInfo = MSFragment.year + "/" + MSFragment.month + "/" + MSFragment.date;
+            String dateInfo = ASHistoryFragment.year + "/" + ASHistoryFragment.month + "/" + ASHistoryFragment.date;
             dateTextView.setText(dateInfo);
 
         }
     }
+
 }

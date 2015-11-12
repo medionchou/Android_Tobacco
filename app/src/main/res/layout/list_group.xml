@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:paddingLeft="30dp"
-        android:paddingTop="1dip"
+        android:paddingTop="5dp"
         android:textColor="#3f51b5"
         android:textSize="30sp"
         android:textStyle="bold"

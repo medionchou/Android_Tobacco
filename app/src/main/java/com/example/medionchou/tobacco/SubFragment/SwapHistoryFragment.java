@@ -37,9 +37,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Medion on 2015/11/8.
+ * Created by Medion on 2015/11/11.
  */
-public class MSFragment extends Fragment {
+public class SwapHistoryFragment extends Fragment {
 
     private int YEAR;
     private int MONTH;
@@ -143,7 +143,7 @@ public class MSFragment extends Fragment {
     }
 
     private void setCommand(int year, int month, int date) {
-        cmd = Command.MS_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
+        cmd = Command.SWAP_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
     }
 
     private class QueryAsyncTask extends AsyncTask<Void, String, Void> {
@@ -177,8 +177,8 @@ public class MSFragment extends Fragment {
                         mService.resetQueryReply();
 
                         if (query.length() > 0) {
-                            parseMS(query, false);
-                            msg = "MS_HISTORY";
+                            parseSWAP(query, false);
+                            msg = "SWAP_HISTORY";
                         } else {
                             publishProgress("", "ShowDialog", "警告", "查無資料");
                             if (msDataList.size() > 0)
@@ -198,8 +198,8 @@ public class MSFragment extends Fragment {
                         for (int i = 0; i < updateMsgQueue.size(); i++) {
                             String text = updateMsgQueue.get(i);
 
-                            if (text.contains("MS_HISTORY") && isTimeMatch()) {
-                                parseMS(text, true);
+                            if (text.contains("SWAP_HISTORY") && isTimeMatch()) {
+                                parseSWAP(text, true);
                             }
                         }
 
@@ -210,7 +210,7 @@ public class MSFragment extends Fragment {
                     Thread.sleep(500);
                 }
             } catch(InterruptedException e) {
-                Log.e("MyLog", "InterruptedException in MSFragment " + e.toString());
+                Log.e("MyLog", "InterruptedException in SwapHistoryFragment " + e.toString());
             }
             return (Void)null;
         }
@@ -219,7 +219,7 @@ public class MSFragment extends Fragment {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            if (values[0].equals("MS_HISTORY"))
+            if (values[0].equals("SWAP_HISTORY"))
                 inflateView();
 
             if (values[1].equals("ShowDialog")) {
@@ -251,7 +251,7 @@ public class MSFragment extends Fragment {
             return YEAR == year && MONTH == month && DATE == date;
         }
 
-        private void parseMS(String rawData, boolean update) {
+        private void parseSWAP(String rawData, boolean update) {
             String[] detailMS = rawData.split("<N>|<END>|\\t");
 
             if (update) {
@@ -320,10 +320,10 @@ public class MSFragment extends Fragment {
             TextView staff = (TextView) tableRow.findViewById(R.id.staff);
 
             time.setText("時間");
-            rID.setText("配方編號");
-            rName.setText("配方名稱");
+            rID.setText("從某品牌");
+            rName.setText("換成品牌");
             staffID.setText("流水編號");
-            staff.setText("員工名稱");
+            staff.setText("員工姓名");
 
             time.setTextSize(Config.TEXT_TITLE_SIZE);
             rID.setTextSize(Config.TEXT_TITLE_SIZE);
@@ -398,11 +398,11 @@ public class MSFragment extends Fragment {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            MSFragment.year = year;
-            MSFragment.month = monthOfYear + 1;
-            MSFragment.date = dayOfMonth;
+            SwapHistoryFragment.year = year;
+            SwapHistoryFragment.month = monthOfYear + 1;
+            SwapHistoryFragment.date = dayOfMonth;
 
-            String dateInfo = MSFragment.year + "/" + MSFragment.month + "/" + MSFragment.date;
+            String dateInfo = SwapHistoryFragment.year + "/" + SwapHistoryFragment.month + "/" + SwapHistoryFragment.date;
             dateTextView.setText(dateInfo);
 
         }

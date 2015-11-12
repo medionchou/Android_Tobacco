@@ -229,6 +229,10 @@ public class WareHouseFragment extends Fragment {
                             }
                         } else {
                             publishProgress("", "ShowDialog", "警告", "查無資料");
+                            if (sideHouseList.size() > 0)
+                                sideHouseList.clear();
+                            if (wareHouseInfoList.size() > 0)
+                                wareHouseInfoList.clear();
                         }
 
                         publishProgress(msg, "", "", "");

@@ -1,6 +1,5 @@
 package com.example.medionchou.tobacco.SubFragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,13 +8,23 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,10 +38,7 @@ import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,7 +49,6 @@ public class InsertFragment extends Fragment {
     private LocalService mService;
     private TableLayout tableLayout;
     private ProductAsynTask asyncTask;
-
 
 
     @Override
@@ -137,9 +142,9 @@ public class InsertFragment extends Fragment {
                     Thread.sleep(500);
                 }
             } catch (InterruptedException e) {
-                Log.v("MyLog", "InsertFragment " + e.toString());
+                Log.e("MyLog", "InsertFragment " + e.toString());
             }
-            return (Void)null;
+            return (Void) null;
         }
 
         @Override
@@ -233,11 +238,12 @@ public class InsertFragment extends Fragment {
         }
 
         private void addTableRow(int i) {
-            TableRow tableRow = (TableRow)getActivity().getLayoutInflater().inflate(R.layout.production_row_item, null);
-            TextView lineNum = (TextView)tableRow.findViewById(R.id.line_num);
-            TextView cur_production = (TextView)tableRow.findViewById(R.id.current_production);
-            TextView next_production = (TextView)tableRow.findViewById(R.id.next_production);
-            Button insert = (Button)tableRow.findViewById(R.id.insert);
+
+            TableRow tableRow = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.production_row_item, null);
+            TextView lineNum = (TextView) tableRow.findViewById(R.id.line_num);
+            TextView cur_production = (TextView) tableRow.findViewById(R.id.current_production);
+            TextView next_production = (TextView) tableRow.findViewById(R.id.next_production);
+            Button insert = (Button) tableRow.findViewById(R.id.insert);
 
             ProductLine productLine = productLineList.get(i);
 
@@ -261,7 +267,6 @@ public class InsertFragment extends Fragment {
             } else if (productLine.getSize() == 1) {
                 cur_production.setText(productLine.getProductName(0));
                 next_production.setText("無生產資料");
-
             } else {
                 cur_production.setText("無生產資料");
                 next_production.setText("無生產資料");
@@ -273,6 +278,7 @@ public class InsertFragment extends Fragment {
         }
 
         private void addTableTitle() {
+
             TableRow tableRow = new TableRow(getActivity());
             TextView lineNum = new TextView(getActivity());
             TextView cur_production = new TextView(getActivity());
@@ -314,21 +320,27 @@ public class InsertFragment extends Fragment {
         }
 
         private class ModificationListener implements View.OnClickListener {
+
             ProductLine productLine;
+            AlertDialog.Builder builder;
+            AlertDialog alert;
+            List<String> tmp = new ArrayList<>();
 
             public ModificationListener(ProductLine productLine) {
                 this.productLine = productLine;
+                builder = new AlertDialog.Builder(getActivity());
+                alert = builder.create();
+
+                for (int i = 0;i < recipeLists.size(); i++) {
+                    tmp.add(recipeLists.get(i).getProductName());
+                }
             }
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                builder.setView(getCustomLayout());
-
-                builder.setTitle("Testtt");
-
-                builder.show();
+                alert.setView(getCustomLayout());
+                alert.setTitle("插牌及刪除功能");
+                alert.show();
             }
 
             private ScrollView getCustomLayout() {
@@ -343,8 +355,7 @@ public class InsertFragment extends Fragment {
                 tableLayout.addView(getTableTitle());
 
                 for (int i = 1; i < productLine.getSize(); i++) {
-                   TableRow row = getTableRow(i);
-
+                    TableRow row = getTableRow(i);
                     tableLayout.addView(row);
                 }
 
@@ -398,11 +409,11 @@ public class InsertFragment extends Fragment {
 
             private TableRow getTableRow(int i) {
                 TableRow tableRow = (TableRow) getActivity().getLayoutInflater().inflate(R.layout.dialog_item, null);
-                TextView identity = (TextView)tableRow.findViewById(R.id.identifier);
-                TextView productName = (TextView)tableRow.findViewById(R.id.product_name);
-                TextView quantity = (TextView)tableRow.findViewById(R.id.quantity);
-                TextView delete = (TextView)tableRow.findViewById(R.id.delete);
-                TextView modify = (TextView)tableRow.findViewById(R.id.modify);
+                TextView identity = (TextView) tableRow.findViewById(R.id.identifier);
+                TextView productName = (TextView) tableRow.findViewById(R.id.product_name);
+                TextView quantity = (TextView) tableRow.findViewById(R.id.quantity);
+                TextView delete = (TextView) tableRow.findViewById(R.id.delete);
+                TextView modify = (TextView) tableRow.findViewById(R.id.modify);
 
                 identity.setText(productLine.getProductId(i));
                 productName.setText(productLine.getProductName(i));
@@ -416,7 +427,294 @@ public class InsertFragment extends Fragment {
                 delete.setTextSize(Config.DIALOG_SIZE);
                 modify.setTextSize(Config.DIALOG_SIZE);
 
+                delete.setOnClickListener(new DeletionListener(productLine.getCategory(), productLine.getLineNum(), Integer.toString(i)));
+                modify.setOnClickListener(new InsertionListener(productLine.getCategory(), productLine.getLineNum(), Integer.toString(i)));
+
                 return tableRow;
+            }
+
+            private class InsertionListener implements View.OnClickListener {
+
+                final int SIZE = 9;
+
+                String category;
+                String lineNum;
+                String indexOfInsertion;
+                AlertDialog.Builder insertionAlertbuilder;
+                AlertDialog insertionAlert;
+                char[] checkBit;
+                char filterType;
+                int indexOfSelectedProduct;
+
+                public InsertionListener(String category, String lineNum, String index) {
+                    this.category = category;
+                    this.lineNum = lineNum;
+                    this.indexOfInsertion = index;
+                    insertionAlertbuilder = new AlertDialog.Builder(getActivity());
+
+
+                    checkBit = new char[SIZE];
+
+                    for (int i = 0; i < SIZE; i++) {
+                        checkBit[i] = '0';
+                    }
+                }
+
+                @Override
+                public void onClick(View v) {
+                    final RelativeLayout relativeLayout = createCustomView();
+                    insertionAlert = insertionAlertbuilder.create();
+                    insertionAlert.setView(relativeLayout);
+                    insertionAlert.setTitle("發佈產品");
+                    insertionAlert.show();
+
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+
+                    insertionAlert.getWindow().setAttributes(lp);
+                }
+
+                private RelativeLayout createCustomView() {
+
+                    RelativeLayout relativeLayout = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.insertion_layout, null);
+                    Spinner spinner = (Spinner) relativeLayout.findViewById(R.id.spinner);
+                    RadioGroup radioGroup = (RadioGroup)relativeLayout.findViewById(R.id.radiogroup);
+                    EditText editText = (EditText)relativeLayout.findViewById(R.id.numberOf);
+                    TextView numberOfBoxes = (TextView)relativeLayout.findViewById(R.id.numberOfBoxes);
+                    TextView totalTextView = (TextView)relativeLayout.findViewById(R.id.total);
+                    Button confirm = (Button)relativeLayout.findViewById(R.id.send);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, tmp);
+                    ItemSelectedListener listener = new ItemSelectedListener();
+                    CheckBox[] checkBoxes = new CheckBox[SIZE];
+                    int[] ids = {R.id.line1, R.id.line2, R.id.line3, R.id.line4, R.id.line5, R.id.line6, R.id.line7, R.id.line8, R.id.line9};
+
+                    radioGroup.setOnCheckedChangeListener(new RadioButtonListener());
+
+                    for (int i = 0; i < SIZE; i++) {
+                        checkBoxes[i] = (CheckBox) relativeLayout.findViewById(ids[i]);
+                        checkBoxes[i].setOnCheckedChangeListener(new CheckBoxListener(i, editText, totalTextView));
+                    }
+
+
+                    adapter.setDropDownViewResource(R.layout.spinner_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setOnItemSelectedListener(listener);
+
+                    editText.addTextChangedListener(new EditTextWatcher(numberOfBoxes, totalTextView));
+                    confirm.setOnClickListener(new SendListener(totalTextView));
+
+                    return relativeLayout;
+                }
+
+                private class ItemSelectedListener implements Spinner.OnItemSelectedListener {
+
+                    public ItemSelectedListener() {
+
+                    }
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        indexOfSelectedProduct = position;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                }
+
+                private class RadioButtonListener implements RadioGroup.OnCheckedChangeListener {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId){
+                            case R.id.f1:
+                                filterType = '1';
+                                break;
+                            case R.id.manual:
+                                filterType = 'H';
+                                break;
+                        }
+                    }
+                }
+
+                private class CheckBoxListener implements  CheckBox.OnCheckedChangeListener {
+
+                    int index;
+                    EditText editText;
+                    TextView totalTextView;
+                    public CheckBoxListener(int index, EditText editText, TextView total) {
+                        this.index = index;
+                        this.editText = editText;
+                        this.totalTextView = total;
+                    }
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        int length = totalTextView.getText().toString().length();
+                        int totalNumber = Integer.valueOf(totalTextView.getText().toString().substring(2, length - 2));
+                        int boxes = 0;
+
+                        if (!editText.getText().toString().equals(""))
+                            boxes = Integer.valueOf(editText.getText().toString()) * 200;
+
+                        if (isChecked) {
+                            checkBit[index] = '1';
+                            totalNumber +=  boxes;
+                        } else {
+                            checkBit[index] = '0';
+                            totalNumber -=  boxes;
+                        }
+
+                        totalTextView.setText("共 " + String.valueOf(totalNumber) + " 箱");
+                    }
+                }
+
+                private class EditTextWatcher implements TextWatcher {
+                    TextView numberOfBoxes;
+                    TextView totalTextView;
+
+                    public EditTextWatcher(TextView numberOfBoxes, TextView total) {
+                        this.numberOfBoxes = numberOfBoxes;
+                        this.totalTextView = total;
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        int totalLine = 0;
+                        int boxes = 0;
+
+                        if (!s.toString().equals(""))
+                            boxes = 200 * Integer.valueOf(s.toString());
+
+                        for (int i = 0; i < SIZE; i++) {
+                            totalLine += Character.getNumericValue(checkBit[i]);
+                        }
+
+                        numberOfBoxes.setText("每條線生產 " + String.valueOf(boxes) + " 箱");
+                        totalTextView.setText("共 " + String.valueOf(boxes * totalLine) + " 箱");
+                    }
+                }
+
+                private class SendListener implements View.OnClickListener {
+
+                    TextView totalTextView;
+                    int count;
+
+                    public SendListener(TextView totalTextView) {
+                        this.totalTextView = totalTextView;
+                        count = 0;
+                    }
+
+                    @Override
+                    public void onClick(View v) {
+                        String command = "";
+                        AlertDialog.Builder warning = new AlertDialog.Builder(getActivity());
+
+                        warning.setTitle("警告");
+                        if (isLineChecked()) {
+                            if (isFilterChoosed()) {
+                                if (isBoxEntered()) {
+                                    command += "EXE\tRECIPE_INSERT\t" + productLine.getCategory() + "\t" + productLine.getLineNum() + "\t"+ String.valueOf(indexOfInsertion) + "\t";
+                                    command += getInsertLineNum() + "\t" + filterType + "\t";
+                                    command += recipeLists.get(indexOfSelectedProduct).getSerialNum() + "\t" + getTotalOfBoxes() + "<END>";
+                                    insertionAlert.dismiss();
+                                    alert.dismiss();
+                                    mService.setCmd(command);
+                                    warning.setMessage("插牌成功");
+                                } else {
+                                    warning.setMessage("請輸入班數");
+                                }
+                            } else {
+                                warning.setMessage("請選擇濾嘴");
+                            }
+                        } else {
+                            warning.setMessage("請選擇生產線");
+                        }
+                        warning.show();
+                    }
+
+                    private boolean isLineChecked() {
+                        boolean res = false;
+
+                        for (int i = 0; i < SIZE; i++) {
+                            if (checkBit[i] == '1') {
+                                count += 1;
+                                res = true;
+                            }
+                        }
+
+                        return res;
+                    }
+
+                    private boolean isFilterChoosed() {
+                        if (filterType == 'H' || filterType == '1')
+                            return true;
+
+                        return false;
+                    }
+
+                    private boolean isBoxEntered() {
+                        int length = totalTextView.getText().toString().length();
+                        int number = Integer.valueOf(totalTextView.getText().toString().substring(2, length - 2));
+
+                        if (number == 0)
+                            return false;
+
+                        return true;
+                    }
+
+                    private String getInsertLineNum() {
+                        String lineNum = "";
+                        int cnt = 0;
+
+                        for (int i = 0; i < SIZE; i++) {
+                            if (checkBit[i] == '1') {
+                                lineNum += String.valueOf(i + 1);
+                                if (cnt < count-1)
+                                    lineNum += ",";
+                                cnt++;
+                            }
+                        }
+                        return lineNum;
+                    }
+
+                    private String getTotalOfBoxes() {
+                        int length = totalTextView.getText().toString().length();
+                        String number = totalTextView.getText().toString().substring(2, length - 2);
+
+                        return number;
+                    }
+                }
+            }
+
+            private class DeletionListener implements View.OnClickListener {
+
+                String category;
+                String lineNum;
+                String indexOfDeletion;
+
+                public DeletionListener(String category, String lineNum, String index) {
+                    this.category = category;
+                    this.lineNum = lineNum;
+                    this.indexOfDeletion = index;
+                }
+
+                @Override
+                public void onClick(View v) {
+                    mService.setCmd("EXE\tRECIPE_DELETE\t" + category + "\t" +lineNum + "\t" + indexOfDeletion + "<END>");
+                    alert.cancel();
+                }
             }
         }
     }

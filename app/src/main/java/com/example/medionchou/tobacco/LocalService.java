@@ -22,7 +22,7 @@ import java.util.List;
 
 public class LocalService extends Service implements Runnable {
 
-    private final String SERVER_IP = "140.113.167.14";
+    private final String SERVER_IP = "192.168.1.250";
     private final int SERVER_PORT = 9000;
     private final IBinder mBinder = new LocalBinder();
 

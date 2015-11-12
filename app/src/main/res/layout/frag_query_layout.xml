@@ -17,6 +17,7 @@
 
         <TableLayout
             android:id="@+id/table_layout_container"
+            android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></TableLayout>
     </ScrollView>

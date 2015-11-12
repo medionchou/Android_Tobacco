@@ -74,7 +74,7 @@ public class ProductionTitleFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"切牌", "生產線"};
+            group = new String[] {"切牌", "生產線", "換牌歷史"};
             children = new String [][] {
                     {},
                     {}
@@ -103,9 +103,10 @@ public class ProductionTitleFragment extends Fragment {
 
                     if (getGroup(groupPosition).equals("切牌")) {
                         newFrag = new InsertFragment();
-
                     } else if (getGroup(groupPosition).equals("生產線")) {
                         newFrag = new CPFragment();
+                    } else if (getGroup(groupPosition).equals("換牌歷史")) {
+                        newFrag = new SwapHistoryFragment();
                     }
 
                     if (newFrag != null)

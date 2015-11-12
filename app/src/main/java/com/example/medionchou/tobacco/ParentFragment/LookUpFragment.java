@@ -136,6 +136,7 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
+
             IngreTitlesFragment ingreTitlesFragment = new IngreTitlesFragment();
             ingreTitlesFragment.setParentFrag(LookUpFragment.this);
             createFragment(ingreTitlesFragment, R.id.title_frag_container, TAG_TITLE);
@@ -152,10 +153,6 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
-//            CPFragment cpFragment = new CPFragment();
-//            createFragment(cpFragment, R.id.content_frag_container, TAG_CONTENT);
-//            deleteFragment(TAG_TITLE);
-//            setTitleFrameLayoutWeight(0f);
 
             ProductionTitleFragment productionTitleFragment = new ProductionTitleFragment();
             productionTitleFragment.setParentFrag(LookUpFragment.this);
@@ -174,6 +171,7 @@ public class LookUpFragment extends Fragment{
                     Disconnect with Server;
                  */
             }
+
             RecipeTitlesFragment recipeTitlesFragment = new RecipeTitlesFragment();
             recipeTitlesFragment.setParentFrag(LookUpFragment.this);
             createFragment(recipeTitlesFragment, R.id.title_frag_container, TAG_TITLE);
@@ -192,17 +190,11 @@ public class LookUpFragment extends Fragment{
                  */
             }
 
-            /*DeviceFragment deviceFragment = new DeviceFragment();
-            createFragment(deviceFragment, R.id.content_frag_container, TAG_CONTENT);
-            deleteFragment(TAG_TITLE);
-            setTitleFrameLayoutWeight(0f);*/
-
             OtherTitlesFragment otherTitlesFragment = new OtherTitlesFragment();
             otherTitlesFragment.setParentFrag(LookUpFragment.this);
             createFragment(otherTitlesFragment, R.id.title_frag_container, TAG_TITLE);
             deleteFragment(TAG_CONTENT);
             setTitleFrameLayoutWeight(1f);
-
         }
     }
 
