@@ -49,7 +49,6 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
-        initObject();
         Bundle extras = getIntent().getExtras();
         workerId = extras.getString("WorkerId");
     }
@@ -57,6 +56,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     @Override
     protected void onStart() {
         super.onStart();
+        initObject();
         Intent intent = new Intent(this, LocalService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         /*if (thread.getState() == Thread.State.NEW) {
@@ -73,7 +73,13 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
             unbindService(mConnection);
         }
         thread.stopThread();
+        thread = null;
         logoutTimer.cancel();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
     @Override
@@ -111,17 +117,17 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     private class RunningTextThread extends Thread {
 
         private boolean stop = false;
-        String msg;
+        String msg = "";
         String oldMsg = "";
 
         @Override
         public void run() {
             super.run();
             LocalService mService;
-            while (!mConnection.isBound()) {
+            while (!mConnection.isBound());
 
-            }
             mService = mConnection.getService();
+
             while (!stop) {
                 try {
                     msg = mService.getMsg();

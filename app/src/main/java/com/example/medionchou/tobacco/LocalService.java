@@ -2,12 +2,14 @@ package com.example.medionchou.tobacco;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.*;
 import android.os.Process;
 import android.util.Log;
 
 import com.example.medionchou.tobacco.Activity.MainActivity;
 import com.example.medionchou.tobacco.Constants.Command;
+import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.Constants.States;
 
 import java.io.IOException;
@@ -22,8 +24,8 @@ import java.util.List;
 
 public class LocalService extends Service implements Runnable {
 
-    private final String SERVER_IP = "192.168.1.250";
-    private final int SERVER_PORT = 9000;
+    private String SERVER_IP = "140.113.167.14";
+    private int SERVER_PORT = 9000;
     private final IBinder mBinder = new LocalBinder();
 
     private SocketChannel socketChannel;
@@ -49,6 +51,9 @@ public class LocalService extends Service implements Runnable {
         /*initObject();
         client.start();*/
         //Log.v("MyLog", "ServiceOnCreate");
+        SharedPreferences settings = getSharedPreferences(Config.IPCONFIG, 0);
+        SERVER_IP = settings.getString("IP", "140.113.167.14");
+        SERVER_PORT = settings.getInt("PORT", 9000);
     }
 
     @Override
@@ -134,7 +139,7 @@ public class LocalService extends Service implements Runnable {
 
                         if (buffer.get(buffer.size() - 1) > 0) {
                             byte[] tmp = new byte[buffer.size()];
-                            for (int i = 0; i < buffer.size(); i++)
+                            for (int i = 0; i < tmp.length; i++)
                                 tmp[i] = buffer.get(i);
                             serverReply += new String(tmp, "UTF-8");
                             buffer.clear();
@@ -180,7 +185,7 @@ public class LocalService extends Service implements Runnable {
                     switch (client_state) {
                         case States.CONNECT_INITIALZING:
                             outStream = CharBuffer.wrap(Command.CONNECT_SERVER);
-                            while (outStream.hasRemaining()) {
+                            while (outStream.hasRemaining() && socketChannel != null) {
                                 socketChannel.write(Charset.defaultCharset().encode(outStream));
                             }
                             Thread.sleep(2000);
@@ -213,11 +218,10 @@ public class LocalService extends Service implements Runnable {
                 /* TODO:
                         Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
                  */
-
                 Log.v("MyLog", "Re-connection");
             }
 
-        } catch (NullPointerException e) {
+        } catch(NotYetConnectedException e) {
 
             Log.e("MyLog", e.toString());
             stopSelf();
@@ -229,6 +233,7 @@ public class LocalService extends Service implements Runnable {
             try {
                 if (socketChannel != null)
                     socketChannel.close();
+                isTerminated = true;
             } catch (IOException err) {
                 Log.v("MyLog", "IOException " + err.toString());
             }

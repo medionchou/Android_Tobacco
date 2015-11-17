@@ -63,14 +63,14 @@ public class ScheduleFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.frag_schedule_layout, container, false);
         tableLayout = (TableLayout) rootView.findViewById(R.id.schedule_table_layout);
         tableLayout.setStretchAllColumns(true);
+        schedulAsync = new ScheduleAsync();
+        schedulAsync.execute((Void) null);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        schedulAsync = new ScheduleAsync();
-        schedulAsync.execute();
     }
 
     @Override
@@ -104,20 +104,25 @@ public class ScheduleFragment extends Fragment {
             String reply = "";
 
             try{
+                mService.setCmd(Command.SCHEDULE);
+                Thread.sleep(2000);
+
+
+                while (reply.length() == 0) {
+                    reply = mService.getQueryReply();
+                    Thread.sleep(1000);
+                }
+
+                mService.resetQueryReply();
+                parseSchedule(reply);
+                publishProgress("Update");
+
                 while (!isCancelled()) {
 
-                    while (reply.length() == 0) {
-                        mService.setCmd(Command.SCHEDULE);
-                        Thread.sleep(2000);
-                        reply = mService.getQueryReply();
-                        parseSchedule(reply);
-                        publishProgress("Update");
-                    }
 
-                    if (progressDialog.isShowing())
-                        publishProgress("");
 
                     Thread.sleep(2000);
+
                 }
 
             } catch (InterruptedException e) {
@@ -130,16 +135,13 @@ public class ScheduleFragment extends Fragment {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
             if (progressDialog.isShowing())
-                progressDialog.dismiss();
+                progressDialog.cancel();
+
             if (values[0].equals("Update")) {
                 inflateView();
             }
         }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
 
         private void parseSchedule(String rawData) {
             String[] officeInfo = rawData.split("<N>|<END>");
@@ -157,6 +159,7 @@ public class ScheduleFragment extends Fragment {
         }
 
         public void inflateView() {
+            tableLayout.removeAllViews();
             for (int i = 0; i < scheduleList.size(); i=i+4) {
                 addTableRow(i);
             }

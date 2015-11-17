@@ -16,6 +16,8 @@ public class Config {
     public static final int YELLOW = 2;
     public static final int GREEN = 3;
 
+    public static final String IPCONFIG = "IPFILE";
+
 
     public static int getColor(int code) {
         switch (code) {

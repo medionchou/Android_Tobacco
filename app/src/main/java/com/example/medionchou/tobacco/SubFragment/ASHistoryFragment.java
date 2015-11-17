@@ -168,12 +168,14 @@ public class ASHistoryFragment extends Fragment {
                 while (!isCancelled()) {
 
                     if (cmd.length() > 0) {
+
+
                         mService.setCmd(cmd);
                         publishProgress("", "ShowDialog", "", "");
+
                         Thread.sleep(2000);
-
-
                         query = mService.getQueryReply();
+
                         mService.resetQueryReply();
 
                         if (query.length() > 0) {

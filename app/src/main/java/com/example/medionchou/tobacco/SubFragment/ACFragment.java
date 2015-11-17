@@ -100,7 +100,6 @@ public class ACFragment extends Fragment {
             String msg = "";
             try {
 
-
                 mService.setCmd(Command.RECIPE_NOW);
                 Thread.sleep(2000);
 

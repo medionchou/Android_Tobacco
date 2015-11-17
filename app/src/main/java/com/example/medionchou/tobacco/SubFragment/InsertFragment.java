@@ -71,15 +71,14 @@ public class InsertFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.frag_product_layout, container, false);
         tableLayout = (TableLayout) rootView.findViewById(R.id.product_table_layout);
         tableLayout.setStretchAllColumns(true);
+        asyncTask = new ProductAsynTask();
+        asyncTask.execute((Void) null);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        asyncTask = new ProductAsynTask();
-        asyncTask.execute((Void) null);
-
     }
 
     @Override

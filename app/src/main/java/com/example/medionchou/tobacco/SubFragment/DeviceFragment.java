@@ -62,16 +62,16 @@ public class DeviceFragment extends Fragment {
 
         first_col.setStretchAllColumns(true);
         second_col.setStretchAllColumns(true);
+        asynTask = new DeviceStatusTask();
+        asynTask.execute((Void) null);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        asynTask = new DeviceStatusTask();
         deviceStatue = new HashMap<>();
         sequences = new ArrayList<>();
-        asynTask.execute((Void) null);
     }
 
     @Override

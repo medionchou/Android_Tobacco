@@ -303,7 +303,7 @@ public class BoxHistoryFragment extends Fragment {
             rName.setTextSize(Config.TEXT_SIZE);
             staffID.setTextSize(Config.TEXT_SIZE);
 
-            time.setMaxEms(5);
+            time.setMaxEms(3);
 
             tableLayout.addView(tableRow);
         }

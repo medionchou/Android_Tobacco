@@ -119,6 +119,8 @@ public class WareHouseFragment extends Fragment {
         }
     }
 
+
+
     private void createLookUpView() {
         dateButton = new Button(getActivity());
         sendButton = new Button(getActivity());
@@ -164,7 +166,7 @@ public class WareHouseFragment extends Fragment {
             } else if (house.equals("總倉庫")){
                 cmd = Command.WH_HISTORY_ALL + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
             } else {
-                cmd = Command.SH_HISTORY + year + "\t" + month + "\t" + date + "\t" + year + "\t" + month + "\t" + date + "<END>";
+                cmd = Command.SH_HISTORY + year + "\t" + month + "\t" + date + "<END>";
             }
         } else {
             if (house.equals("3號倉庫")) {
@@ -199,7 +201,7 @@ public class WareHouseFragment extends Fragment {
         protected Void doInBackground(Void... params) {
             try {
                 while (!isCancelled()) {
-                    String stockMsg;
+                    String stockMsg = "";
                     String updateMsg;
 
                     if (cmd.length() > 0) {
