@@ -39,6 +39,8 @@ public class LocalService extends Service implements Runnable {
     private String updateMsg;
     private String msg;
     private String swapDoneMsg;
+    private String recentBox;
+    private String exeResult;
     private List<Byte> buffer;
 
     private boolean isTerminated;
@@ -96,6 +98,8 @@ public class LocalService extends Service implements Runnable {
         updateMsg = "";
         msg = "";
         swapDoneMsg = "";
+        recentBox = "";
+        exeResult = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
         socketChannel = null;
@@ -176,6 +180,10 @@ public class LocalService extends Service implements Runnable {
                             msg = tmp;
                         } else if (endLine.contains("SWAP_DONE")) {
                             swapDoneMsg = endLine;
+                        } else if (endLine.contains("BOX_RECENT")) {
+                            recentBox = endLine;
+                        } else if (endLine.contains("EXE")) {
+                            exeResult = endLine;
                         }
 
                         serverReply = serverReply.replace(endLine, "");
@@ -268,8 +276,24 @@ public class LocalService extends Service implements Runnable {
         return swapDoneMsg;
     }
 
+    public String getExeResult() {
+        return exeResult;
+    }
+
     public synchronized String getUpdateMsg() {
         return updateMsg;
+    }
+
+    public String getRecentBox() {
+        return recentBox;
+    }
+
+    public void resetExeResult() {
+        exeResult = "";
+    }
+
+    public void resetRecentBox() {
+        recentBox = "";
     }
 
     public void resetSwapDoneMsg() {

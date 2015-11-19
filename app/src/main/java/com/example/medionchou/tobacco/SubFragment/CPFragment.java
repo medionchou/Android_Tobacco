@@ -2,6 +2,7 @@ package com.example.medionchou.tobacco.SubFragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -128,6 +129,7 @@ public class CPFragment extends Fragment {
             try {
                 String msg;
                 String swapDoneMsg;
+                String exeRes;
 
                 sendCommand(Command.PRODUCT);
                 sendCommand(Command.SWAP);
@@ -138,6 +140,7 @@ public class CPFragment extends Fragment {
                 while (!isCancelled()) {
                     msg = mService.getUpdateMsg();
                     swapDoneMsg = mService.getSwapDoneMsg();
+                    exeRes = mService.getExeResult();
 
 
                     if (msg.length() > 0) {
@@ -166,6 +169,26 @@ public class CPFragment extends Fragment {
 
                         publishProgress(productLine.getCategory(), productLine.getLineNum());
                     }
+
+                    if (exeRes.length() > 0) {
+                        if (exeRes.contains("EXE_CANCEL")) {
+                            if (progressDialog.isShowing())
+                                progressDialog.dismiss();
+
+                            publishProgress("EXE_CANCEL", "");
+
+                        } else if (exeRes.contains("EXE_OK")) {
+                            if (progressDialog.isShowing())
+                                progressDialog.dismiss();
+
+                            publishProgress("EXE_OK", "");
+                        } else if (exeRes.contains("EXE_SWAP")) {
+
+                            publishProgress("EXE_SWAP", exeRes);
+                        }
+                        mService.resetExeResult();
+                    }
+
                     Thread.sleep(500);
                 }
 
@@ -207,7 +230,44 @@ public class CPFragment extends Fragment {
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
 
-            updateGui(values[0], values[1]);
+            if (values[0].equals("EXE_OK")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("提示");
+                builder.setMessage("捲包辦公室已確認，即將進行換牌。");
+
+                builder.show();
+            } else if (values[0].equals("EXE_CANCEL")) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("提示");
+                builder.setMessage("捲包辦公室已取消。");
+                builder.show();
+
+            } else if (values[0].equals("EXE_SWAP")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog dialog = builder.create();
+                LinearLayout linearLayout = (LinearLayout)getActivity().getLayoutInflater().inflate(R.layout.dialog_swap, null);
+                String tmp = values[1];
+                tmp = tmp.replace("EXE_SWAP\t", "");
+                tmp = tmp.replace("<END>", "");
+
+                dialog.setTitle("請注意");
+                dialog.setView(linearLayout);
+                dialog.setCanceledOnTouchOutside(false);
+
+                ((TextView)linearLayout.findViewById(R.id.message_text)).setText(tmp);
+
+                ((Button)linearLayout.findViewById(R.id.confirm)).setOnClickListener(new SwapCheckListener(false,linearLayout ,dialog));
+                ((Button)linearLayout.findViewById(R.id.cancel)).setOnClickListener(new SwapCheckListener(true, linearLayout, dialog));
+
+                dialog.show();
+
+            } else {
+                updateGui(values[0], values[1]);
+            }
+
         }
 
         @Override
@@ -245,6 +305,7 @@ public class CPFragment extends Fragment {
             Button swap = new Button(getActivity());
             Button broadcast = new Button(getActivity());
 
+
             if (index == 0) {
                 setTitleLabel();
             }
@@ -273,7 +334,7 @@ public class CPFragment extends Fragment {
             swap.setTextSize(Config.TEXT_SIZE);
             broadcast.setTextSize(Config.TEXT_SIZE);
 
-            cur_production.setMaxEms(5);
+            cur_production.setMaxEms(3);
 
             if (index < NUM_PRODUCTION_LINE*2) {
 
@@ -565,6 +626,7 @@ public class CPFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+
                     }
                 });
 
@@ -590,7 +652,7 @@ public class CPFragment extends Fragment {
             public void onClick(View v) {
                 final View custom = getActivity().getLayoutInflater().inflate(R.layout.swap_confirm_dialog, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                Spinner spinner = (Spinner) custom.findViewById(R.id.spinner);
+                final Spinner spinner = (Spinner) custom.findViewById(R.id.spinner);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, tmp);
                 ItemSelectedListener listener = new ItemSelectedListener(this);
                 final int index;
@@ -604,6 +666,7 @@ public class CPFragment extends Fragment {
 
                 if (productLine.getSize() == 1) {
                     builder.setMessage(Html.fromHtml("即將清除<font color='red'>" + productLine.getProductName(0) + "</font>\n你確定要執行嗎 ？"));
+                    spinner.setVisibility(View.INVISIBLE);
                     index = 0;
                 } else {
                     builder.setMessage(Html.fromHtml("即將更換成<font color='red'>" + productLine.getProductName(1) + "</font>\n你確定要執行嗎 ？"));
@@ -618,12 +681,24 @@ public class CPFragment extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                         if (workerId.equals(confirmedId)) {
-                            if (selectedItem.equals(productLine.getProductName(index))) {
-                                mService.setCmd(command);
+                            if (index == 1) {
+                                if (selectedItem.equals(productLine.getProductName(index))) {
+                                    mService.setCmd(command);
+                                    progressDialog.setTitle("請稍候");
+                                    progressDialog.setMessage("等待捲包辦公室確認 ！");
+                                    progressDialog.show();
+                                    progressDialog.setCancelable(false);
+                                } else {
+                                    builder.setTitle("警告");
+                                    builder.setMessage("選擇的物料必須與換排物料相同");
+                                    builder.show();
+                                }
                             } else {
-                                builder.setTitle("警告");
-                                builder.setMessage("選擇的物料必須與換排物料相同");
-                                builder.show();
+                                mService.setCmd(command);
+                                progressDialog.setTitle("請稍候");
+                                progressDialog.setMessage("等待捲包辦公室確認中　！");
+                                progressDialog.show();
+                                progressDialog.setCancelable(false);
                             }
                         } else {
                             builder.setTitle("警告");
@@ -675,6 +750,43 @@ public class CPFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        }
+
+        private class SwapCheckListener implements View.OnClickListener {
+
+            boolean isCancel;
+            LinearLayout linearLayout;
+            AlertDialog dialog;
+
+            public SwapCheckListener(boolean isCancel, LinearLayout linearLayout, AlertDialog dialog) {
+                this.isCancel = isCancel;
+                this.linearLayout = linearLayout;
+                this.dialog = dialog;
+            }
+
+            @Override
+            public void onClick(View v) {
+
+                if (!isCancel) {
+                    String inputId = ((EditText)linearLayout.findViewById(R.id.worker_text)).getText().toString();
+                    String workerId = ((LoggedInActivity) getActivity()).getWorkerId();
+
+
+                    if (workerId.equals(inputId)) {
+                        mService.setCmd("EXE_SWAP_OK<END>");
+                        dialog.dismiss();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                        builder.setTitle("警告");
+                        builder.setMessage("輸入編號必須與登入編號相同");
+                        builder.show();
+                    }
+                } else {
+                    mService.setCmd("EXE_SWAP_CANCEL<END>");
+                    dialog.dismiss();
+                }
             }
         }
     }

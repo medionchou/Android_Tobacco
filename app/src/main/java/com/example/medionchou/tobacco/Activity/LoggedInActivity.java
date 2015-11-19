@@ -3,16 +3,12 @@ package com.example.medionchou.tobacco.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.*;
-import android.os.Process;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.widget.TextView;
 
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
@@ -43,6 +39,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     private String workerId;
 
     private final int TIMEOUT = 300000;
+
 
 
     @Override

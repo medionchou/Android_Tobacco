@@ -74,7 +74,7 @@ public class OtherTitlesFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"設備狀況", "排班表", "生產箱數查詢"};
+            group = new String[] {"設備狀況", "排班表", "生產箱數查詢", "生產箱數", "品管資料"};
             children = new String [][] {
                     {},
                     {}
@@ -108,6 +108,10 @@ public class OtherTitlesFragment extends Fragment {
                         newFrag = new ScheduleFragment();
                     } else if (getGroup(groupPosition).equals("生產箱數查詢")) {
                         newFrag = new BoxHistoryFragment();
+                    } else if (getGroup(groupPosition).equals("生產箱數")) {
+                        newFrag = new BoxFragment();
+                    } else if (getGroup(groupPosition).equals("品管資料")) {
+                        newFrag = new QualityFragment();
                     }
 
                     if (newFrag != null)

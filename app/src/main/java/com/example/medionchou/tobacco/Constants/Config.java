@@ -33,4 +33,17 @@ public class Config {
 
         return -1;
     }
+
+    public static int getQualityColor(int code) {
+        switch (code) {
+            case 0:
+                return Color.RED;
+            case 1:
+                return Color.GREEN;
+            case 2:
+                return Color.BLUE;
+        }
+
+        return -1;
+    }
 }

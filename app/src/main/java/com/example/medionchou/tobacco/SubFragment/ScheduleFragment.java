@@ -104,23 +104,41 @@ public class ScheduleFragment extends Fragment {
             String reply = "";
 
             try{
-                mService.setCmd(Command.SCHEDULE);
-                Thread.sleep(2000);
+//                mService.setCmd(Command.SCHEDULE);
+//                Thread.sleep(2000);
+//
+//
+//                while (reply.length() == 0) {
+//                    reply = mService.getQueryReply();
+//                    Thread.sleep(1000);
+//                }
+//
+//                mService.resetQueryReply();
+//                parseSchedule(reply);
 
-
-                while (reply.length() == 0) {
-                    reply = mService.getQueryReply();
-                    Thread.sleep(1000);
-                }
-
-                mService.resetQueryReply();
-                parseSchedule(reply);
+                sendCommand(Command.SCHEDULE);
                 publishProgress("Update");
 
                 while (!isCancelled()) {
+                    reply = mService.getUpdateMsg();
 
+                    if (reply.length() > 0) {
+                        mService.resetUpdateMsg();
+                        String[] updateMsg = reply.split("<END>");
+                        boolean isUpdate = false;
 
+                        for (String tmp : updateMsg) {
+                            if (tmp.contains("SCHEDULE")) {
+                                isUpdate = true;
+                            }
+                        }
 
+                        if (isUpdate) {
+                            scheduleList.clear();
+                            sendCommand(Command.SCHEDULE);
+                            publishProgress("Update");
+                        }
+                    }
                     Thread.sleep(2000);
 
                 }
@@ -139,6 +157,25 @@ public class ScheduleFragment extends Fragment {
 
             if (values[0].equals("Update")) {
                 inflateView();
+            }
+        }
+
+        private void sendCommand(String cmd) {
+            String msg = "";
+            try {
+                while (msg.length() == 0) {
+                    mService.setCmd(cmd);
+                    Thread.sleep(1000);
+                    msg = mService.getQueryReply();
+                }
+                switch (cmd) {
+                    case Command.SCHEDULE:
+                        parseSchedule(msg);
+                        break;
+                }
+                mService.resetQueryReply();
+            } catch (InterruptedException e) {
+                Log.e("MyLog", e.toString() + "SendCommand thread interrupted");
             }
         }
 
@@ -190,7 +227,7 @@ public class ScheduleFragment extends Fragment {
                 ((TextView)gridItem[i].findViewById(R.id.onduty_text_view)).setText(schedule.getStaff());
 
                 ((TextView)gridItem[i].findViewById(R.id.office_text_view)).setTextSize(Config.TEXT_SIZE);
-                ((TextView)gridItem[i].findViewById(R.id.production_text_view)).setTextSize(Config.TEXT_SIZE);
+                ((TextView)gridItem[i].findViewById(R.id.production_text_view)).setTextSize(20);
                 ((TextView)gridItem[i].findViewById(R.id.onduty_text_view)).setTextSize(20);
 
                 tableRow.addView(gridItem[i]);

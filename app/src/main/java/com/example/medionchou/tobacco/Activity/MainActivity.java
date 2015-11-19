@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void[] params) {
             mService = mConnection.getService();
             String account = accountEditView.getText().toString();
-            account = "1310568";
             String cmd = "LOGIN\tPDA\t" + account + "<END>"; //Specific Command
 
             if (mService.getClientState() == States.CONNECT_OK) {
@@ -222,11 +221,11 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 if (msg.contains("未連線到伺服器")) {
                     builder.setTitle("提示");
-                    builder.setMessage("暫時無法連線到伺服器\n請稍後重試或確認伺服器狀態後重試。");
+                    builder.setMessage("暫時無法連線到伺服器\n請稍候重試或確認伺服器狀態後重試。");
                     builder.show();
                 } else {
                     builder.setTitle("提示");
-                    builder.setMessage("公號錯誤。");
+                    builder.setMessage("工號錯誤。");
                     builder.show();
                 }
             }
