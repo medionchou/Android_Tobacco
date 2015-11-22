@@ -214,11 +214,12 @@ public class WareHouseFragment extends Fragment {
 
                         if (!stockMsg.contains("QUERY_NULL<END>") && stockMsg.length() != 0) {
                             if (cmd.contains("HISTORY")) {
-                                parseHistoryMsg(stockMsg, true);
                                 if (cmd.contains("WH_HISTORY")) {
                                     msg = "WH_HISTORY";
+                                    parseHistoryMsg(stockMsg, true, false);
                                 } else if (cmd.contains("SH_HISTORY")) {
                                     msg = "SH_HISTORY";
+                                    parseHistoryMsg(stockMsg, true, true);
                                 }
                             } else if (cmd.contains("NOW")) {
                                 if (cmd.contains("WH_NOW")) {
@@ -249,10 +250,10 @@ public class WareHouseFragment extends Fragment {
                         for (int i = 0; i < updateMsgQueue.size(); i++) {
                             String text = updateMsgQueue.get(i);
                             if (msg.equals("WH_HISTORY") && text.contains("WH_HISTORY")) {
-                                parseHistoryMsg(text, false);
+                                parseHistoryMsg(text, false, false);
 
                             } else if (msg.equals("SH_HISTORY") && text.contains("SH_HISTORY")) {
-                                parseHistoryMsg(text, false);
+                                parseHistoryMsg(text, false, true);
 
                             } else if (msg.equals("WH_NOW") && text.contains("WH_NOW")) {
                                 parseWH_NOWmsg(text, true);
@@ -284,7 +285,10 @@ public class WareHouseFragment extends Fragment {
             } else if (values[0].equals("SH_NOW")) {
                 updateSH_NOWgui(sideHouseList);
             } else if (values[0].contains("HISTORY")) {
-                updateHistorygui(wareHouseInfoList);
+                if (values[0].contains(("SH")))
+                    updateHistorygui(wareHouseInfoList, "SH");
+                else
+                    updateHistorygui(wareHouseInfoList, "");
             }
 
             if (values[1].equals("ShowDialog")) {
@@ -312,7 +316,7 @@ public class WareHouseFragment extends Fragment {
                 progressDialog.dismiss();
         }
 
-        private void parseHistoryMsg(String stockMsg, boolean clear) {
+        private void parseHistoryMsg(String stockMsg, boolean clear, boolean isSH) {
             /**
              *  TODO: empty command
              */
@@ -322,9 +326,17 @@ public class WareHouseFragment extends Fragment {
                 wareHouseInfoList.clear();
             }
 
-            for (int i = 0; i < data.length; i = i + 9) {
-                WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8]);
-                wareHouseInfoList.add(info);
+            if (isSH) {
+                for (int i = 0; i < data.length; i = i + 8) {
+                    WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], "");
+                    wareHouseInfoList.add(info);
+                }
+
+            } else {
+                for (int i = 0; i < data.length; i = i + 9) {
+                    WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8]);
+                    wareHouseInfoList.add(info);
+                }
             }
         }
 
@@ -396,7 +408,7 @@ public class WareHouseFragment extends Fragment {
 
             for (int i = 0; i < wareHouseInfoList.size(); i++) {
                 WareHouseInfo info = wareHouseInfoList.get(i);
-                inflateTextView(info, i);
+                inflateTextView(info, i, "");
             }
         }
 
@@ -409,16 +421,16 @@ public class WareHouseFragment extends Fragment {
             }
         }
 
-        private void updateHistorygui(List<WareHouseInfo> wareHouseInfoList) {
+        private void updateHistorygui(List<WareHouseInfo> wareHouseInfoList, String sh) {
             tableLayout.removeAllViews();
 
             for (int i = 0; i < wareHouseInfoList.size(); i++) {
                 WareHouseInfo info = wareHouseInfoList.get(i);
-                inflateTextView(info, i);
+                inflateTextView(info, i, sh);
             }
         }
 
-        private void inflateTextView(WareHouseInfo info, int indexToInflate) {
+        private void inflateTextView(WareHouseInfo info, int indexToInflate, String sh) {
             TableRow tableRow = new TableRow(getActivity());
             TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -469,7 +481,7 @@ public class WareHouseFragment extends Fragment {
 
 
                 if (indexToInflate == 0) {
-                    setTitleLabel(true);
+                    setTitleLabel(true, sh);
                 }
 
                 tableRow.addView(date);
@@ -478,7 +490,11 @@ public class WareHouseFragment extends Fragment {
                 tableRow.addView(productName);
                 tableRow.addView(quantity);
                 tableRow.addView(unit);
-                tableRow.addView(pallet);
+                if (!sh.equals("SH")) {
+                    tableRow.addView(pallet);
+                } else {
+                    person.setText(info.getPallet());
+                }
                 tableRow.addView(person);
 
             } else { // now
@@ -493,7 +509,7 @@ public class WareHouseFragment extends Fragment {
                 unit.setTextSize(Config.TEXT_SIZE);
 
                 if (indexToInflate == 0) {
-                    setTitleLabel(false);
+                    setTitleLabel(false, "");
                 }
 
                 tableRow.addView(productId);
@@ -504,7 +520,7 @@ public class WareHouseFragment extends Fragment {
             tableLayout.addView(tableRow);
         }
 
-        private void setTitleLabel(boolean isHistory) {
+        private void setTitleLabel(boolean isHistory, String sh) {
 
             TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             TableRow.LayoutParams textViewParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -572,7 +588,8 @@ public class WareHouseFragment extends Fragment {
                 titleRow.addView(productNameTitle);
                 titleRow.addView(quantityTitle);
                 titleRow.addView(unitTitle);
-                titleRow.addView(palletTitle);
+                if (!sh.equals("SH"))
+                    titleRow.addView(palletTitle);
                 titleRow.addView(personTitle);
             } else {
 

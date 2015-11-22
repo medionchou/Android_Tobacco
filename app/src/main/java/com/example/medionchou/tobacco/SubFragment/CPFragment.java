@@ -110,8 +110,9 @@ public class CPFragment extends Fragment {
         private List<ProductLine> productLineList = new ArrayList<>();
         private List<LineState> lineStateList = new ArrayList<>();
         private List<RecipeList> recipeLists = new ArrayList<>();
-
         private List<String> updateMsgQueue = new LinkedList<>();
+
+        boolean isBroadcast;
 
         @Override
         protected void onPreExecute() {
@@ -121,6 +122,8 @@ public class CPFragment extends Fragment {
             progressDialog.setMessage("取得生產資訊中");
             progressDialog.show();
             progressDialog.setCancelable(false);
+
+            isBroadcast = true;
         }
 
         @Override
@@ -177,11 +180,12 @@ public class CPFragment extends Fragment {
 
                             publishProgress("EXE_CANCEL", "");
 
-                        } else if (exeRes.contains("EXE_OK")) {
+                        } else if (exeRes.contains("EXE_OK") && !isBroadcast) {
                             if (progressDialog.isShowing())
                                 progressDialog.dismiss();
 
                             publishProgress("EXE_OK", "");
+                            isBroadcast = false;
                         } else if (exeRes.contains("EXE_SWAP")) {
 
                             publishProgress("EXE_SWAP", exeRes);
@@ -620,6 +624,8 @@ public class CPFragment extends Fragment {
                         String cmd = "EXE\tBROADCAST\t" + lineInfo + "\t" + broadcastMsg + "<END>";
 
                         mService.setCmd(cmd);
+
+                        isBroadcast = true;
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -688,6 +694,8 @@ public class CPFragment extends Fragment {
                                     progressDialog.setMessage("等待捲包辦公室確認 ！");
                                     progressDialog.show();
                                     progressDialog.setCancelable(false);
+
+                                    isBroadcast = false;
                                 } else {
                                     builder.setTitle("警告");
                                     builder.setMessage("選擇的物料必須與換排物料相同");
@@ -699,6 +707,8 @@ public class CPFragment extends Fragment {
                                 progressDialog.setMessage("等待捲包辦公室確認中　！");
                                 progressDialog.show();
                                 progressDialog.setCancelable(false);
+
+                                isBroadcast = false;
                             }
                         } else {
                             builder.setTitle("警告");

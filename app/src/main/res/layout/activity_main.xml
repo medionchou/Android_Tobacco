@@ -26,6 +26,7 @@
         android:textSize="25sp"
         android:maxLines="1"
         android:maxLength="16"
+        android:inputType="number"
         android:hint="請輸入工號"
         android:id="@+id/edit_text_account"/>
 
