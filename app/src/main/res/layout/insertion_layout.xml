@@ -3,9 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_toLeftOf="@+id/spinner"
+        android:textStyle="bold"
+        android:text="請選擇品牌"/>
+
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"/>
@@ -18,11 +29,22 @@
         android:layout_below="@id/spinner"
         android:orientation="horizontal">
 
+
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="請選擇生產線"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+                android:textSize="30sp"/>
 
             <CheckBox
                 android:id="@+id/line1"
@@ -59,6 +81,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="請選擇生產線"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="10dp"
+                android:visibility="invisible"
+                android:textSize="30sp"/>
 
             <CheckBox
                 android:id="@+id/line5"
@@ -102,6 +133,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/spinner">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"
+                android:text="選擇濾嘴線"/>
+
 
             <RadioButton
                 android:id="@+id/f1"

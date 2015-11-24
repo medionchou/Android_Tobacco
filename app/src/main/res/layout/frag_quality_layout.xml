@@ -6,987 +6,1005 @@
 
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TableLayout
             android:id="@+id/table_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/fake"
-                    android:text="max"
-                    android:visibility="invisible"
+                    android:id="@+id/line"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="123" />
+
+                <TextView
+                    android:id="@+id/product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="123" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="123" />
 
                 <TextView
                     android:id="@+id/weight"
-                    android:layout_toRightOf="@+id/fake"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"/>
+                    android:text="123" />
 
                 <TextView
                     android:id="@+id/perimeter"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_height="wrap_content"
+                    android:text="123" />
 
                 <TextView
                     android:id="@+id/breath"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_height="wrap_content"
+                    android:text="123" />
 
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product1"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
                 <TextView
-                    android:id="@+id/weight_max1"
+                    android:id="@+id/time1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value1"
-                    android:text="max" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_value1"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max1"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weight_min1"
+                    <TextView
+                        android:id="@+id/weight_max1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value1"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max1"
+                    <TextView
+                        android:id="@+id/perimeter_max1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value1"
-                    android:layout_toLeftOf="@+id/perimeter_value1"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_max1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/perimeter_min1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value1"
-                    android:layout_toLeftOf="@+id/perimeter_value1"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_value1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_max1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value1"
-                    android:layout_toLeftOf="@+id/breath_value1"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_min1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_value1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
-
-                <TextView
-                    android:id="@+id/breath_min1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value1"
-                    android:layout_toLeftOf="@+id/breath_value1"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product2"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
-                <TextView
-                    android:id="@+id/weight_max2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value2"
-                    android:text="max" />
 
                 <TextView
-                    android:id="@+id/weight_value2"
+                    android:id="@+id/time2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max2"
-                    android:text="value" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_min2"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value2"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max2"
+                    <TextView
+                        android:id="@+id/weight_max2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value2"
-                    android:layout_toLeftOf="@+id/perimeter_value2"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value2"
+                    <TextView
+                        android:id="@+id/perimeter_max2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_min2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value2"
-                    android:layout_toLeftOf="@+id/perimeter_value2"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_max2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/breath_max2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value2"
-                    android:layout_toLeftOf="@+id/breath_value2"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_value2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_value2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_min2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_min2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value2"
-                    android:layout_toLeftOf="@+id/breath_value2"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product3"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
                 <TextView
-                    android:id="@+id/weight_max3"
+                    android:id="@+id/time3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value3"
-                    android:text="max" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_value3"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max3"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weight_min3"
+                    <TextView
+                        android:id="@+id/weight_max3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value3"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max3"
+                    <TextView
+                        android:id="@+id/perimeter_max3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value3"
-                    android:layout_toLeftOf="@+id/perimeter_value3"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_max3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/perimeter_min3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value3"
-                    android:layout_toLeftOf="@+id/perimeter_value3"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_value3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_max3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value3"
-                    android:layout_toLeftOf="@+id/breath_value3"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_min3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_value3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
-
-                <TextView
-                    android:id="@+id/breath_min3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value3"
-                    android:layout_toLeftOf="@+id/breath_value3"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product4"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
                 <TextView
-                    android:id="@+id/weight_max4"
+                    android:id="@+id/time4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value4"
-                    android:text="max" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_value4"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max4"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weight_min4"
+                    <TextView
+                        android:id="@+id/weight_max4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value4"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max4"
+                    <TextView
+                        android:id="@+id/perimeter_max4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value4"
-                    android:layout_toLeftOf="@+id/perimeter_value4"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_max4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/perimeter_min4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value4"
-                    android:layout_toLeftOf="@+id/perimeter_value4"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_value4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_max4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value4"
-                    android:layout_toLeftOf="@+id/breath_value4"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_min4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_value4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
-
-                <TextView
-                    android:id="@+id/breath_min4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value4"
-                    android:layout_toLeftOf="@+id/breath_value4"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product5"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
-                <TextView
-                    android:id="@+id/weight_max5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value5"
-                    android:text="max" />
 
                 <TextView
-                    android:id="@+id/weight_value5"
+                    android:id="@+id/time5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max5"
-                    android:text="value" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_min5"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value5"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max5"
+                    <TextView
+                        android:id="@+id/weight_max5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value5"
-                    android:layout_toLeftOf="@+id/perimeter_value5"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value5"
+                    <TextView
+                        android:id="@+id/perimeter_max5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_min5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value5"
-                    android:layout_toLeftOf="@+id/perimeter_value5"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_max5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/breath_max5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value5"
-                    android:layout_toLeftOf="@+id/breath_value5"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_value5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_value5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_min5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_min5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value5"
-                    android:layout_toLeftOf="@+id/breath_value5"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product6"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
-                <TextView
-                    android:id="@+id/weight_max6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value6"
-                    android:text="max" />
 
                 <TextView
-                    android:id="@+id/weight_value6"
+                    android:id="@+id/time6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max6"
-                    android:text="value" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_min6"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value6"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max6"
+                    <TextView
+                        android:id="@+id/weight_max6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value6"
-                    android:layout_toLeftOf="@+id/perimeter_value6"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value6"
+                    <TextView
+                        android:id="@+id/perimeter_max6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_min6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value6"
-                    android:layout_toLeftOf="@+id/perimeter_value6"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_max6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/breath_max6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value6"
-                    android:layout_toLeftOf="@+id/breath_value6"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_value6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_value6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_min6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
 
-                <TextView
-                    android:id="@+id/breath_min6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value6"
-                    android:layout_toLeftOf="@+id/breath_value6"
-                    android:text="min" />
+                </LinearLayout>
 
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product7"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
                 <TextView
-                    android:id="@+id/weight_max7"
+                    android:id="@+id/time7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value7"
-                    android:text="max" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_value7"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max7"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weight_min7"
+                    <TextView
+                        android:id="@+id/weight_max7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value7"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max7"
+                    <TextView
+                        android:id="@+id/perimeter_max7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value7"
-                    android:layout_toLeftOf="@+id/perimeter_value7"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_max7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/perimeter_min7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value7"
-                    android:layout_toLeftOf="@+id/perimeter_value7"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_value7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_max7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value7"
-                    android:layout_toLeftOf="@+id/breath_value7"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_min7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_value7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
-
-                <TextView
-                    android:id="@+id/breath_min7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value7"
-                    android:layout_toLeftOf="@+id/breath_value7"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product8"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
                 <TextView
-                    android:id="@+id/weight_max8"
+                    android:id="@+id/time8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value8"
-                    android:text="max" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_value8"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max8"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weight_min8"
+                    <TextView
+                        android:id="@+id/weight_max8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value8"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max8"
+                    <TextView
+                        android:id="@+id/perimeter_max8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value8"
-                    android:layout_toLeftOf="@+id/perimeter_value8"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_max8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/perimeter_min8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value8"
-                    android:layout_toLeftOf="@+id/perimeter_value8"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_value8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_max8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value8"
-                    android:layout_toLeftOf="@+id/breath_value8"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_min8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_value8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
-
-                <TextView
-                    android:id="@+id/breath_min8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value8"
-                    android:layout_toLeftOf="@+id/breath_value8"
-                    android:text="min" />
-
-            </RelativeLayout>
+            </TableRow>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"/>
 
-            <RelativeLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <TextView
-                    android:id="@+id/time9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="time" />
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/line9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/product9"
+                    android:layout_gravity="center_vertical"
                     android:text="line" />
 
                 <TextView
                     android:id="@+id/product9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_vertical"
                     android:text="product" />
 
                 <TextView
-                    android:id="@+id/weight_max9"
+                    android:id="@+id/time9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/weight_value9"
-                    android:text="max" />
+                    android:layout_gravity="center_vertical"
+                    android:text="time" />
 
-                <TextView
-                    android:id="@+id/weight_value9"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/weight_max9"
-                    android:text="value" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/weight_min9"
+                    <TextView
+                        android:id="@+id/weight_max9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/weight_value9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/weight_min9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/weight_value9"
-                    android:text="min" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_max9"
+                    <TextView
+                        android:id="@+id/perimeter_max9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+
+                    <TextView
+                        android:id="@+id/perimeter_value9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
+
+                    <TextView
+                        android:id="@+id/perimeter_min9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/perimeter_value9"
-                    android:layout_toLeftOf="@+id/perimeter_value9"
-                    android:text="max" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/perimeter_value9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="value" />
+                    <TextView
+                        android:id="@+id/breath_max9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
 
-                <TextView
-                    android:id="@+id/perimeter_min9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/perimeter_value9"
-                    android:layout_toLeftOf="@+id/perimeter_value9"
-                    android:text="min" />
+                    <TextView
+                        android:id="@+id/breath_value9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="value" />
 
-                <TextView
-                    android:id="@+id/breath_max9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/breath_value9"
-                    android:layout_toLeftOf="@+id/breath_value9"
-                    android:text="max" />
+                    <TextView
+                        android:id="@+id/breath_min9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min" />
 
-                <TextView
-                    android:id="@+id/breath_value9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="value" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/breath_min9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/breath_value9"
-                    android:layout_toLeftOf="@+id/breath_value9"
-                    android:text="min" />
-            </RelativeLayout>
+            </TableRow>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
         </TableLayout>
+
     </ScrollView>
 
 </LinearLayout>

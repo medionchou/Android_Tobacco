@@ -3,6 +3,7 @@ package com.example.medionchou.tobacco.SubFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 
 import com.example.medionchou.tobacco.Constants.Command;
 import com.example.medionchou.tobacco.Constants.Config;
+import com.example.medionchou.tobacco.DataContainer.LineState;
 import com.example.medionchou.tobacco.DataContainer.ProductLine;
 import com.example.medionchou.tobacco.DataContainer.RecipeList;
 import com.example.medionchou.tobacco.LocalService;
@@ -98,6 +100,7 @@ public class InsertFragment extends Fragment {
         ProgressDialog progressDialog;
         private List<ProductLine> productLineList = new ArrayList<>();
         private List<RecipeList> recipeLists = new ArrayList<>();
+        private List<LineState> lineStateList = new ArrayList<>();
 
 
         @Override
@@ -116,7 +119,9 @@ public class InsertFragment extends Fragment {
 
             try {
                 sendCommand(Command.PRODUCT);
+                sendCommand(Command.SWAP);
                 sendCommand(Command.RECIPE_LIST);
+
 
                 publishProgress("", "");
 
@@ -132,6 +137,8 @@ public class InsertFragment extends Fragment {
 
                             if (tmp.contains("UPDATE_PRODUCT")) {
                                 parseProductLine(tmp, true);
+                            } else if (tmp.contains("UPDATE_SWAP")) {
+                                parseLineState(tmp, true);
                             }
                         }
 
@@ -173,6 +180,9 @@ public class InsertFragment extends Fragment {
                     case Command.PRODUCT:
                         parseProductLine(msg, false);
                         break;
+                    case Command.SWAP:
+                        parseLineState(msg, false);
+                        break;
                     case Command.RECIPE_LIST:
                         parseRecipeList(msg);
                         break;
@@ -180,6 +190,27 @@ public class InsertFragment extends Fragment {
                 mService.resetQueryReply();
             } catch (InterruptedException e) {
                 Log.e("MyLog", e.toString() + "SendCommand thread interrupted");
+            }
+        }
+
+        private void parseLineState(String msg, boolean update) {
+            String[] data = msg.split("\\t|<N>|<END>");
+
+            if (update) {
+                LineState lineState = new LineState(data[1], data[2], Integer.valueOf(data[3]), data[4]);
+
+                for (int i = 0; i < lineStateList.size(); i++) {
+                    LineState tmp = lineStateList.get(i);
+
+                    if (tmp.isSwapLineMatch(lineState)) {
+                        lineStateList.set(i, lineState);
+                    }
+                }
+            } else {
+                for (int i = 0; i < data.length; i = i + 5) {
+                    LineState lineState = new LineState(data[i + 1], data[i + 2], Integer.valueOf(data[i + 3]), data[i + 4]);
+                    lineStateList.add(lineState);
+                }
             }
         }
 
@@ -271,9 +302,29 @@ public class InsertFragment extends Fragment {
                 next_production.setText("無生產資料");
             }
             insert.setText("修改");
+
             insert.setOnClickListener(new ModificationListener(productLine));
 
+            if (!isSwapping(i)) {
+                insert.setEnabled(false);
+                insert.setText("正在換牌中");
+            }
+
+
             tableLayout.addView(tableRow);
+        }
+
+        private boolean isSwapping(int index) {
+            LineState cm = lineStateList.get(index * 2);
+            LineState pm = lineStateList.get(index * 2 + 1);
+
+
+            if (cm.getStatus() == 0 && pm.getStatus() == 0)
+                return true;
+
+
+
+            return false;
         }
 
         private void addTableTitle() {
@@ -711,10 +762,22 @@ public class InsertFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    mService.setCmd("EXE\tRECIPE_DELETE\t" + category + "\t" +lineNum + "\t" + indexOfDeletion + "<END>");
-                    alert.cancel();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setTitle("警告");
+                    builder.setMessage("是否確認刪除？");
+                    builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mService.setCmd("EXE\tRECIPE_DELETE\t" + category + "\t" + lineNum + "\t" + indexOfDeletion + "<END>");
+                            alert.cancel();
+                        }
+                    });
+
+                    builder.show();
                 }
             }
         }
     }
 }
+

@@ -308,6 +308,10 @@ public class LocalService extends Service implements Runnable {
         msg = "";
     }
 
+    public void resetLogginPerm() {
+        isSignIn = false;
+    }
+
     public synchronized void resetUpdateOnline() {
         updateOnline = "";
     }

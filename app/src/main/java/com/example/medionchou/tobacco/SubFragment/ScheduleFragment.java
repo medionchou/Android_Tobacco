@@ -40,7 +40,7 @@ public class ScheduleFragment extends Fragment {
 
     private LocalService mService;
     private ScheduleAsync schedulAsync;
-    private TableLayout tableLayout;
+
 
 
     @Override
@@ -61,8 +61,6 @@ public class ScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frag_schedule_layout, container, false);
-        tableLayout = (TableLayout) rootView.findViewById(R.id.schedule_table_layout);
-        tableLayout.setStretchAllColumns(true);
         schedulAsync = new ScheduleAsync();
         schedulAsync.execute((Void) null);
         return rootView;
@@ -104,17 +102,6 @@ public class ScheduleFragment extends Fragment {
             String reply = "";
 
             try{
-//                mService.setCmd(Command.SCHEDULE);
-//                Thread.sleep(2000);
-//
-//
-//                while (reply.length() == 0) {
-//                    reply = mService.getQueryReply();
-//                    Thread.sleep(1000);
-//                }
-//
-//                mService.resetQueryReply();
-//                parseSchedule(reply);
 
                 sendCommand(Command.SCHEDULE);
                 publishProgress("Update");
@@ -140,7 +127,6 @@ public class ScheduleFragment extends Fragment {
                         }
                     }
                     Thread.sleep(2000);
-
                 }
 
             } catch (InterruptedException e) {
@@ -156,7 +142,6 @@ public class ScheduleFragment extends Fragment {
                 progressDialog.cancel();
 
             if (values[0].equals("Update")) {
-                inflateView();
             }
         }
 
@@ -184,56 +169,21 @@ public class ScheduleFragment extends Fragment {
             String[] officeInfo = rawData.split("<N>|<END>");
 
             for (int i = 0; i < officeInfo.length; i++) {
-                String[] detailOffice = officeInfo[i].split("\\t", -1);
-                Schedule schedule;
-                if (detailOffice[1].equals("1"))
-                    schedule = new Schedule(true, detailOffice[2], detailOffice[3], detailOffice[4]);
-                else
-                    schedule = new Schedule(false, detailOffice[2], detailOffice[3], detailOffice[4]);
+                Log.v("MyLog", officeInfo[i]);
+                String[] detail = officeInfo[i].split("\\t", -1);
 
-                scheduleList.add(schedule);
+                if (i < 9) {
+
+                    Schedule schedule = new Schedule(detail[1].equals("1"), detail[2].equals("1"), detail[3] +" "+ detail[4], detail[5], detail[6]);
+
+                } else {
+                    //Schedule schedule = new Schedule(detail[1].equals("1"), detail[2].equals("1"), detail[3] +" "+ detail[4], detail[5], detail[6]);
+
+                }
             }
         }
 
-        public void inflateView() {
-            tableLayout.removeAllViews();
-            for (int i = 0; i < scheduleList.size(); i=i+4) {
-                addTableRow(i);
-            }
-        }
 
-        public void addTableRow(int index) {
-            TableRow tableRow = new TableRow(getActivity());
-            RelativeLayout[] gridItem = new RelativeLayout[4];
-            TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, 1);
-            TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            tableRow.setLayoutParams(tableLayoutParams);
-
-            for (int i = 0; i < 4; i++) {
-                int itemIndex = i + index;
-                Schedule schedule = scheduleList.get(itemIndex);
-
-
-                gridItem[i] = (RelativeLayout)getActivity().getLayoutInflater().inflate(R.layout.gridview_item, null);
-                gridItem[i].setLayoutParams(tableRowParams);
-
-                if (schedule.getOn())
-                    gridItem[i].setBackgroundColor(Color.GREEN);
-                else
-                    gridItem[i].setBackgroundColor(Color.GRAY);
-
-                ((TextView)gridItem[i].findViewById(R.id.office_text_view)).setText(schedule.getOffice());
-                ((TextView)gridItem[i].findViewById(R.id.production_text_view)).setText(schedule.getProduction());
-                ((TextView)gridItem[i].findViewById(R.id.onduty_text_view)).setText(schedule.getStaff());
-
-                ((TextView)gridItem[i].findViewById(R.id.office_text_view)).setTextSize(Config.TEXT_SIZE);
-                ((TextView)gridItem[i].findViewById(R.id.production_text_view)).setTextSize(20);
-                ((TextView)gridItem[i].findViewById(R.id.onduty_text_view)).setTextSize(20);
-
-                tableRow.addView(gridItem[i]);
-            }
-            tableLayout.addView(tableRow);
-        }
     }
 
 }

@@ -182,6 +182,8 @@ public class QualityFragment extends Fragment {
             breathValView.setText(quality.getBreath()[1]);
             breathMinView.setText(quality.getBreath()[2]);
 
+            productView.setMaxEms(3);
+
 
             weightValView.setTextColor(Config.getQualityColor(quality.getColorWeight()));
             perimeterValView.setTextColor(Config.getQualityColor(quality.getColorPerimeter()));
@@ -201,22 +203,37 @@ public class QualityFragment extends Fragment {
             TextView[] breathMaxView = new TextView[9];
             TextView[] breathValView = new TextView[9];
             TextView[] breathMinView = new TextView[9];
+            TextView line = (TextView) view.findViewById(R.id.line);
+            TextView product = (TextView) view.findViewById(R.id.product);
+            TextView curtime = (TextView) view.findViewById(R.id.time);
             TextView weight = (TextView) view.findViewById(R.id.weight);
             TextView perimeter = (TextView) view.findViewById(R.id.perimeter);
             TextView breathLabel = (TextView) view.findViewById(R.id.breath);
 
+            line.setText("機台");
+            product.setText("生產");
+            curtime.setText("時間");
             weight.setText("重量");
             perimeter.setText("圓周");
             breathLabel.setText("透氣率");
 
+            line.setTextSize(Config.TEXT_TITLE_SIZE);
+            product.setTextSize(Config.TEXT_TITLE_SIZE);
+            curtime.setTextSize(Config.TEXT_TITLE_SIZE);
             weight.setTextSize(Config.TEXT_TITLE_SIZE);
             perimeter.setTextSize(Config.TEXT_TITLE_SIZE);
             breathLabel.setTextSize(Config.TEXT_TITLE_SIZE);
 
+            line.setTextColor(Color.BLACK);
+            product.setTextColor(Color.BLACK);
+            curtime.setTextColor(Color.BLACK);
             weight.setTextColor(Color.BLACK);
             perimeter.setTextColor(Color.BLACK);
             breathLabel.setTextColor(Color.BLACK);
 
+            line.setTypeface(null, Typeface.BOLD);
+            product.setTypeface(null, Typeface.BOLD);
+            curtime.setTypeface(null, Typeface.BOLD);
             weight.setTypeface(null, Typeface.BOLD);
             perimeter.setTypeface(null, Typeface.BOLD);
             breathLabel.setTypeface(null, Typeface.BOLD);

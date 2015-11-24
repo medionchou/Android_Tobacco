@@ -244,7 +244,7 @@ public class BoxFragment extends Fragment {
             int index = Integer.valueOf(detail[1]) - 1;
             TextView boxes = (TextView) tableLayout.findViewById(boxNumId[index]);
 
-            boxes.setText(detail[2]);
+            boxes.setText(detail[2] + "/" + detail[3]);
         }
 
         private void sendCommand(String cmd) {

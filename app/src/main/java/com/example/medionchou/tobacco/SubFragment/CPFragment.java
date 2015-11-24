@@ -107,6 +107,11 @@ public class CPFragment extends Fragment {
 
     private class ProductAsynTask extends AsyncTask<Void, String, Void> {
         ProgressDialog progressDialog;
+        ProgressDialog waitingDialog;
+
+        AlertDialog.Builder requestBuilder;
+        AlertDialog request;
+
         private List<ProductLine> productLineList = new ArrayList<>();
         private List<LineState> lineStateList = new ArrayList<>();
         private List<RecipeList> recipeLists = new ArrayList<>();
@@ -122,6 +127,11 @@ public class CPFragment extends Fragment {
             progressDialog.setMessage("取得生產資訊中");
             progressDialog.show();
             progressDialog.setCancelable(false);
+
+            waitingDialog = new ProgressDialog(getActivity());
+
+            requestBuilder = new AlertDialog.Builder(getActivity());
+            request = requestBuilder.create();
 
             isBroadcast = true;
         }
@@ -154,8 +164,9 @@ public class CPFragment extends Fragment {
                             String text = updateMsgQueue.get(i);
 
                             if (text.contains("SWAP")) {
-                                if (!text.contains("SWAP_HISTORY"))
+                                if (!text.contains("SWAP_HISTORY")) {
                                     parseLineState(text, true);
+                                }
                             } else if (text.contains("PRODUCT")) {
                                 parseProductLine(text, true);
                             }
@@ -175,22 +186,22 @@ public class CPFragment extends Fragment {
 
                     if (exeRes.length() > 0) {
                         if (exeRes.contains("EXE_CANCEL")) {
-                            if (progressDialog.isShowing())
-                                progressDialog.dismiss();
+                            if (waitingDialog.isShowing())
+                                waitingDialog.dismiss();
 
                             publishProgress("EXE_CANCEL", "");
+                            mService.resetExeResult();
 
                         } else if (exeRes.contains("EXE_OK") && !isBroadcast) {
-                            if (progressDialog.isShowing())
-                                progressDialog.dismiss();
-
+                            if (waitingDialog.isShowing())
+                                waitingDialog.dismiss();
                             publishProgress("EXE_OK", "");
                             isBroadcast = false;
-                        } else if (exeRes.contains("EXE_SWAP")) {
+                            mService.resetExeResult();
 
-                            publishProgress("EXE_SWAP", exeRes);
+                        } else if (exeRes.contains("EXE_WAIT")) {
+                            getActivity().onUserInteraction();
                         }
-                        mService.resetExeResult();
                     }
 
                     Thread.sleep(500);
@@ -249,25 +260,6 @@ public class CPFragment extends Fragment {
                 builder.setMessage("捲包辦公室已取消。");
                 builder.show();
 
-            } else if (values[0].equals("EXE_SWAP")) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                AlertDialog dialog = builder.create();
-                LinearLayout linearLayout = (LinearLayout)getActivity().getLayoutInflater().inflate(R.layout.dialog_swap, null);
-                String tmp = values[1];
-                tmp = tmp.replace("EXE_SWAP\t", "");
-                tmp = tmp.replace("<END>", "");
-
-                dialog.setTitle("請注意");
-                dialog.setView(linearLayout);
-                dialog.setCanceledOnTouchOutside(false);
-
-                ((TextView)linearLayout.findViewById(R.id.message_text)).setText(tmp);
-
-                ((Button)linearLayout.findViewById(R.id.confirm)).setOnClickListener(new SwapCheckListener(false,linearLayout ,dialog));
-                ((Button)linearLayout.findViewById(R.id.cancel)).setOnClickListener(new SwapCheckListener(true, linearLayout, dialog));
-
-                dialog.show();
-
             } else {
                 updateGui(values[0], values[1]);
             }
@@ -286,7 +278,7 @@ public class CPFragment extends Fragment {
 
                 inflateView(i, category, lineNum);
 
-                if (i < NUM_PRODUCTION_LINE*2) {
+                if (i < NUM_PRODUCTION_LINE * 2) {
                     i = i + 2;
                 } else {
                     i++;
@@ -340,7 +332,7 @@ public class CPFragment extends Fragment {
 
             cur_production.setMaxEms(3);
 
-            if (index < NUM_PRODUCTION_LINE*2) {
+            if (index < NUM_PRODUCTION_LINE * 2) {
 
                 name.setText("生產線_" + String.valueOf(index / 2 + 1));
                 production_serial.setText("查看生產序列");
@@ -690,10 +682,10 @@ public class CPFragment extends Fragment {
                             if (index == 1) {
                                 if (selectedItem.equals(productLine.getProductName(index))) {
                                     mService.setCmd(command);
-                                    progressDialog.setTitle("請稍候");
-                                    progressDialog.setMessage("等待捲包辦公室確認 ！");
-                                    progressDialog.show();
-                                    progressDialog.setCancelable(false);
+                                    waitingDialog.setTitle("請稍候");
+                                    waitingDialog.setMessage("等待捲包辦公室確認 ！");
+                                    waitingDialog.show();
+                                    waitingDialog.setCancelable(false);
 
                                     isBroadcast = false;
                                 } else {
@@ -703,10 +695,10 @@ public class CPFragment extends Fragment {
                                 }
                             } else {
                                 mService.setCmd(command);
-                                progressDialog.setTitle("請稍候");
-                                progressDialog.setMessage("等待捲包辦公室確認中　！");
-                                progressDialog.show();
-                                progressDialog.setCancelable(false);
+                                waitingDialog.setTitle("請稍候");
+                                waitingDialog.setMessage("等待捲包辦公室確認中　！");
+                                waitingDialog.show();
+                                waitingDialog.setCancelable(false);
 
                                 isBroadcast = false;
                             }
@@ -747,7 +739,8 @@ public class CPFragment extends Fragment {
         }
 
         private class ItemSelectedListener implements Spinner.OnItemSelectedListener {
-            private SwapDialogListener  listener;
+            private SwapDialogListener listener;
+
             public ItemSelectedListener(SwapDialogListener tmp) {
                 listener = tmp;
             }
@@ -779,13 +772,14 @@ public class CPFragment extends Fragment {
             public void onClick(View v) {
 
                 if (!isCancel) {
-                    String inputId = ((EditText)linearLayout.findViewById(R.id.worker_text)).getText().toString();
+                    String inputId = ((EditText) linearLayout.findViewById(R.id.worker_text)).getText().toString();
                     String workerId = ((LoggedInActivity) getActivity()).getWorkerId();
 
 
                     if (workerId.equals(inputId)) {
                         mService.setCmd("EXE_SWAP_OK<END>");
                         dialog.dismiss();
+                        mService.resetExeResult();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -796,6 +790,7 @@ public class CPFragment extends Fragment {
                 } else {
                     mService.setCmd("EXE_SWAP_CANCEL<END>");
                     dialog.dismiss();
+                    mService.resetExeResult();
                 }
             }
         }

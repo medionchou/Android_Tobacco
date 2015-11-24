@@ -417,7 +417,7 @@ public class WareHouseFragment extends Fragment {
 
             for (int i = 0; i < info.size(); i++) {
                 SideHouse sideHouse = info.get(i);
-                inflateTextView(sideHouse);
+                inflateTextView(sideHouse, i);
             }
         }
 
@@ -612,13 +612,17 @@ public class WareHouseFragment extends Fragment {
             tableLayout.addView(titleRow);
         }
 
-        private void inflateTextView(SideHouse sideHouse) {
+        private void inflateTextView(SideHouse sideHouse, int indexToInflate) {
             TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
             TableRow tableRow = new TableRow(getActivity());
             TextView name = new TextView(getActivity());
             TextView productName = new TextView(getActivity());
             TextView unit = new TextView(getActivity());
+
+            if (indexToInflate == 0) {
+                setSideHouseTitle();
+            }
 
             tableRow.setLayoutParams(tableRowParams);
             name.setLayoutParams(rowParams);
@@ -639,6 +643,45 @@ public class WareHouseFragment extends Fragment {
 
             tableLayout.addView(tableRow);
         }
+
+        private void setSideHouseTitle() {
+
+            TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow tableRow = new TableRow(getActivity());
+            TextView name = new TextView(getActivity());
+            TextView productName = new TextView(getActivity());
+            TextView unit = new TextView(getActivity());
+
+            tableRow.setLayoutParams(tableRowParams);
+            name.setLayoutParams(rowParams);
+            productName.setLayoutParams(rowParams);
+            unit.setLayoutParams(rowParams);
+
+            name.setText("料位看板");
+            productName.setText("物料名稱");
+            unit.setText("物料數量");
+
+            name.setTextSize(Config.TEXT_TITLE_SIZE);
+            productName.setTextSize(Config.TEXT_TITLE_SIZE);
+            unit.setTextSize(Config.TEXT_TITLE_SIZE);
+
+            name.setTypeface(null, Typeface.BOLD);
+            productName.setTypeface(null, Typeface.BOLD);
+            unit.setTypeface(null, Typeface.BOLD);
+
+            name.setTextColor(Color.BLACK);
+            productName.setTextColor(Color.BLACK);
+            unit.setTextColor(Color.BLACK);
+
+            tableRow.addView(name);
+            tableRow.addView(productName);
+            tableRow.addView(unit);
+
+            tableLayout.addView(tableRow);
+
+        }
+
 
         private boolean isTimeMatch() {
             return YEAR == year && MONTH == month && DATE == date;

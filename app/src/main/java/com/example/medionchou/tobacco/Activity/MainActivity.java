@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = new Intent(this, LocalService.class);
-        startService(intent);
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras == null)
+            startService(intent);
     }
 
     @Override
@@ -75,38 +80,43 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
         switch (item.getItemId()) {
             case R.id.action_settings:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final LinearLayout ip_portLayout = (LinearLayout)getLayoutInflater().inflate(R.layout.ip_port_layout, null);
+                final LinearLayout ip_portLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.ip_port_layout, null);
                 builder.setTitle("設定IP及PORT");
                 builder.setView(ip_portLayout);
 
                 builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences settings = getSharedPreferences(Config.IPCONFIG, 0);
+                        SharedPreferences settings = getSharedPreferences("IPFILE", 0);
                         SharedPreferences.Editor editor = settings.edit();
                         EditText ipView = (EditText) ip_portLayout.findViewById(R.id.ip);
                         EditText portView = (EditText) ip_portLayout.findViewById(R.id.port);
                         String ipTest = ipView.getText().toString();
                         String portTest = portView.getText().toString();
                         String ip = "127.0.0.1";
-                        Pattern pattern = Pattern.compile("[0-9]{1,3}+.[0-9]{1,3}+.[0-9]{1,3}+.[0-9]{1,3}+");
+                        Pattern pattern = Pattern.compile("[0-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+");
                         Matcher matcher = pattern.matcher(ipTest);
                         int port = 0;
-                        boolean checker = false;
-
-                        if (!portTest.equals("")) {
-                            if (Integer.valueOf(portTest) <= 65536) {
-                                port = Integer.valueOf(portTest);
-                                checker = true;
-                            }
-                        }
+                        boolean checker;
 
                         checker = matcher.matches();
 
-                        if (matcher.matches()) {
+                        if (checker) {
+                            if (!portTest.equals("")) {
+                                if (Integer.valueOf(portTest) <= 65536) {
+                                    port = Integer.valueOf(portTest);
+                                    checker = true;
+                                } else {
+                                    checker = false;
+                                }
+                            }
+                        }
+
+                        if (checker) {
                             String[] strip = ipTest.split("\\.");
                             boolean isMatch = true;
 
@@ -118,8 +128,9 @@ public class MainActivity extends AppCompatActivity {
                             if (isMatch)
                                 ip = ipTest;
 
-                            checker |= isMatch;
+                            checker = isMatch;
                         }
+
 
                         if (checker) {
                             editor.putString("IP", ip);
@@ -196,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (mService.isLoggin()) {
+                    mService.resetLogginPerm();
                     Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("WorkerId", account);
@@ -206,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 msg = getString(R.string.no_connection);
             }
+
 
 
             return (Void)null;
