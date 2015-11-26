@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -271,6 +273,13 @@ public class CPFragment extends Fragment {
             super.onPostExecute(aVoid);
         }
 
+        public SpannableString setDialogText(String text, float size) {
+            SpannableString ss = new SpannableString(text);
+            ss.setSpan(new RelativeSizeSpan(size), 0, ss.length(), 0);
+
+            return ss;
+        }
+
         private void updateGui(String category, String lineNum) {
             tableLayout.removeAllViews();
 
@@ -468,8 +477,8 @@ public class CPFragment extends Fragment {
             name.setText("產線名稱");
             cur_production.setText("目前生產");
             production_serial.setText("詳細生產序列");
-            status.setText("換排燈號");
-            statusTextView.setText("換排情形");
+            status.setText("換牌燈號");
+            statusTextView.setText("換牌情形");
             swap.setText("換牌");
             broadcast.setText("廣播");
 
@@ -682,29 +691,29 @@ public class CPFragment extends Fragment {
                             if (index == 1) {
                                 if (selectedItem.equals(productLine.getProductName(index))) {
                                     mService.setCmd(command);
-                                    waitingDialog.setTitle("請稍候");
-                                    waitingDialog.setMessage("等待捲包辦公室確認 ！");
+                                    waitingDialog.setTitle(setDialogText("請稍候", 1));
+                                    waitingDialog.setMessage(setDialogText("等待捲包辦公室確認 ！", 3));
                                     waitingDialog.show();
                                     waitingDialog.setCancelable(false);
 
                                     isBroadcast = false;
                                 } else {
-                                    builder.setTitle("警告");
-                                    builder.setMessage("選擇的物料必須與換排物料相同");
+                                    builder.setTitle(setDialogText("警告", 1));
+                                    builder.setMessage(setDialogText("選擇的物料必須與換牌物料相同", 3));
                                     builder.show();
                                 }
                             } else {
                                 mService.setCmd(command);
-                                waitingDialog.setTitle("請稍候");
-                                waitingDialog.setMessage("等待捲包辦公室確認中　！");
+                                waitingDialog.setTitle(setDialogText("請稍候", 1));
+                                waitingDialog.setMessage(setDialogText("等待捲包辦公室確認中　！", 3));
                                 waitingDialog.show();
                                 waitingDialog.setCancelable(false);
 
                                 isBroadcast = false;
                             }
                         } else {
-                            builder.setTitle("警告");
-                            builder.setMessage("輸入編號必須與登入編號相同");
+                            builder.setTitle(setDialogText("警告", 1));
+                            builder.setMessage(setDialogText("輸入編號必須與登入編號相同", 3));
                             builder.show();
                         }
 

@@ -12,8 +12,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="50sp"
+        android:layout_marginTop="50dp"
+        android:textSize="200sp"
         android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
         android:text="菸絲看板" />
 
     <EditText
@@ -23,9 +25,9 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:gravity="center_horizontal"
-        android:textSize="25sp"
+        android:textSize="120sp"
         android:maxLines="1"
-        android:maxLength="16"
+        android:maxLength="7"
         android:inputType="number"
         android:hint="請輸入工號"
         android:id="@+id/edit_text_account"/>
@@ -36,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
-        android:textSize="30sp"
+        android:textSize="100sp"
         android:text="登入"
         android:id="@+id/loginBtn"/>
 

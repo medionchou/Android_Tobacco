@@ -75,7 +75,7 @@ public class IngreTitlesFragment extends Fragment {
         private final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         public ExpandableAdapter() {
-            group = new String[] {"本日進出貨情況", "本日庫存情形", "查詢進出貨紀錄", "查詢庫存紀錄"};
+            group = new String[] {"本日進出貨情況", "本日庫存情形", "進出貨歷史", "庫存歷史"};
             children = new String [][] {
                     {"3號倉庫", "5號倉庫", "6號倉庫", "總倉庫", "線邊倉"},
                     {"3號倉庫", "5號倉庫", "6號倉庫", "總倉庫", "線邊倉"},
@@ -136,13 +136,13 @@ public class IngreTitlesFragment extends Fragment {
                         bundle.putString("QUERY_TYPE", "NOW");
                         bundle.putBoolean("LOOK_UP", false);
                         newFrag.setArguments(bundle);
-                    } else if (getGroup(groupPosition).toString().equals("查詢進出貨紀錄")) {
+                    } else if (getGroup(groupPosition).toString().equals("進出貨歷史")) {
                         newFrag = new WareHouseFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "HISTORY");
                         bundle.putBoolean("LOOK_UP", true);
                         newFrag.setArguments(bundle);
-                    } else if (getGroup(groupPosition).toString().equals("查詢庫存紀錄")){
+                    } else if (getGroup(groupPosition).toString().equals("庫存歷史")){
                         newFrag = new WareHouseFragment();
                         bundle.putString("HOUSE_NAME", houseName);
                         bundle.putString("QUERY_TYPE", "NOW");
