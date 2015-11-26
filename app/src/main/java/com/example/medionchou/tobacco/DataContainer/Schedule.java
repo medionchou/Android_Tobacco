@@ -1,5 +1,7 @@
 package com.example.medionchou.tobacco.DataContainer;
 
+import android.graphics.Color;
+
 /**
  * Created by Medion on 2015/11/4.
  */
@@ -53,5 +55,13 @@ public class Schedule {
 
     public String getStaff() {
         return staff;
+    }
+
+    public int getColor(boolean type) {
+        if (type)
+            return Color.GREEN;
+        else
+            return Color.GRAY;
+
     }
 }

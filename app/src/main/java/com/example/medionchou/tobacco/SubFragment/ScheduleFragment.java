@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -40,6 +41,7 @@ public class ScheduleFragment extends Fragment {
 
     private LocalService mService;
     private ScheduleAsync schedulAsync;
+    private TableLayout parentLayout;
 
 
 
@@ -61,6 +63,9 @@ public class ScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frag_schedule_layout, container, false);
+        parentLayout = (TableLayout) rootView.findViewById(R.id.parent_layout);
+
+        parentLayout.setStretchAllColumns(true);
         schedulAsync = new ScheduleAsync();
         schedulAsync.execute((Void) null);
         return rootView;
@@ -86,6 +91,12 @@ public class ScheduleFragment extends Fragment {
     private class ScheduleAsync extends AsyncTask<Void, String, Void> {
         ProgressDialog progressDialog;
         List<Schedule> scheduleList = new ArrayList<>();
+
+        int lineId[] = {R.id.line1, R.id.line2, R.id.line3, R.id.line4, R.id.line5, R.id.line6, R.id.line7, R.id.line8, R.id.line9};
+        int cm_staff[] = {R.id.cm_staff1, R.id.cm_staff2, R.id.cm_staff3, R.id.cm_staff4, R.id.cm_staff5, R.id.cm_staff6, R.id.cm_staff7, R.id.cm_staff8, R.id.cm_staff9};
+        int pm_staff[] = {R.id.pm_staff1, R.id.pm_staff2, R.id.pm_staff3, R.id.pm_staff4, R.id.pm_staff5, R.id.pm_staff6, R.id.pm_staff7, R.id.pm_staff8, R.id.pm_staff9};
+        int office_id[] = {R.id.filter, R.id.boxing, R.id.repair, R.id.office};
+        int office_layout[] = {R.id.fp_layout, R.id.boxing_layout, R.id.repair_layout, R.id.office_layout};
 
         @Override
         protected void onPreExecute() {
@@ -142,8 +153,49 @@ public class ScheduleFragment extends Fragment {
                 progressDialog.cancel();
 
             if (values[0].equals("Update")) {
+                setLayout();
             }
         }
+
+        private void setLayout() {
+
+            for (int i = 0; i < scheduleList.size(); i++) {
+                Schedule schedule = scheduleList.get(i);
+
+                if (i < 9) {
+                    TextView line = (TextView) parentLayout.findViewById(lineId[i]);
+                    TextView cm = (TextView) parentLayout.findViewById(cm_staff[i]);
+                    TextView pm = (TextView) parentLayout.findViewById(pm_staff[i]);
+
+                    line.setText(schedule.getOffice());
+                    cm.setText(schedule.getCMStaff());
+                    pm.setText(schedule.getPMStaff());
+
+                    line.setTextSize(Config.TEXT_SIZE);
+                    cm.setTextSize(Config.TEXT_SIZE);
+                    pm.setTextSize(Config.TEXT_SIZE);
+
+                    cm.setBackgroundColor(schedule.getColor(schedule.getCMOn()));
+                    pm.setBackgroundColor(schedule.getColor(schedule.getPMOn()));
+
+                } else {
+                    LinearLayout layout = (LinearLayout)parentLayout.findViewById(office_layout[i-9]);
+                    TextView staff = (TextView) parentLayout.findViewById(office_id[i-9]);
+
+                    staff.setText(schedule.getStaff());
+
+                    staff.setTextSize(24);
+
+                    staff.setMaxEms(5);
+                    staff.setMaxLines(3);
+
+                    layout.setBackgroundColor(schedule.getColor(schedule.getOfficeOn()));
+
+                }
+
+            }
+        }
+
 
         private void sendCommand(String cmd) {
             String msg = "";
@@ -174,13 +226,18 @@ public class ScheduleFragment extends Fragment {
 
                 if (i < 9) {
 
-                    Schedule schedule = new Schedule(detail[1].equals("1"), detail[2].equals("1"), detail[3] +" "+ detail[4], detail[5], detail[6]);
+                    Schedule schedule = new Schedule(detail[1].equals("1"), detail[2].equals("1"), detail[3], detail[4], detail[5]);
 
+                    scheduleList.add(schedule);
                 } else {
-                    //Schedule schedule = new Schedule(detail[1].equals("1"), detail[2].equals("1"), detail[3] +" "+ detail[4], detail[5], detail[6]);
+                    Schedule schedule = new Schedule(detail[1].equals("1"), detail[2], detail[3]);
 
+                    scheduleList.add(schedule);
                 }
             }
+
+            TableLayout test = (TableLayout) parentLayout.findViewById(R.id.lower_layout);
+            test.setStretchAllColumns(true);
         }
 
 

@@ -151,6 +151,9 @@ public class QualityFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            if (progressDialog.isShowing())
+                progressDialog.cancel();
         }
 
         private void updateView(String raw) {

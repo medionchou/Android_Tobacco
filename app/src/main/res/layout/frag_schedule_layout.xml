@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <TableLayout
+            android:id="@+id/parent_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,9 +29,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
+                        android:text="線號"
                         android:textColor="@android:color/black"
-                        android:text="線號"/>
+                        android:textSize="32dp" />
 
                     <TextView
                         android:id="@+id/line1"
@@ -84,7 +84,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/darker_gray" />
 
                 <LinearLayout
                     android:id="@+id/cm_layout"
@@ -97,9 +97,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
+                        android:text="捲菸機"
                         android:textColor="@android:color/black"
-                        android:text="捲菸機"/>
+                        android:textSize="32dp" />
 
                     <TextView
                         android:id="@+id/cm_staff1"
@@ -152,7 +152,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/darker_gray" />
 
                 <LinearLayout
                     android:id="@+id/pm_layout"
@@ -165,9 +165,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
+                        android:text="包裝機"
                         android:textColor="@android:color/black"
-                        android:text="包裝機"/>
+                        android:textSize="32dp" />
 
 
                     <TextView
@@ -220,117 +220,114 @@
             </LinearLayout>
 
 
-            <LinearLayout
+            <TableLayout
+                android:id="@+id/lower_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/fp_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
-                        android:textColor="@android:color/black"
-                        android:text="濾嘴捲制風送解剖"/>
+                    <LinearLayout
+                        android:id="@+id/fp_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_custom_background"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/filter"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="濾嘴捲制風送解剖"
+                            android:textColor="@android:color/black"
+                            android:textSize="32dp" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/boxing_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
-                        android:textColor="@android:color/black"
-                        android:text="裝箱機"/>
+                    <LinearLayout
+                        android:id="@+id/boxing_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_custom_background"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/boxing"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="裝箱機"
+                            android:textColor="@android:color/black"
+                            android:textSize="32dp" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/boxing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/repair_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
-                        android:textColor="@android:color/black"
-                        android:text="維修部"/>
+                    <LinearLayout
+                        android:id="@+id/repair_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_custom_background"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/repair"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="維修部"
+                            android:textColor="@android:color/black"
+                            android:textSize="32dp" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/repair"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/office_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:textSize="32dp"
-                        android:textColor="@android:color/black"
-                        android:text="辦公室"/>
+                    <LinearLayout
+                        android:id="@+id/office_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/my_custom_background"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/office"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="辦公室"
+                            android:textColor="@android:color/black"
+                            android:textSize="32dp" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/office"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-            </LinearLayout>
+                    </LinearLayout>
+                </TableRow>
 
-        </LinearLayout>
+            </TableLayout>
+
+        </TableLayout>
 
     </ScrollView>
 

@@ -157,7 +157,7 @@ public class LocalService extends Service implements Runnable {
 
                         String endLine = serverReply.substring(0, endIndex);
 
-                        Log.v("MyLog", endLine);
+                        //Log.v("MyLog", endLine);
 
                         if (endLine.contains("CONNECT_OK<END>")) {
                             client_state = States.CONNECT_OK;
