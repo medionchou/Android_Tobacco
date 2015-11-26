@@ -59,9 +59,9 @@ public class Schedule {
 
     public int getColor(boolean type) {
         if (type)
-            return Color.GREEN;
+            return Color.parseColor("#ff228b22");
         else
-            return Color.GRAY;
+            return Color.parseColor("#ff303030");
 
     }
 }

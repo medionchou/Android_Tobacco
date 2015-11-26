@@ -97,15 +97,16 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     @Override
     protected void onStop() {
         super.onStop();
-        if (mConnection.isBound()) {
-            unbindService(mConnection);
-        }
         thread.stopThread();
         thread = null;
         logoutTimer.cancel();
 
         swapThread.stopThread();
         swapThread = null;
+
+        if (mConnection.isBound()) {
+            unbindService(mConnection);
+        }
     }
 
     @Override

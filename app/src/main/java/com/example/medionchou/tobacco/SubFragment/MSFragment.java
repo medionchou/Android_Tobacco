@@ -262,7 +262,7 @@ public class MSFragment extends Fragment {
                 if (msDataList.size() > 0)
                     msDataList.clear();
 
-                for (int i = 0; i < detailMS.length; i = i + 6) {
+                for (int i = 0; i < detailMS.length; i = i + 7) {
                     MSData msData = new MSData(detailMS[i + 1], detailMS[i + 2], detailMS[i + 3], detailMS[i + 4], detailMS[i + 5]);
                     msDataList.add(msData);
                 }

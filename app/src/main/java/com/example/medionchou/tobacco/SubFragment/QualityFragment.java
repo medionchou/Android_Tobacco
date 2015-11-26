@@ -114,17 +114,21 @@ public class QualityFragment extends Fragment {
             try {
                 publishProgress("CREATE");
                 while (!isCancelled()) {
-                    msg = mService.getUpdateMsg();
+                    msg = mService.getUpdateQual();
 
                     if (msg.length() > 0) {
                         mService.resetUpdateMsg();
                         String[] updateMsg = msg.split("<END>");
+
+
 
                         for (String tmp : updateMsg) {
                             if (tmp.contains("UPDATE_VALUE")) {
                                 publishProgress("UPDATE", tmp);
                             }
                         }
+
+                        mService.resetQual();
                     }
                     Thread.sleep(1000);
                 }
@@ -159,7 +163,7 @@ public class QualityFragment extends Fragment {
         private void updateView(String raw) {
             String[] detail = raw.split("\\t|<END>");
             Quality quality = new Quality(detail[1], detail[2], detail[3], detail[4], detail[5], detail[6], detail[7], detail[8], detail[9], detail[10], detail[11], detail[12]);
-            int i = quality.getLineNum();
+            int i = quality.getLineNum() - 1;
 
             TextView timeView = (TextView) view.findViewById(time[i]);
             TextView productView = (TextView) view.findViewById(productId[i]);

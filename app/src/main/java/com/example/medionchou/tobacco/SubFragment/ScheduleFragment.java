@@ -171,9 +171,12 @@ public class ScheduleFragment extends Fragment {
                     cm.setText(schedule.getCMStaff());
                     pm.setText(schedule.getPMStaff());
 
-                    line.setTextSize(Config.TEXT_SIZE);
-                    cm.setTextSize(Config.TEXT_SIZE);
-                    pm.setTextSize(Config.TEXT_SIZE);
+                    line.setTextSize(28);
+                    cm.setTextSize(24);
+                    pm.setTextSize(24);
+
+                    cm.setTextColor(Color.parseColor("#fff08080"));
+                    pm.setTextColor(Color.parseColor("#fff08080"));
 
                     cm.setBackgroundColor(schedule.getColor(schedule.getCMOn()));
                     pm.setBackgroundColor(schedule.getColor(schedule.getPMOn()));
@@ -184,10 +187,12 @@ public class ScheduleFragment extends Fragment {
 
                     staff.setText(schedule.getStaff());
 
-                    staff.setTextSize(24);
+                    staff.setTextSize(Config.TEXT_SIZE);
 
                     staff.setMaxEms(5);
-                    staff.setMaxLines(3);
+                    staff.setMaxLines(4);
+
+                    staff.setTextColor(Color.parseColor("#fff08080")); //646464
 
                     layout.setBackgroundColor(schedule.getColor(schedule.getOfficeOn()));
 

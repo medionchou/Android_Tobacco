@@ -82,14 +82,14 @@ public class Quality {
         double value = Double.valueOf(parameter[1]);
         double min = Double.valueOf(parameter[2]);
 
-        if (value > max)
-            return 0;
-        else if (value <= max && value >= min)
-            return 1;
-        else if (value < min)
-            return 2;
 
-        return -1;
+        if ( (value < min && value >= (min - min*0.02)) || (value <= (max + max*0.02) && value > max))
+            return 2;
+        else if (value < (min - min*0.02) || value > (max + max*0.02) ) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
 

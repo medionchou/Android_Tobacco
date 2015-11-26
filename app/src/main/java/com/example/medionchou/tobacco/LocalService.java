@@ -37,6 +37,7 @@ public class LocalService extends Service implements Runnable {
     private String queryReply;
     private String updateOnline;
     private String updateMsg;
+    private String updateQual;
     private String msg;
     private String swapDoneMsg;
     private String recentBox;
@@ -100,6 +101,7 @@ public class LocalService extends Service implements Runnable {
         swapDoneMsg = "";
         recentBox = "";
         exeResult = "";
+        updateQual = "";
         buffer = new ArrayList<>();
         inputBuffer.clear();
         socketChannel = null;
@@ -157,7 +159,7 @@ public class LocalService extends Service implements Runnable {
 
                         String endLine = serverReply.substring(0, endIndex);
 
-                        //Log.v("MyLog", endLine);
+                        Log.v("MyLog", endLine);
 
                         if (endLine.contains("CONNECT_OK<END>")) {
                             client_state = States.CONNECT_OK;
@@ -168,11 +170,16 @@ public class LocalService extends Service implements Runnable {
                         } else if (endLine.contains("UPDATE")) {
                             if (endLine.contains("UPDATE_ONLINE")) {
                                 updateOnline = endLine;
-                            } else {
+                            } else if (!endLine.contains("UPDATE_VALUE")){
                                 synchronized (updateMsg) {
                                     updateMsg += endLine;
                                 }
+                            } else if (endLine.contains("UPDATE_VALUE")) {
+                                synchronized (updateQual) {
+                                    updateQual += endLine;
+                                }
                             }
+
                         } else if (endLine.contains("MSG")) {
                             String tmp;
                             tmp = endLine.replace("<END>", "");
@@ -286,6 +293,14 @@ public class LocalService extends Service implements Runnable {
 
     public String getRecentBox() {
         return recentBox;
+    }
+
+    public String getUpdateQual() {
+        return updateQual;
+    }
+
+    public void resetQual() {
+        updateQual = "";
     }
 
     public void resetExeResult() {

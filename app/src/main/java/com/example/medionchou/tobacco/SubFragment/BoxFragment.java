@@ -6,11 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.medionchou.tobacco.Constants.Command;
@@ -34,6 +40,7 @@ public class BoxFragment extends Fragment {
     private LocalService mService;
     private BoxAsyncTask asyncTask;
     private TableLayout tableLayout;
+    private TableLayout parentLayout;
 
     @Override
     public void onAttach(Activity activity) {
@@ -57,6 +64,9 @@ public class BoxFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.frag_current_box_production_layout, container, false);
         tableLayout = (TableLayout) rootView.findViewById(R.id.table_layout);
         tableLayout.setStretchAllColumns(true);
+
+        parentLayout = (TableLayout) rootView.findViewById(R.id.box_layout);
+        parentLayout.setStretchAllColumns(true);
 
         asyncTask = new BoxAsyncTask();
         asyncTask.execute((Void) null);
@@ -147,14 +157,8 @@ public class BoxFragment extends Fragment {
             }
 
             if (values[0].equals("BOX_RECENT")) {
-                TextView recentBox = (TextView) getActivity().findViewById(R.id.recentTextView);
-                String boxRecent =  mService.getRecentBox();
-                boxRecent = boxRecent.replace("BOX_RECENT\t", "");
-                boxRecent = boxRecent.replace("<END>", "");
-
-                recentBox.setText(boxRecent);
-                recentBox.setTextSize(Config.TEXT_SIZE);
-
+                String raw = mService.getRecentBox();
+                createHistoryBoxView(raw);
             }
 
             if (values[1].equals("BOX")) {
@@ -163,6 +167,66 @@ public class BoxFragment extends Fragment {
 
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
+        }
+
+        private void createHistoryBoxView(String raw) {
+            String[] data = raw.split("\\t|<END>");
+
+            for (int i = 0; i < data.length; i  = i + 4) {
+                if (i == 0) {
+                    Log.v("MyLog", data[i] + data[i+1] + data[i+2] + "總箱數");
+                    drawView(data[i+1], data[i+2], data[i+3], Html.fromHtml("總箱數"));
+                } else {
+                    if (i == 36) {
+                        Log.v("MyLog", data[i] + data[i + 1] + data[i + 2] + Html.fromHtml( data[i + 3] +"\r\n<font color='yellow'>" + data[i + 4] + "</font>"));
+                        drawView(data[i], data[i + 1], data[i + 2], Html.fromHtml(data[i + 3] + "<br><font color='green'>" + data[i + 4] + "</font>"));
+                        i = data.length;
+                    } else
+                        drawView(data[i], data[i + 1], data[i + 2], Html.fromHtml(data[i+3]));
+                }
+            }
+        }
+
+        private void drawView(String col1, String col2, String col3, Spanned col4) {
+            TableLayout.LayoutParams param = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, 1);
+            TableRow.LayoutParams rowParam = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.MATCH_PARENT);
+            TableRow layout = new TableRow(getActivity());
+            TextView col1View = new TextView(getActivity());
+            TextView col2View = new TextView(getActivity());
+            TextView col3View = new TextView(getActivity());
+            TextView col4View = new TextView(getActivity());
+
+
+            layout.setLayoutParams(param);
+
+            col1View.setLayoutParams(rowParam);
+            col2View.setLayoutParams(rowParam);
+            col3View.setLayoutParams(rowParam);
+            col4View.setLayoutParams(rowParam);
+
+            col2 = col2.replace("\r", "");
+
+            col1View.setText(col1);
+            col2View.setText(col2);
+            col3View.setText(col3);
+            col4View.setText(col4);
+
+            col1View.setTextSize(Config.TEXT_SIZE);
+            col2View.setTextSize(Config.TEXT_SIZE);
+            col3View.setTextSize(Config.TEXT_SIZE);
+            col4View.setTextSize(Config.TEXT_SIZE);
+
+            col1View.setGravity(Gravity.CENTER_HORIZONTAL);
+            col2View.setGravity(Gravity.CENTER_HORIZONTAL);
+            col3View.setGravity(Gravity.CENTER_HORIZONTAL);
+            col4View.setGravity(Gravity.CENTER_HORIZONTAL);
+
+            layout.addView(col1View);
+            layout.addView(col2View);
+            layout.addView(col3View);
+            layout.addView(col4View);
+
+            parentLayout.addView(layout);
         }
 
         private void createProductView() {
@@ -241,10 +305,10 @@ public class BoxFragment extends Fragment {
 
         private void updateBoxes(String msg) {
             String[] detail = msg.split("\\t|<END>");
-            int index = Integer.valueOf(detail[1]) - 1;
-            TextView boxes = (TextView) tableLayout.findViewById(boxNumId[index]);
 
-            boxes.setText(detail[2] + "/" + detail[3]);
+            for (int i = 0; i < detail.length; i++) {
+                Log.v("MyLog", detail[i]);
+            }
         }
 
         private void sendCommand(String cmd) {
