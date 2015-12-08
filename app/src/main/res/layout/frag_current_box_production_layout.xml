@@ -15,12 +15,46 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="今日箱數"
-            android:textColor="@android:color/black"
-            android:textSize="32sp"
+            android:background="@color/red"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
+            android:text="今日箱數"
+            android:textColor="@android:color/white"
+            android:textSize="32sp"
             android:textStyle="bold" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/yellow"
+                android:gravity="center_horizontal"
+                android:text="機台"
+                android:textColor="@color/red"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/yellow"
+                android:gravity="center_horizontal"
+                android:text="品牌"
+                android:textColor="@color/red"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/yellow"
+                android:gravity="center_horizontal"
+                android:text="已產箱數 / 預計箱數"
+                android:textColor="@color/red"
+                android:textSize="30sp" />
+
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
@@ -29,23 +63,25 @@
 
             <TextView
                 android:id="@+id/line1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/product1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/box_num1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
-            <TextView
-                android:id="@+id/box_label1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
         <TableRow
@@ -55,23 +91,25 @@
 
             <TextView
                 android:id="@+id/line2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/product2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/box_num2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
-            <TextView
-                android:id="@+id/box_label2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -82,23 +120,25 @@
 
             <TextView
                 android:id="@+id/line3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/product3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/box_num3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
-            <TextView
-                android:id="@+id/box_label3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -109,23 +149,25 @@
 
             <TextView
                 android:id="@+id/line4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/product4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/box_num4"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
-            <TextView
-                android:id="@+id/box_label4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -136,23 +178,25 @@
 
             <TextView
                 android:id="@+id/line5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"  />
 
             <TextView
                 android:id="@+id/product5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/box_num5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
-            <TextView
-                android:id="@+id/box_label5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -163,23 +207,25 @@
 
             <TextView
                 android:id="@+id/line6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/product6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
             <TextView
                 android:id="@+id/box_num6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
-            <TextView
-                android:id="@+id/box_label6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -190,23 +236,25 @@
 
             <TextView
                 android:id="@+id/line7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/product7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/box_num7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
-            <TextView
-                android:id="@+id/box_label7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -217,23 +265,25 @@
 
             <TextView
                 android:id="@+id/line8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/product8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/box_num8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
 
-            <TextView
-                android:id="@+id/box_label8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </TableRow>
 
 
@@ -244,30 +294,32 @@
 
             <TextView
                 android:id="@+id/line9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/product9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical" />
 
             <TextView
                 android:id="@+id/box_num9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/box_label9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal|center_vertical"/>
         </TableRow>
+
     </TableLayout>
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -275,15 +327,33 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="歷史箱數"
-            android:textColor="@android:color/black"
-            android:textSize="32sp"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:textStyle="bold" />
+            android:background="@color/red">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="歷史箱數"
+                android:textColor="@android:color/white"
+                android:textSize="32sp"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/total_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="歷史箱數"
+                android:textColor="@android:color/white"
+                android:textSize="32sp"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
 
         <TableLayout
             android:id="@+id/box_layout"

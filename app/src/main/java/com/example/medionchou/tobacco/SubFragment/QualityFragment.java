@@ -218,8 +218,8 @@ public class QualityFragment extends Fragment {
             TextView breathLabel = (TextView) view.findViewById(R.id.breath);
 
             line.setText("機台");
-            product.setText("生產");
-            curtime.setText("時間");
+            product.setText("品牌");
+            curtime.setText("檢測時間");
             weight.setText("重量");
             perimeter.setText("圓周");
             breathLabel.setText("透氣率");
@@ -262,7 +262,7 @@ public class QualityFragment extends Fragment {
 
 
                 timeView[i].setText("00:00:00");
-                lineView[i].setText(String.valueOf(i+1));
+                lineView[i].setText(String.valueOf(i+1) + " 號機");
                 productView[i].setText("無");
                 weightMaxView[i].setText("0.00");
                 weightValView[i].setText("0.00");
@@ -275,7 +275,7 @@ public class QualityFragment extends Fragment {
                 breathMinView[i].setText("0.00");
 
                 timeView[i].setTextSize(Config.TEXT_SIZE);
-                lineView[i].setTextSize(Config.TEXT_SIZE);
+                lineView[i].setTextSize(40);
                 productView[i].setTextSize(Config.TEXT_SIZE);
                 weightMaxView[i].setTextSize(Config.TEXT_SIZE);
                 weightValView[i].setTextSize(Config.TEXT_SIZE);

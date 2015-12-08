@@ -607,7 +607,7 @@ public class InsertFragment extends Fragment {
                         int boxes = 0;
 
                         if (!editText.getText().toString().equals(""))
-                            boxes = Integer.valueOf(editText.getText().toString()) * 200;
+                            boxes = Integer.valueOf(editText.getText().toString());
 
                         if (isChecked) {
                             checkBit[index] = '1';
@@ -646,7 +646,7 @@ public class InsertFragment extends Fragment {
                         int boxes = 0;
 
                         if (!s.toString().equals(""))
-                            boxes = 200 * Integer.valueOf(s.toString());
+                            boxes = Integer.valueOf(s.toString());
 
                         for (int i = 0; i < SIZE; i++) {
                             totalLine += Character.getNumericValue(checkBit[i]);

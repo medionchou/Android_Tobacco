@@ -11,16 +11,21 @@ public class Schedule {
     private String office;
     private String staffCM;
     private String staffPM;
+    private String bossCM;
+    private String bossPM;
+
 
     private boolean isOfficeOn;
     private String staff;
 
-    public Schedule(boolean isCMOn, boolean isPMOn, String office, String staffCM, String staffPM) {
+    public Schedule(boolean isCMOn, boolean isPMOn, String office, String staffCM, String bossCM, String staffPM, String bossPM) {
         this.isCMOn = isCMOn;
         this.isPMOn = isPMOn;
-        this.office = office;
+        this.office = office.substring(2, office.length());
         this.staffCM = staffCM;
+        this.bossCM = bossCM;
         this.staffPM = staffPM;
+        this.bossPM = bossPM;
     }
 
     public Schedule(boolean isOfficeOn, String office, String staff) {
@@ -49,8 +54,16 @@ public class Schedule {
         return staffCM;
     }
 
+    public String getCMBoss() {
+        return bossCM;
+    }
+
     public String getPMStaff() {
         return staffPM;
+    }
+
+    public String getPMBoss() {
+        return bossPM;
     }
 
     public String getStaff() {

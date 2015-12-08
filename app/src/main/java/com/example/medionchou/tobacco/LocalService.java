@@ -161,6 +161,12 @@ public class LocalService extends Service implements Runnable {
 
                         Log.v("MyLog", endLine);
 
+                        if (endLine.contains("UPDATE") && endLine.indexOf("UPDATE") > 0 ) {
+                            endLine = endLine.substring(endLine.indexOf("UPDATE"), endIndex);
+                        }
+
+
+
                         if (endLine.contains("CONNECT_OK<END>")) {
                             client_state = States.CONNECT_OK;
                         } else if (endLine.contains("LOGIN_REPLY")) {
