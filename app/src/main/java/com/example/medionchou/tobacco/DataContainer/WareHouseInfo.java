@@ -12,6 +12,7 @@ public class WareHouseInfo {
     private String unit = "";
     private String pallet = "";
     private String person = "";
+    private String takenPerson = "";
 
     public WareHouseInfo(String date, String action, String productId, String productName, String quantity, String unit, String pallet, String person) {
         this.date = date;
@@ -22,6 +23,18 @@ public class WareHouseInfo {
         this.unit = unit;
         this.pallet = pallet;
         this.person = person;
+    }
+
+    public WareHouseInfo(String date, String action, String productId, String productName, String quantity, String unit, String pallet, String person, String takenPerson) {
+        this.date = date;
+        this.action = action;
+        this.productId = productId;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.unit = unit;
+        this.pallet = pallet;
+        this.person = person;
+        this.takenPerson = takenPerson;
     }
 
     public WareHouseInfo(String productId, String productName, String quantity, String unit) {
@@ -61,6 +74,10 @@ public class WareHouseInfo {
 
     public String getPerson() {
         return person;
+    }
+
+    public String getTakenPerson() {
+        return takenPerson;
     }
 
     public boolean isProductIdMatch(WareHouseInfo info) {

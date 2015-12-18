@@ -123,7 +123,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
-        //Log.v("MyLog", "ResetLogout");
+        Log.v("MyLog", "ResetLogout");
         logoutTimer.cancel();
         logoutTimer = new Timer();
 

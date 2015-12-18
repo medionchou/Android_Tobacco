@@ -239,7 +239,7 @@ public class ScheduleFragment extends Fragment {
                 if (i < parsed.length - 1)
                     tmp += ",";
 
-                if ((i+1)%5 == 0)
+                if ((i+1)%4 == 0)
                     tmp += "\n";
 
             }

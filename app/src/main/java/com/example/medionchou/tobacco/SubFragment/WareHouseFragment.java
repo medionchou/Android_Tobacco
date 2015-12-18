@@ -320,21 +320,26 @@ public class WareHouseFragment extends Fragment {
             /**
              *  TODO: empty command
              */
-            String[] data = stockMsg.split("\\t|<N>|<END>");
+
 
             if (clear) {
                 wareHouseInfoList.clear();
             }
 
             if (isSH) {
+                String[] data = stockMsg.split("\\t|<N>|<END>");
                 for (int i = 0; i < data.length; i = i + 8) {
                     WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], "");
                     wareHouseInfoList.add(info);
                 }
 
             } else {
-                for (int i = 0; i < data.length; i = i + 9) {
-                    WareHouseInfo info = new WareHouseInfo(data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8]);
+                String[] detail = stockMsg.split("<N>|<END>");
+
+                for (int i = 0; i < detail.length; i = i + 1) {
+                    String[] data = detail[i].split("\\t", -1);
+
+                    WareHouseInfo info = new WareHouseInfo(data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]);
                     wareHouseInfoList.add(info);
                 }
             }
@@ -442,6 +447,7 @@ public class WareHouseFragment extends Fragment {
             TextView unit = new TextView(getActivity());
             TextView pallet = new TextView(getActivity());
             TextView person = new TextView(getActivity());
+            TextView takenPerson = new TextView(getActivity());
 
 
             tableRow.setLayoutParams(tableRowParams);
@@ -453,6 +459,7 @@ public class WareHouseFragment extends Fragment {
             unit.setLayoutParams(textViewParams);
             pallet.setLayoutParams(textViewParams);
             person.setLayoutParams(textViewParams);
+            takenPerson.setLayoutParams(textViewParams);
 
             date.setMaxEms(5);
             productId.setMaxEms(5);
@@ -468,6 +475,7 @@ public class WareHouseFragment extends Fragment {
                 unit.setText(info.getUnit());
                 pallet.setText(info.getPallet());
                 person.setText(info.getPerson());
+                takenPerson.setText(info.getTakenPerson());
 
 
                 date.setTextSize(Config.TEXT_SIZE);
@@ -478,6 +486,7 @@ public class WareHouseFragment extends Fragment {
                 unit.setTextSize(Config.TEXT_SIZE);
                 pallet.setTextSize(Config.TEXT_SIZE);
                 person.setTextSize(Config.TEXT_SIZE);
+                takenPerson.setTextSize(Config.TEXT_SIZE);
 
 
                 if (indexToInflate == 0) {
@@ -495,7 +504,12 @@ public class WareHouseFragment extends Fragment {
                 } else {
                     person.setText(info.getPallet());
                 }
+
                 tableRow.addView(person);
+
+                if (!sh.equals("SH")) {
+                    tableRow.addView(takenPerson);
+                }
 
             } else { // now
 
@@ -533,6 +547,7 @@ public class WareHouseFragment extends Fragment {
             TextView unitTitle = new TextView(getActivity());
             TextView palletTitle = new TextView(getActivity());
             TextView personTitle = new TextView(getActivity());
+            TextView takenTitle = new TextView(getActivity());
 
 
             tableRowParams.setMargins(1, 10, 1, 1);
@@ -544,6 +559,7 @@ public class WareHouseFragment extends Fragment {
             quantityTitle.setLayoutParams(textViewParams);
             unitTitle.setLayoutParams(textViewParams);
             personTitle.setLayoutParams(textViewParams);
+            takenTitle.setLayoutParams(textViewParams);
 
             dateTitle.setTextColor(Color.BLACK);
             actionTitle.setTextColor(Color.BLACK);
@@ -553,6 +569,7 @@ public class WareHouseFragment extends Fragment {
             unitTitle.setTextColor(Color.BLACK);
             palletTitle.setTextColor(Color.BLACK);
             personTitle.setTextColor(Color.BLACK);
+            takenTitle.setTextColor(Color.BLACK);
 
             dateTitle.setTypeface(null, Typeface.BOLD);
             actionTitle.setTypeface(null, Typeface.BOLD);
@@ -562,6 +579,7 @@ public class WareHouseFragment extends Fragment {
             unitTitle.setTypeface(null, Typeface.BOLD);
             palletTitle.setTypeface(null, Typeface.BOLD);
             personTitle.setTypeface(null, Typeface.BOLD);
+            takenTitle.setTypeface(null, Typeface.BOLD);
 
             if (isHistory) {
                 dateTitle.setText("日期");
@@ -572,6 +590,7 @@ public class WareHouseFragment extends Fragment {
                 unitTitle.setText("單位");
                 palletTitle.setText("棧板數");
                 personTitle.setText("人員");
+                takenTitle.setText("領料人員");
 
                 dateTitle.setTextSize(Config.TEXT_TITLE_SIZE);
                 actionTitle.setTextSize(Config.TEXT_TITLE_SIZE);
@@ -581,6 +600,7 @@ public class WareHouseFragment extends Fragment {
                 unitTitle.setTextSize(Config.TEXT_TITLE_SIZE);
                 palletTitle.setTextSize(Config.TEXT_TITLE_SIZE);
                 personTitle.setTextSize(Config.TEXT_TITLE_SIZE);
+                takenTitle.setTextSize(Config.TEXT_TITLE_SIZE);
 
                 titleRow.addView(dateTitle);
                 titleRow.addView(actionTitle);
@@ -588,9 +608,15 @@ public class WareHouseFragment extends Fragment {
                 titleRow.addView(productNameTitle);
                 titleRow.addView(quantityTitle);
                 titleRow.addView(unitTitle);
-                if (!sh.equals("SH"))
+                if (!sh.equals("SH")) {
                     titleRow.addView(palletTitle);
+                }
                 titleRow.addView(personTitle);
+
+                if (!sh.equals("SH")) {
+                    titleRow.addView(takenTitle);
+                }
+
             } else {
 
                 productIdTitle.setText("產品編號");

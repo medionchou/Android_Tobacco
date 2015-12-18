@@ -24,7 +24,7 @@ import java.util.List;
 
 public class LocalService extends Service implements Runnable {
 
-    private String SERVER_IP = "140.113.167.14";
+    private String SERVER_IP = "192.168.1.250";
     private int SERVER_PORT = 9000;
     private final IBinder mBinder = new LocalBinder();
 
@@ -55,8 +55,10 @@ public class LocalService extends Service implements Runnable {
         client.start();*/
         //Log.v("MyLog", "ServiceOnCreate");
         SharedPreferences settings = getSharedPreferences(Config.IPCONFIG, 0);
-        SERVER_IP = settings.getString("IP", "140.113.167.14");
+        SERVER_IP = settings.getString("IP", "192.168.1.250");
         SERVER_PORT = settings.getInt("PORT", 9000);
+
+        Log.v("MyLog", SERVER_IP + " " + SERVER_PORT);
     }
 
     @Override
@@ -255,6 +257,7 @@ public class LocalService extends Service implements Runnable {
                 if (socketChannel != null)
                     socketChannel.close();
                 isTerminated = true;
+                stopSelf();
             } catch (IOException err) {
                 Log.v("MyLog", "IOException " + err.toString());
             }

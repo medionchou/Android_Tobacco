@@ -293,7 +293,7 @@ public class BoxFragment extends Fragment {
 
                 tmp = productLine.getSize() > 0 ? productLine.getProductName(0) : "(無)";
 
-                lineNum[i].setText(String.valueOf(i + 1) + " 機台");
+                lineNum[i].setText(String.valueOf(i + 1) + " 號機");
                 product[i].setText(tmp);
 
                 if (boxNum[i].getText().toString().equals("")) {
