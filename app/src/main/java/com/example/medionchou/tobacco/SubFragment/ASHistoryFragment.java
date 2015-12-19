@@ -264,7 +264,7 @@ public class ASHistoryFragment extends Fragment {
                 if (msDataList.size() > 0)
                     msDataList.clear();
 
-                for (int i = 0; i < detailMS.length; i = i + 6) {
+                for (int i = 0; i < detailMS.length; i = i + 1) {
                     String[] tmp = detailMS[i].split("\\t", -1);
                     MSData msData = new MSData(tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]);
                     msDataList.add(msData);
