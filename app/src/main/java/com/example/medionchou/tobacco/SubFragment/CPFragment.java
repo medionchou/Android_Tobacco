@@ -37,11 +37,19 @@ import com.example.medionchou.tobacco.DataContainer.LineState;
 import com.example.medionchou.tobacco.DataContainer.ProductLine;
 import com.example.medionchou.tobacco.Activity.DetailDialogActivity;
 import com.example.medionchou.tobacco.DataContainer.RecipeList;
+import com.example.medionchou.tobacco.ListenerAdapter;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.R;
 import com.example.medionchou.tobacco.ServiceListener;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOError;
+import java.io.IOException;
+import java.nio.Buffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -554,6 +562,7 @@ public class CPFragment extends Fragment {
             String[] data = msg.split("\\t|<N>|<END>");
 
             if (update) {
+                if (data[1].equals("PP")) return;
                 LineState lineState = new LineState(data[1], data[2], Integer.valueOf(data[3]), data[4]);
 
                 for (int i = 0; i < lineStateList.size(); i++) {
@@ -565,6 +574,7 @@ public class CPFragment extends Fragment {
                 }
             } else {
                 for (int i = 0; i < data.length; i = i + 5) {
+                    if (data[i+1].equals("PP")) continue;
                     LineState lineState = new LineState(data[i + 1], data[i + 2], Integer.valueOf(data[i + 3]), data[i + 4]);
                     lineStateList.add(lineState);
                 }
@@ -597,11 +607,17 @@ public class CPFragment extends Fragment {
             }
         }
 
-        private class BroadcastListener implements View.OnClickListener {
+        private class BroadcastListener extends ListenerAdapter implements View.OnClickListener {
             String lineInfo;
+            List<String> tmp;
+            String selectedItem;
+            EditText broadcastMsg;
+            private final String fileName = "BroadcastLog";
+            private File broadcastFile;
 
             public BroadcastListener(String msg) {
                 lineInfo = msg;
+                broadcastFile = new File(getActivity().getFilesDir(), fileName);
             }
 
             @Override
@@ -609,14 +625,27 @@ public class CPFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View customView = inflater.inflate(R.layout.dialog_broadcast, null);
-                EditText broadcastMsg;
                 Calendar cal = Calendar.getInstance();
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm");
                 String date = dateFormat.format(cal.getTime());
+                final Spinner spinner = (Spinner) customView.findViewById(R.id.spinner);
+
+                tmp = readFile();
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, tmp);
+                ItemSelectedListener listener = new ItemSelectedListener(this);
+
+                adapter.setDropDownViewResource(R.layout.spinner_item);
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(listener);
+
                 builder.setTitle("請輸入廣播訊息");
                 builder.setView(customView);
                 broadcastMsg = (EditText) customView.findViewById(R.id.broadcast_text);
-                broadcastMsg.setText("即將在 " + date + " 進行換牌，請注意。");
+
+                if (tmp.size() == 0)
+                    broadcastMsg.setText("即將在 " + date + " 進行換牌，請注意。");
+                else
+                    broadcastMsg.setText(tmp.get(tmp.size() - 1));
 
                 builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
                     @Override
@@ -624,8 +653,11 @@ public class CPFragment extends Fragment {
                         String broadcastMsg = ((EditText) customView.findViewById(R.id.broadcast_text)).getText().toString();
                         String cmd = "EXE\tBROADCAST\t" + lineInfo + "\t" + broadcastMsg + "<END>";
 
-                        mService.setCmd(cmd);
+                        tmp.add(broadcastMsg);
 
+                        writeFile(tmp);
+
+                        mService.setCmd(cmd);
                         isBroadcast = true;
                     }
                 });
@@ -639,9 +671,53 @@ public class CPFragment extends Fragment {
 
                 builder.show();
             }
+
+            public void setSelectedItem(String item) {
+                selectedItem = item;
+                broadcastMsg.setText(selectedItem);
+            }
+
+
+            public void writeFile(List<String> msg)  {
+                try {
+                    FileWriter fw = new FileWriter(broadcastFile);
+                    int end = (msg.size() - 20) > 0 ? msg.size() - 20 : 0;
+
+                    for (int i = msg.size() - 1; i >= end; i--) {
+                        String wd = msg.get(i);
+                        fw.write(wd + "\n");
+                    }
+
+                    fw.close();
+                } catch(IOException e) {
+                    Log.e("MyLog", e.toString());
+                }
+            }
+
+            public List<String> readFile() {
+                List<String> msg = new ArrayList<>();
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(broadcastFile));
+                    String line;
+                    int count = 0;
+
+                    while ((line = br.readLine()) != null && count < 20) {
+                        msg.add(line);
+
+                        count++;
+                    }
+                    br.close();
+                } catch (IOException e) {
+                    Log.e("MyLog", e.toString());
+                    return msg;
+                }
+
+                return msg;
+            }
+
         }
 
-        private class SwapDialogListener implements View.OnClickListener {
+        private class SwapDialogListener extends ListenerAdapter implements View.OnClickListener {
             private String command;
             private List<String> tmp = new ArrayList<>();
             private String selectedItem;
@@ -748,9 +824,9 @@ public class CPFragment extends Fragment {
         }
 
         private class ItemSelectedListener implements Spinner.OnItemSelectedListener {
-            private SwapDialogListener listener;
+            private ListenerAdapter listener;
 
-            public ItemSelectedListener(SwapDialogListener tmp) {
+            public ItemSelectedListener(ListenerAdapter tmp) {
                 listener = tmp;
             }
 
@@ -762,45 +838,6 @@ public class CPFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        }
-
-        private class SwapCheckListener implements View.OnClickListener {
-
-            boolean isCancel;
-            LinearLayout linearLayout;
-            AlertDialog dialog;
-
-            public SwapCheckListener(boolean isCancel, LinearLayout linearLayout, AlertDialog dialog) {
-                this.isCancel = isCancel;
-                this.linearLayout = linearLayout;
-                this.dialog = dialog;
-            }
-
-            @Override
-            public void onClick(View v) {
-
-                if (!isCancel) {
-                    String inputId = ((EditText) linearLayout.findViewById(R.id.worker_text)).getText().toString();
-                    String workerId = ((LoggedInActivity) getActivity()).getWorkerId();
-
-
-                    if (workerId.equals(inputId)) {
-                        mService.setCmd("EXE_SWAP_OK<END>");
-                        dialog.dismiss();
-                        mService.resetExeResult();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                        builder.setTitle("警告");
-                        builder.setMessage("輸入編號必須與登入編號相同");
-                        builder.show();
-                    }
-                } else {
-                    mService.setCmd("EXE_SWAP_CANCEL<END>");
-                    dialog.dismiss();
-                    mService.resetExeResult();
-                }
             }
         }
     }

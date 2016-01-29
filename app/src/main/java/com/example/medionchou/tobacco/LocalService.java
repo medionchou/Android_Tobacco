@@ -47,6 +47,7 @@ public class LocalService extends Service implements Runnable {
     private boolean isTerminated;
     private boolean isSignIn;
     private int client_state;
+    private int counter = 0;
 
     @Override
     public void onCreate() {
@@ -57,7 +58,6 @@ public class LocalService extends Service implements Runnable {
         SharedPreferences settings = getSharedPreferences(Config.IPCONFIG, 0);
         SERVER_IP = settings.getString("IP", "192.168.1.250");
         SERVER_PORT = settings.getInt("PORT", 9000);
-
         Log.v("MyLog", SERVER_IP + " " + SERVER_PORT);
     }
 
@@ -163,10 +163,9 @@ public class LocalService extends Service implements Runnable {
 
                         Log.v("MyLog", endLine);
 
-                        if (endLine.contains("UPDATE") && endLine.indexOf("UPDATE") > 0 ) {
+                        if (endLine.contains("UPDATE") && endLine.indexOf("UPDATE") > 0) {
                             endLine = endLine.substring(endLine.indexOf("UPDATE"), endIndex);
                         }
-
 
 
                         if (endLine.contains("CONNECT_OK<END>")) {
@@ -175,10 +174,11 @@ public class LocalService extends Service implements Runnable {
                             isSignIn = true;
                         } else if (endLine.contains("QUERY_REPLY")) {
                             queryReply = endLine;
+                            counter = 0;
                         } else if (endLine.contains("UPDATE")) {
                             if (endLine.contains("UPDATE_ONLINE")) {
                                 updateOnline = endLine;
-                            } else if (!endLine.contains("UPDATE_VALUE")){
+                            } else if (!endLine.contains("UPDATE_VALUE")) {
                                 synchronized (updateMsg) {
                                     updateMsg += endLine;
                                 }
@@ -204,7 +204,6 @@ public class LocalService extends Service implements Runnable {
                         serverReply = serverReply.replace(endLine, "");
                     }
 
-
                     switch (client_state) {
                         case States.CONNECT_INITIALZING:
                             outStream = CharBuffer.wrap(Command.CONNECT_SERVER);
@@ -218,6 +217,7 @@ public class LocalService extends Service implements Runnable {
                             if (cmd.length() > 0) {
                                 outStream = CharBuffer.wrap(cmd);
                                 Log.v("MyLog", cmd);
+                                counter++;
                                 while (outStream.hasRemaining()) {
                                     socketChannel.write(Charset.defaultCharset().encode(outStream));
                                 }
@@ -228,23 +228,7 @@ public class LocalService extends Service implements Runnable {
                     }
                 }
             }
-        } catch (InterruptedException e) {
-            Log.e("MyLog", "InterruptedException " + e.toString());
-
-        } catch (IOException e) {
-            Log.e("MyLog", "IOException " + e.toString());
-            if (e.toString().contains("Server disconnect") || e.toString().contains("SocketTimeoutException") || e.toString().contains("ECONNRESET") ) {
-                stopSelf();
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                /* TODO:
-                        Make sure reconnection will still work. At the same time, do not switch away from Bound Service.
-                 */
-                Log.v("MyLog", "Re-connection");
-            }
-
-        } catch(NotYetConnectedException e) {
+        } catch(Exception e) {
 
             Log.e("MyLog", e.toString());
             stopSelf();
