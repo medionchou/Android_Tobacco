@@ -152,6 +152,7 @@ public class CPFragment extends Fragment {
             try {
                 String msg;
                 String swapDoneMsg;
+                String broadCastMsg;
                 String exeRes;
 
                 sendCommand(Command.PRODUCT);
@@ -164,6 +165,7 @@ public class CPFragment extends Fragment {
                     msg = mService.getUpdateMsg();
                     swapDoneMsg = mService.getSwapDoneMsg();
                     exeRes = mService.getExeResult();
+                    broadCastMsg = mService.getBroadcastMsg();
 
 
                     if (msg.length() > 0) {
@@ -214,6 +216,27 @@ public class CPFragment extends Fragment {
                         }
                     }
 
+                    if (broadCastMsg.length() > 0) {
+                        String[] m = broadCastMsg.split("<END>");
+
+                        for (final String t : m) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String word = t;
+                                    word = word.replace("SWAP_MSG_OK", "");
+                                    AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                                    b.setTitle("注意");
+                                    b.setMessage(word);
+                                    b.show();
+                                }
+                            });
+                        }
+
+                        mService.resetBroadcastMsg(mService.getBroadcastMsg().replace(broadCastMsg, ""));
+                        broadCastMsg = "";
+                    }
+
                     Thread.sleep(500);
                 }
 
@@ -223,29 +246,30 @@ public class CPFragment extends Fragment {
             return (Void) null;
         }
 
-        private void sendCommand(String cmd) {
+        private void sendCommand(String cmd) throws InterruptedException {
             String msg = "";
-            try {
-                while (msg.length() == 0) {
-                    mService.setCmd(cmd);
-                    Thread.sleep(1000);
-                    msg = mService.getQueryReply();
-                }
-                switch (cmd) {
-                    case Command.PRODUCT:
-                        parseProductLine(msg, false);
-                        break;
-                    case Command.SWAP:
-                        parseLineState(msg, false);
-                        break;
-                    case Command.RECIPE_LIST:
-                        parseRecipeList(msg);
-                        break;
-                }
-                mService.resetQueryReply();
-            } catch (InterruptedException e) {
-                Log.e("MyLog", e.toString() + "SendCommand thread interrupted");
+            int counter = 0;
+            while (msg.length() == 0) {
+                if (counter == 10)
+                    throw new InterruptedException("Can't send command!");
+                mService.setCmd(cmd);
+                Thread.sleep(1000);
+                msg = mService.getQueryReply();
+                counter++;
             }
+            switch (cmd) {
+                case Command.PRODUCT:
+                    parseProductLine(msg, false);
+                    break;
+                case Command.SWAP:
+                    parseLineState(msg, false);
+                    break;
+                case Command.RECIPE_LIST:
+                    parseRecipeList(msg);
+                    break;
+            }
+            mService.resetQueryReply();
+
         }
 
         @Override
@@ -574,7 +598,7 @@ public class CPFragment extends Fragment {
                 }
             } else {
                 for (int i = 0; i < data.length; i = i + 5) {
-                    if (data[i+1].equals("PP")) continue;
+                    if (data[i + 1].equals("PP")) continue;
                     LineState lineState = new LineState(data[i + 1], data[i + 2], Integer.valueOf(data[i + 3]), data[i + 4]);
                     lineStateList.add(lineState);
                 }
@@ -678,7 +702,7 @@ public class CPFragment extends Fragment {
             }
 
 
-            public void writeFile(List<String> msg)  {
+            public void writeFile(List<String> msg) {
                 try {
                     FileWriter fw = new FileWriter(broadcastFile);
                     int end = (msg.size() - 20) > 0 ? msg.size() - 20 : 0;
@@ -689,7 +713,7 @@ public class CPFragment extends Fragment {
                     }
 
                     fw.close();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     Log.e("MyLog", e.toString());
                 }
             }

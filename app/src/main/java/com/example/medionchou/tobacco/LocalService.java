@@ -24,7 +24,7 @@ import java.util.List;
 
 public class LocalService extends Service implements Runnable {
 
-    private String SERVER_IP = "192.168.1.250";
+    private String SERVER_IP = "140.113.167.14";
     private int SERVER_PORT = 9000;
     private final IBinder mBinder = new LocalBinder();
 
@@ -42,6 +42,7 @@ public class LocalService extends Service implements Runnable {
     private String swapDoneMsg;
     private String recentBox;
     private String exeResult;
+    private String broadcastMsg;
     private List<Byte> buffer;
 
     private boolean isTerminated;
@@ -99,6 +100,7 @@ public class LocalService extends Service implements Runnable {
         queryReply = "";
         updateOnline = "";
         updateMsg = "";
+        broadcastMsg = "";
         msg = "";
         swapDoneMsg = "";
         recentBox = "";
@@ -189,10 +191,16 @@ public class LocalService extends Service implements Runnable {
                             }
 
                         } else if (endLine.contains("MSG")) {
-                            String tmp;
-                            tmp = endLine.replace("<END>", "");
-                            tmp = tmp.replace("MSG\t", "");
-                            msg = tmp;
+                            if (!endLine.contains("SWAP_MSG_OK")) {
+                                String tmp;
+                                tmp = endLine.replace("<END>", "");
+                                tmp = tmp.replace("MSG\t", "");
+                                msg = tmp;
+                            } else {
+                                synchronized (broadcastMsg) {
+                                    broadcastMsg += endLine;
+                                }
+                            }
                         } else if (endLine.contains("SWAP_DONE")) {
                             swapDoneMsg = endLine;
                         } else if (endLine.contains("BOX_RECENT")) {
@@ -202,6 +210,11 @@ public class LocalService extends Service implements Runnable {
                         }
 
                         serverReply = serverReply.replace(endLine, "");
+                    }
+
+                    if (counter == 10) {
+                        counter = 0;
+                        throw new IOException("Server no response");
                     }
 
                     switch (client_state) {
@@ -233,7 +246,7 @@ public class LocalService extends Service implements Runnable {
             Log.e("MyLog", e.toString());
             stopSelf();
             Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         } finally {
@@ -290,6 +303,14 @@ public class LocalService extends Service implements Runnable {
 
     public String getUpdateQual() {
         return updateQual;
+    }
+
+    public synchronized String getBroadcastMsg() {
+        return broadcastMsg;
+    }
+
+    public synchronized void resetBroadcastMsg(String msg) {
+        broadcastMsg = msg;
     }
 
     public void resetQual() {
