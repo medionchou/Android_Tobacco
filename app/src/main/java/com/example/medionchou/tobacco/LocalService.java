@@ -24,7 +24,7 @@ import java.util.List;
 
 public class LocalService extends Service implements Runnable {
 
-    private String SERVER_IP = "140.113.167.14";
+    private String SERVER_IP = "192.168.1.250";
     private int SERVER_PORT = 9000;
     private final IBinder mBinder = new LocalBinder();
 
@@ -117,10 +117,9 @@ public class LocalService extends Service implements Runnable {
     }
 
     private void setUpConnection() {
-
         try {
+            com.example.medionchou.tobacco.Log.getRequest("<h2>*** Client Service Start ***</h2>");
             while (!isTerminated) {
-
                 if (socketChannel == null) {
 
                     socketChannel = SocketChannel.open();
@@ -177,6 +176,7 @@ public class LocalService extends Service implements Runnable {
                         } else if (endLine.contains("QUERY_REPLY")) {
                             queryReply = endLine;
                             counter = 0;
+                            com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"#7AC405\">Query Reply: </font></b>" + endLine);
                         } else if (endLine.contains("UPDATE")) {
                             if (endLine.contains("UPDATE_ONLINE")) {
                                 updateOnline = endLine;
@@ -184,6 +184,7 @@ public class LocalService extends Service implements Runnable {
                                 synchronized (updateMsg) {
                                     updateMsg += endLine;
                                 }
+                                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"#7AC405\">Update: </font></b>" + endLine);
                             } else if (endLine.contains("UPDATE_VALUE")) {
                                 synchronized (updateQual) {
                                     updateQual += endLine;
@@ -230,6 +231,7 @@ public class LocalService extends Service implements Runnable {
                             if (cmd.length() > 0) {
                                 outStream = CharBuffer.wrap(cmd);
                                 Log.v("MyLog", cmd);
+                                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"blue\">Send Command: </font></b>" + cmd);
                                 counter++;
                                 while (outStream.hasRemaining()) {
                                     socketChannel.write(Charset.defaultCharset().encode(outStream));
@@ -244,6 +246,7 @@ public class LocalService extends Service implements Runnable {
         } catch(Exception e) {
 
             Log.e("MyLog", e.toString());
+            com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in service:</font></b>" + e.toString());
             stopSelf();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -255,8 +258,9 @@ public class LocalService extends Service implements Runnable {
                     socketChannel.close();
                 isTerminated = true;
                 stopSelf();
-            } catch (IOException err) {
+            } catch (Exception err) {
                 Log.v("MyLog", "IOException " + err.toString());
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in service in finally block:</font></b>" + err.toString());
             }
         }
     }
