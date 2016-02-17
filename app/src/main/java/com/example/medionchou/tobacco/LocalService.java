@@ -184,7 +184,6 @@ public class LocalService extends Service implements Runnable {
                                 synchronized (updateMsg) {
                                     updateMsg += endLine;
                                 }
-                                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"#7AC405\">Update: </font></b>" + endLine);
                             } else if (endLine.contains("UPDATE_VALUE")) {
                                 synchronized (updateQual) {
                                     updateQual += endLine;
@@ -208,6 +207,7 @@ public class LocalService extends Service implements Runnable {
                             recentBox = endLine;
                         } else if (endLine.contains("EXE")) {
                             exeResult = endLine;
+                            com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"#C4C400\">Receive EXE Command: </font></b>" + endLine);
                         }
 
                         serverReply = serverReply.replace(endLine, "");
