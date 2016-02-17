@@ -208,8 +208,9 @@ public class BoxHistoryFragment extends Fragment {
 
                     Thread.sleep(500);
                 }
-            } catch(InterruptedException e) {
+            } catch(Exception e) {
                 Log.e("MyLog", "InterruptedException in ASHistoryFragment " + e.toString());
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in BoxHistoryFragment 213:</font></b>" + e.toString());
             }
             return (Void)null;
         }

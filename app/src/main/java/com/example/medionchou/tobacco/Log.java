@@ -11,21 +11,30 @@ import java.net.URLEncoder;
  */
 public class Log {
 
-    private static String site = "http://192.168.1.250/wlog.php?";
+    private static String site = "http://140.113.167.14/wlog.php?";
 
     public static synchronized void getRequest(String words) {
-        try {
-            String mySite = site + "ID=CT&Log=" + URLEncoder.encode(words + "\n", "UTF-8");
-            URL url = new URL(mySite);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        final String msg = words;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-            rd.close();
+                    String mySite = site + "ID=CT&Log=" + URLEncoder.encode(msg + "\n", "UTF-8");
+                    URL url = new URL(mySite);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-        } catch (Exception e) {
-            android.util.Log.e("MyLog", "Unable write log ! ");
-        }
+                    rd.close();
+
+                } catch (Exception e) {
+                    android.util.Log.e("MyLog", "Unable write log ! ");
+                }
+            }
+
+        }).start();
+
     }
 
 }

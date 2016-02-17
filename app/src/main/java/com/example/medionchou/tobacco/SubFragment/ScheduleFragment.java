@@ -143,8 +143,9 @@ public class ScheduleFragment extends Fragment {
                     Thread.sleep(2000);
                 }
 
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 Log.e("MyLog", e.toString());
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in ScheduleFragment 148:</font></b>" + e.toString());
             }
             return null;
         }

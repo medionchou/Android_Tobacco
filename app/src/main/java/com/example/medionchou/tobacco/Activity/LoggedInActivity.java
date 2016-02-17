@@ -65,7 +65,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
 
     private String workerId;
 
-    private int TIMEOUT = 300000;
+    private int TIMEOUT = 900000;
 
     private GetSwapThread swapThread;
 

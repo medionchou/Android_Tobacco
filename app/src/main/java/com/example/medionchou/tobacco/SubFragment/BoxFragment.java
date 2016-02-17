@@ -146,8 +146,9 @@ public class BoxFragment extends Fragment {
                     }
                     Thread.sleep(1000);
                 }
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 Log.e("MyLog", e.toString() + " BoxFragment Interrupted");
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in BoxFragment 151:</font></b>" + e.toString());
             }
             return null;
         }

@@ -138,8 +138,10 @@ public class InsertFragment extends Fragment {
 
                             if (tmp.contains("UPDATE_PRODUCT")) {
                                 parseProductLine(tmp, true);
-                            } else if (tmp.contains("UPDATE_SWAP")) {
-                                parseLineState(tmp, true);
+                            } else if (tmp.contains("SWAP")) {
+                                if (!tmp.contains("SWAP_HISTORY")) {
+                                    parseLineState(tmp, true);
+                                }
                             }
                         }
 
@@ -148,8 +150,8 @@ public class InsertFragment extends Fragment {
 
                     Thread.sleep(500);
                 }
-            } catch (InterruptedException e) {
-                Log.e("MyLog", "InsertFragment " + e.toString());
+            } catch (Exception e) {
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in InsertFragment 154:</font></b>" + e.toString());
             }
             return (Void) null;
         }
@@ -198,6 +200,7 @@ public class InsertFragment extends Fragment {
             String[] data = msg.split("\\t|<N>|<END>");
 
             if (update) {
+                if (data[1].equals("PP")) return;
                 LineState lineState = new LineState(data[1], data[2], Integer.valueOf(data[3]), data[4]);
 
                 for (int i = 0; i < lineStateList.size(); i++) {
@@ -209,6 +212,7 @@ public class InsertFragment extends Fragment {
                 }
             } else {
                 for (int i = 0; i < data.length; i = i + 5) {
+                    if (data[i+1].equals("PP")) continue;
                     LineState lineState = new LineState(data[i + 1], data[i + 2], Integer.valueOf(data[i + 3]), data[i + 4]);
                     lineStateList.add(lineState);
                 }

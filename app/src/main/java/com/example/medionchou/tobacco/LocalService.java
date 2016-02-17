@@ -254,6 +254,7 @@ public class LocalService extends Service implements Runnable {
 
         } finally {
             try {
+
                 if (socketChannel != null)
                     socketChannel.close();
                 isTerminated = true;

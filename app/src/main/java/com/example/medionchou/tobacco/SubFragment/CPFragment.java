@@ -240,8 +240,8 @@ public class CPFragment extends Fragment {
                     Thread.sleep(500);
                 }
 
-            } catch (InterruptedException e) {
-                Log.e("MyLog", e.toString());
+            } catch (Exception e) {
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in CPFragment 244:</font></b>" + e.toString());
             }
             return (Void) null;
         }

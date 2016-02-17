@@ -268,8 +268,9 @@ public class WareHouseFragment extends Fragment {
 
                     Thread.sleep(500);
                 }
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 Log.e("MyLog", "InterruptedException In QueryResultTask: " + e.toString());
+                com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in WareHouseFragment 273:</font></b>" + e.toString());
             }
 
 
