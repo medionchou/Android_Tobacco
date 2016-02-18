@@ -323,7 +323,7 @@ public class SwapHistoryFragment extends Fragment {
             time.setText("時間");
             rID.setText("從某品牌");
             rName.setText("換成品牌");
-            staffID.setText("流水編號");
+            staffID.setText("工作地點");
             staff.setText("員工姓名");
 
             time.setTextSize(Config.TEXT_TITLE_SIZE);

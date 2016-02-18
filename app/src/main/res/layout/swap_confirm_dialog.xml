@@ -16,6 +16,7 @@
         android:textSize="30sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="輸入工號以確認身份"/>
 
 </LinearLayout>

@@ -1,5 +1,7 @@
 package com.example.medionchou.tobacco;
 
+import com.example.medionchou.tobacco.Constants.Command;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -11,7 +13,7 @@ import java.net.URLEncoder;
  */
 public class Log {
 
-    private static String site = "http://140.113.167.14/wlog.php?";
+    private static String site = "http://" + Command.SERVER_IP + "/wlog.php?";
     private static String ID = "CT";
 
     public static synchronized void getRequest(String words) {

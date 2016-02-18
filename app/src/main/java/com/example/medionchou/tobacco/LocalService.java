@@ -57,7 +57,7 @@ public class LocalService extends Service implements Runnable {
         client.start();*/
         //Log.v("MyLog", "ServiceOnCreate");
         SharedPreferences settings = getSharedPreferences(Config.IPCONFIG, 0);
-        SERVER_IP = settings.getString("IP", "192.168.1.250");
+        SERVER_IP = settings.getString("IP", Command.SERVER_IP);
         SERVER_PORT = settings.getInt("PORT", 9000);
         Log.v("MyLog", SERVER_IP + " " + SERVER_PORT);
     }
