@@ -92,6 +92,8 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         swapThread = new GetSwapThread();
         swapThread.start();
 
+        Log.v("MyLog", "Called in loggedInActivity onStart()");
+
     }
 
     @Override
@@ -117,7 +119,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(new Intent(this, LocalService.class));
+//        stopService(new Intent(this, LocalService.class));
     }
 
     @Override
@@ -185,8 +187,12 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
                     }
                     oldMsg = msg;
                     Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    Log.e("MyLog", e.toString());
+                } catch (Exception e) {
+                    com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in running text marque :</font></b>" + e.toString());
+                    stopService(new Intent(LoggedInActivity.this, LocalService.class));
+                    Intent intent = new Intent(LoggedInActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
             }
         }
