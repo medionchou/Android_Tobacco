@@ -110,8 +110,10 @@ public class CPFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        if (!asyncTask.isCancelled())
+        if (!asyncTask.isCancelled()) {
+            Log.v("MyLog", "Onstop called in cpf");
             asyncTask.cancel(true);
+        }
     }
 
 
@@ -242,6 +244,7 @@ public class CPFragment extends Fragment {
 
             } catch (Exception e) {
                 com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in CPFragment 244:</font></b>" + e.toString());
+                if (progressDialog.isShowing()) progressDialog.dismiss();
             }
             return (Void) null;
         }
@@ -269,7 +272,6 @@ public class CPFragment extends Fragment {
                     break;
             }
             mService.resetQueryReply();
-
         }
 
         @Override

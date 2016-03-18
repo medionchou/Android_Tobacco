@@ -1,7 +1,10 @@
 package com.example.medionchou.tobacco.Activity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,13 +21,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.medionchou.tobacco.Constants.Config;
 import com.example.medionchou.tobacco.Constants.States;
 import com.example.medionchou.tobacco.LocalService;
 import com.example.medionchou.tobacco.LocalServiceConnection;
 import com.example.medionchou.tobacco.R;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences settings = getSharedPreferences("IPFILE", 0);
+                        SharedPreferences settings = getSharedPreferences(Config.IPCONFIG, 0);
                         SharedPreferences.Editor editor = settings.edit();
                         EditText ipView = (EditText) ip_portLayout.findViewById(R.id.ip);
                         EditText portView = (EditText) ip_portLayout.findViewById(R.id.port);
@@ -141,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                break;
+            case R.id.timeout:
+                DialogFragment newFragment = new TimePickerFragment();
+                newFragment.show(getFragmentManager(), "timepicker");
                 break;
         }
 
@@ -238,6 +249,31 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 }
             }
+        }
+    }
+
+    public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute, true);
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Do something with the time chosen by the user
+            SharedPreferences settings = getSharedPreferences("TimeOut", 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putInt("Hour", hourOfDay);
+            editor.putInt("Minute", minute);
+            editor.apply();
+            Log.v("Mylog", hourOfDay + " _ " + minute);
         }
     }
 }

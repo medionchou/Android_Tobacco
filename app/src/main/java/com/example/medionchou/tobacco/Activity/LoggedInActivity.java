@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.*;
@@ -75,6 +76,11 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
         setContentView(R.layout.activity_logged_in);
         Bundle extras = getIntent().getExtras();
         workerId = extras.getString("WorkerId");
+        SharedPreferences settings = getSharedPreferences(Config.TIMEOUT, 0);
+        int hour = settings.getInt("Hour", 0);
+        int minute = settings.getInt("Minute", 30);
+        TIMEOUT = (hour*60*60 + minute*60) * 1000;
+        Log.v("Mylog", TIMEOUT + " milisec");
     }
 
     @Override

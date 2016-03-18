@@ -17,6 +17,7 @@ public class Config {
     public static final int GREEN = 3;
 
     public static final String IPCONFIG = "IPFILE";
+    public static final String TIMEOUT = "TimeOut";
 
 
     public static int getColor(int code) {
