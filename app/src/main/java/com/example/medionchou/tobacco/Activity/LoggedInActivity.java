@@ -192,7 +192,7 @@ public class LoggedInActivity extends FragmentActivity implements ServiceListene
 
                     }
                     oldMsg = msg;
-                    Thread.sleep(10000);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                     com.example.medionchou.tobacco.Log.getRequest("<b><font size=\"5\" color=\"red\">Caught exception in running text marque :</font></b>" + e.toString());
                     stopService(new Intent(LoggedInActivity.this, LocalService.class));

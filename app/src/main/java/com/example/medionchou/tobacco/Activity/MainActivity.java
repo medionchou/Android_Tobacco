@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText accountEditView;
     private Button loginBtn;
     private LocalServiceConnection mConnection;
+    private static SharedPreferences timeOut;
 
 
     @Override
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
                 break;
             case R.id.timeout:
+                timeOut = getSharedPreferences(Config.TIMEOUT, 0);
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getFragmentManager(), "timepicker");
                 break;
@@ -252,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+    public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -267,13 +269,12 @@ public class MainActivity extends AppCompatActivity {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            SharedPreferences settings = getSharedPreferences("TimeOut", 0);
-            SharedPreferences.Editor editor = settings.edit();
+
+            SharedPreferences.Editor editor = timeOut.edit();
 
             editor.putInt("Hour", hourOfDay);
             editor.putInt("Minute", minute);
             editor.apply();
-            Log.v("Mylog", hourOfDay + " _ " + minute);
         }
     }
 }
