@@ -230,6 +230,7 @@ public class CPFragment extends Fragment {
                                     AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                                     b.setTitle("注意");
                                     b.setMessage(word);
+                                    b.setPositiveButton("確定", null);
                                     b.show();
                                 }
                             });

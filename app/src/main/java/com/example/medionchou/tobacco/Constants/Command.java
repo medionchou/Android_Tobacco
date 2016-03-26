@@ -27,5 +27,4 @@ public class Command {
     public final static String AS_HISTORY = "QUERY\tAS_HISTORY\t";
 
     public final static String SERVER_IP = "192.168.1.250";
-
 }
